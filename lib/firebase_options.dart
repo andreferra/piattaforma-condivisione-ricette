@@ -60,4 +60,5 @@ class DefaultFirebaseOptions {
     authDomain: 'gestione-rice.firebaseapp.com',
     storageBucket: 'gestione-rice.appspot.com',
   );
+
 }
