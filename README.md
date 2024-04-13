@@ -1,5 +1,7 @@
 ## Piattaforma di Condivisione e Scoperta di Ricette
 
+Nome: RecipeBuddy
+
 **Descrizione**
 
 Un'applicazione web che permette agli utenti di condividere, scoprire e valutare ricette culinarie, promuovendo la cultura del cibo e incentivando la partecipazione attiva attraverso elementi di gamification.
@@ -37,15 +39,9 @@ Un'applicazione web che permette agli utenti di condividere, scoprire e valutare
 * Gli utenti possono scambiarsi messaggi privati o commentare le ricette per scambiarsi consigli e varianti.
 * Possibilità di seguire utenti specifici per ricevere notifiche sulle nuove ricette pubblicate.
 
-**Tecnologie (da definire)**
+**Tecnologie**
 
-* Linguaggi di programmazione (front-end e back-end)
-* Database
-* Cloud hosting
-
-**Note**
-
-* Questo documento è un punto di partenza e può essere modificato per includere ulteriori dettagli o requisiti.
-* La gamification e le sfide culinarie dovrebbero essere progettate con attenzione per mantenere gli utenti motivati e coinvolti.
-* È importante garantire un'esperienza utente fluida e intuitiva.
-* La sicurezza dei dati degli utenti deve essere una priorità assoluta.
+* Frontend: Flutter
+* Backend: dart
+* Database: Firebase Firestore
+* Storage: Firebase Storage
