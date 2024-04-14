@@ -1,8 +1,12 @@
-import 'package:condivisionericette/screens/feed_screen/feed_screen.dart';
+import 'package:condivisionericette/controller/MenuAppController.dart';
 import 'package:condivisionericette/screens/home_screen/home_screen.dart';
+import 'package:condivisionericette/screens/render_view.dart';
+import 'package:condivisionericette/utils/constant.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 
 import "firebase_options.dart";
 
@@ -20,14 +24,21 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'RecipeBuddy',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
-      home: _getPage(),
-    );
+        title: 'RecipeBuddy',
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData.dark().copyWith(
+          scaffoldBackgroundColor: bgColor,
+          textTheme: GoogleFonts.poppinsTextTheme(Theme.of(context).textTheme)
+              .apply(bodyColor: Colors.white.withOpacity(0.8)),
+        ),
+        home: MultiProvider(
+          providers: [
+            ChangeNotifierProvider(
+              create: (context) => MenuAppController(),
+            )
+          ],
+          child: _getPage(),
+        ));
   }
 
   Widget _getPage() {
@@ -44,13 +55,15 @@ class MyApp extends StatelessWidget {
           );
         } else if (snapshot.connectionState == ConnectionState.active) {
           if (snapshot.hasData) {
-            return const FeedScreen();
+            return RenderScreen(
+              child: widgetList[0],
+            );
           } else {
             return const HomeScreen();
           }
         } else {
           return const CircularProgressIndicator(
-            valueColor:  AlwaysStoppedAnimation<Color>(Colors.green),
+            valueColor: AlwaysStoppedAnimation<Color>(Colors.green),
           );
         }
       },

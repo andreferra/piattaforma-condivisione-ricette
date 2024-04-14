@@ -1,6 +1,7 @@
 import 'package:condivisionericette/backend/AuthMethod.dart';
-import 'package:condivisionericette/screens/feed_screen/feed_screen.dart';
+import 'package:condivisionericette/screens/render_view.dart';
 import 'package:condivisionericette/screens/signup_screen/signup_screen.dart';
+import 'package:condivisionericette/utils/constant.dart';
 import 'package:condivisionericette/utils/utils.dart';
 import 'package:flutter/material.dart';
 
@@ -41,7 +42,7 @@ class _HomeScreenState extends State<HomeScreen> {
             Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => const FeedScreen(),
+                  builder: (context) =>  RenderScreen(child: widgetList[0],),
                 ));
           } else {
             setState(() {

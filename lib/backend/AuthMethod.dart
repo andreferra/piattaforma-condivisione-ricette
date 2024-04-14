@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:condivisionericette/backend/DbMethod.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:condivisionericette/model/User.dart' as model;
@@ -45,8 +46,8 @@ class AuthMethod {
         password: password,
         phone: numeroTelefono,
         nickname: nickname,
-        dataRegistrazione: DateTime.now(),
-        dataUltimoAccesso: DateTime.now(),
+        dataRegistrazione: Timestamp.fromDate(DateTime.now()),
+        dataUltimoAccesso: Timestamp.fromDate(DateTime.now()),
         isLogged: false,
       );
 
