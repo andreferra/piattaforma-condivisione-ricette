@@ -1,6 +1,6 @@
 import 'package:condivisionericette/backend/AuthMethod.dart';
-import 'package:condivisionericette/screens/feed_screen/feed_screen.dart';
 import 'package:condivisionericette/screens/home_screen/home_screen.dart';
+import 'package:condivisionericette/screens/render_view.dart';
 import 'package:condivisionericette/utils/function.dart';
 import 'package:condivisionericette/utils/utils.dart';
 import 'package:flutter/cupertino.dart';
@@ -53,7 +53,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
           if (value == "ok") {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => const FeedScreen()),
+              MaterialPageRoute(builder: (context) => const RenderScreen()),
             );
           } else {
             setState(() {
