@@ -1,5 +1,7 @@
 
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class User{
   String id;
   String name;
@@ -7,8 +9,8 @@ class User{
   String password;
   String phone;
   String nickname;
-  DateTime dataRegistrazione;
-  DateTime dataUltimoAccesso;
+  Timestamp dataRegistrazione;
+  Timestamp dataUltimoAccesso;
   bool isLogged;
 
   User({
