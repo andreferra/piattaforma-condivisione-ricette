@@ -30,7 +30,6 @@ class MyApp extends StatelessWidget {
           scaffoldBackgroundColor: bgColor,
           textTheme: GoogleFonts.poppinsTextTheme(Theme.of(context).textTheme)
               .apply(bodyColor: Colors.white.withOpacity(0.8)),
-
         ),
         home: MultiProvider(
           providers: [
@@ -56,7 +55,9 @@ class MyApp extends StatelessWidget {
           );
         } else if (snapshot.connectionState == ConnectionState.active) {
           if (snapshot.hasData) {
-            return const RenderScreen();
+            return RenderScreen(
+              child: widgetList[0],
+            );
           } else {
             return const HomeScreen();
           }
