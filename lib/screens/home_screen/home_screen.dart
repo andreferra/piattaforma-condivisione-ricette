@@ -42,7 +42,9 @@ class _HomeScreenState extends State<HomeScreen> {
             Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) =>  RenderScreen(child: widgetList[0],),
+                  builder: (context) => RenderScreen(
+                    child: widgetList[0],
+                  ),
                 ));
           } else {
             setState(() {
@@ -56,7 +58,9 @@ class _HomeScreenState extends State<HomeScreen> {
       setState(() {
         _isLoading = false;
       });
-      showErrorSnackbar(context, e.toString());
+      if (mounted) {
+        showErrorSnackbar(context, e.toString());
+      }
     }
   }
 

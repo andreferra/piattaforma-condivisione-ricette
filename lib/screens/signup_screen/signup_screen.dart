@@ -16,7 +16,7 @@ class SignUpScreen extends StatefulWidget {
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
-  final _formKey = GlobalKey<FormState>();
+  final _formKey1 = GlobalKey<FormState>();
   TextEditingController _emailController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
   TextEditingController _nomeController = TextEditingController();
@@ -36,13 +36,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   void _trySubmit() async {
     try {
-      final isValid = _formKey.currentState!.validate();
+      final isValid = _formKey1.currentState!.validate();
       FocusScope.of(context).unfocus();
       if (isValid) {
         setState(() {
           _isLoading = true;
         });
-        _formKey.currentState!.save();
+        _formKey1.currentState!.save();
         await AuthMethod()
             .signUpWithEmailAndPassword(
                 _emailController.text,
@@ -71,7 +71,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
       setState(() {
         _isLoading = false;
       });
-      showErrorSnackbar(context, e.toString());
+      if(mounted) {
+        showErrorSnackbar(context, e.toString());
+      }
     }
   }
 
@@ -124,7 +126,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             width: MediaQuery.of(context).size.width * 0.18,
                             height: MediaQuery.of(context).size.height * 0.6,
                             child: Form(
-                              key: _formKey,
+                              key: _formKey1,
                               child: Column(
                                 children: [
                                   formInserimento("Nome", TextInputType.text,

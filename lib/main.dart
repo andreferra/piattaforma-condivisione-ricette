@@ -1,12 +1,11 @@
-import 'package:condivisionericette/controller/MenuAppController.dart';
 import 'package:condivisionericette/screens/home_screen/home_screen.dart';
 import 'package:condivisionericette/screens/render_view.dart';
 import 'package:condivisionericette/utils/constant.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:provider/provider.dart';
 
 import "firebase_options.dart";
 
@@ -15,7 +14,7 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  runApp(const MyApp());
+  runApp(const ProviderScope(child: MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -24,21 +23,15 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        title: 'RecipeBuddy',
-        debugShowCheckedModeBanner: false,
-        theme: ThemeData.dark().copyWith(
-          scaffoldBackgroundColor: bgColor,
-          textTheme: GoogleFonts.poppinsTextTheme(Theme.of(context).textTheme)
-              .apply(bodyColor: Colors.white.withOpacity(0.8)),
-        ),
-        home: MultiProvider(
-          providers: [
-            ChangeNotifierProvider(
-              create: (context) => MenuAppController(),
-            )
-          ],
-          child: _getPage(),
-        ));
+      title: 'RecipeBuddy',
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData.dark().copyWith(
+        scaffoldBackgroundColor: bgColor,
+        textTheme: GoogleFonts.poppinsTextTheme(Theme.of(context).textTheme)
+            .apply(bodyColor: Colors.white.withOpacity(0.8)),
+      ),
+      home: _getPage(),
+    );
   }
 
   Widget _getPage() {
