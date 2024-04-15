@@ -1,7 +1,6 @@
 import 'package:condivisionericette/backend/AuthMethod.dart';
 import 'package:condivisionericette/screens/render_view.dart';
 import 'package:condivisionericette/screens/signup_screen/signup_screen.dart';
-import 'package:condivisionericette/utils/constant.dart';
 import 'package:condivisionericette/utils/utils.dart';
 import 'package:flutter/material.dart';
 
@@ -42,7 +41,7 @@ class _HomeScreenState extends State<HomeScreen> {
             Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) =>  RenderScreen(child: widgetList[0],),
+                  builder: (context) => const RenderScreen(),
                 ));
           } else {
             setState(() {
@@ -56,7 +55,9 @@ class _HomeScreenState extends State<HomeScreen> {
       setState(() {
         _isLoading = false;
       });
-      showErrorSnackbar(context, e.toString());
+      if (mounted) {
+        showErrorSnackbar(context, e.toString());
+      }
     }
   }
 

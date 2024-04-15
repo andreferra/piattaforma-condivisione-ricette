@@ -1,18 +1,20 @@
 import 'package:condivisionericette/controller/MenuAppController.dart';
+import 'package:condivisionericette/controller/PageController.dart';
 import 'package:condivisionericette/utils/responsive.dart';
 import 'package:condivisionericette/widget/side_menu.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class RenderScreen extends StatelessWidget {
-  const RenderScreen({super.key, required this.child});
-
-  final Widget child;
+class RenderScreen extends ConsumerWidget {
+  const RenderScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final menuAppController = ref.watch(menuAppControllerProvider);
+    final pageController = ref.watch(pageControllerProvider);
+
     return Scaffold(
-      key: context.read<MenuAppController>().scaffoldKey,
+      key: menuAppController.scaffoldKey,
       drawer: const SideMenu(),
       body: SafeArea(
           child: Row(
@@ -24,7 +26,7 @@ class RenderScreen extends StatelessWidget {
             ),
           Expanded(
             flex: 5,
-            child: child,
+            child: pageController.currentPage,
           ),
         ],
       )),

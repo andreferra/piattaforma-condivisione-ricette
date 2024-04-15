@@ -1,11 +1,8 @@
-import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:condivisionericette/backend/DbMethod.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:condivisionericette/model/User.dart' as model;
-import 'package:flutter/foundation.dart';
-import 'package:uuid/uuid.dart';
+
 
 class AuthMethod {
   final _firebaseAuth = FirebaseAuth.instance;
