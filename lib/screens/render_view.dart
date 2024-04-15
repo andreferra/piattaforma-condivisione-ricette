@@ -1,17 +1,17 @@
 import 'package:condivisionericette/controller/MenuAppController.dart';
+import 'package:condivisionericette/controller/PageController.dart';
 import 'package:condivisionericette/utils/responsive.dart';
 import 'package:condivisionericette/widget/side_menu.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class RenderScreen extends ConsumerWidget {
-  const RenderScreen({super.key, required this.child});
-
-  final Widget child;
+  const RenderScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final menuAppController = ref.watch(menuAppControllerProvider);
+    final pageController = ref.watch(pageControllerProvider);
 
     return Scaffold(
       key: menuAppController.scaffoldKey,
@@ -26,7 +26,7 @@ class RenderScreen extends ConsumerWidget {
             ),
           Expanded(
             flex: 5,
-            child: child,
+            child: pageController.currentPage,
           ),
         ],
       )),

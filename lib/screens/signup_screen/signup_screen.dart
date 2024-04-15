@@ -1,12 +1,9 @@
 import 'package:condivisionericette/backend/AuthMethod.dart';
 import 'package:condivisionericette/screens/home_screen/home_screen.dart';
 import 'package:condivisionericette/screens/render_view.dart';
-import 'package:condivisionericette/utils/constant.dart';
 import 'package:condivisionericette/utils/function.dart';
 import 'package:condivisionericette/utils/utils.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
@@ -54,10 +51,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
           if (value == "ok") {
             Navigator.push(
               context,
-              MaterialPageRoute(
-                  builder: (context) => RenderScreen(
-                        child: widgetList[0],
-                      )),
+              MaterialPageRoute(builder: (context) => const RenderScreen()),
             );
           } else {
             setState(() {
@@ -71,7 +65,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       setState(() {
         _isLoading = false;
       });
-      if(mounted) {
+      if (mounted) {
         showErrorSnackbar(context, e.toString());
       }
     }

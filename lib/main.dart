@@ -48,9 +48,7 @@ class MyApp extends StatelessWidget {
           );
         } else if (snapshot.connectionState == ConnectionState.active) {
           if (snapshot.hasData) {
-            return RenderScreen(
-              child: widgetList[0],
-            );
+            return const RenderScreen();
           } else {
             return const HomeScreen();
           }

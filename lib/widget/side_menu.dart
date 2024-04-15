@@ -1,11 +1,15 @@
+import 'package:condivisionericette/controller/PageController.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-class SideMenu extends StatelessWidget {
+class SideMenu extends ConsumerWidget {
   const SideMenu({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final pageController = ref.watch(pageControllerProvider);
+
     return Drawer(
       child: ListView(
         children: [
@@ -20,22 +24,30 @@ class SideMenu extends StatelessWidget {
           ),
           DrawerListTile(
             title: 'Home',
-            onTap: () {},
+            onTap: () {
+              pageController.setPage(0);
+            },
             icon: 'assets/icons/menu_dashboard.svg',
           ),
           DrawerListTile(
             title: 'Notifiche',
-            onTap: () {},
+            onTap: () {
+              pageController.setPage(1);
+            },
             icon: 'assets/icons/menu_notification.svg',
           ),
           DrawerListTile(
             title: 'Profilo',
-            onTap: () {},
+            onTap: () {
+              pageController.setPage(2);
+            },
             icon: 'assets/icons/menu_profile.svg',
           ),
           DrawerListTile(
             title: 'Impostazioni',
-            onTap: () {},
+            onTap: () {
+              pageController.setPage(3);
+            },
             icon: 'assets/icons/menu_setting.svg',
           ),
         ],
