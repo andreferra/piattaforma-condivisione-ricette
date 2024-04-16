@@ -1,4 +1,9 @@
+import 'package:condivisionericette/backend/DbMethod.dart';
 import 'package:condivisionericette/controller/PageController.dart';
+import 'package:condivisionericette/controller/UserController.dart';
+import 'package:condivisionericette/model/User.dart';
+import 'package:condivisionericette/screens/home_screen/home_screen.dart';
+import 'package:condivisionericette/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -49,6 +54,34 @@ class SideMenu extends ConsumerWidget {
               pageController.setPage(3);
             },
             icon: 'assets/icons/menu_setting.svg',
+          ),
+          DrawerListTile(
+              title: "Logout",
+              onTap: () async {
+                await ref.watch(userProvider).logout(context).then((value) {
+                  if (value == 'ok') {
+                    pageController.setPage(0);
+                    MaterialPageRoute(builder: (context) => const HomeScreen());
+                  } else {
+                    showErrorSnackbar(context, value);
+                  }
+                });
+              },
+              icon: 'assets/icons/menu_setting.svg'),
+          DrawerListTile(
+              title: "Update ${ref.watch(userProvider).user.name}",
+              onTap: () async {
+                final userController = ref.read(userProvider);
+                final user = userController.user;
+                await DbMethod()
+                    .getUserFromDb("mx32OmvxMWZm2YiCTWVq86yfLef1")
+                    .then((value) async {
+                  debugPrint("name: ${value.toJson()}");
+                  await userController.setUser(User.fromJson(value.toJson()));
+                  debugPrint("name 2: ${userController.user.name} ");
+                });
+              },
+              icon: 'assets/icons/menu_setting.svg'
           ),
         ],
       ),

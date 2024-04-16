@@ -1,21 +1,17 @@
+import 'package:condivisionericette/controller/UserController.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class FeedScreen extends StatefulWidget {
+class FeedScreen extends ConsumerWidget {
   const FeedScreen({super.key});
 
   @override
-  State<FeedScreen> createState() => _FeedScreenState();
-}
+  Widget build(BuildContext context, WidgetRef ref) {
+    final user = ref.watch(userProvider).user;
 
-class _FeedScreenState extends State<FeedScreen> {
-  @override
-  Widget build(BuildContext context) {
-    return  Scaffold(
-      body: Column(
-        children: <Widget>[
-          Text('Feed Screen'),
-        ]
-
+    return Scaffold(
+      body: Center(
+        child: Text("user: ${user.name}"),
       ),
     );
   }
