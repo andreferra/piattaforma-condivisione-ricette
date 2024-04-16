@@ -1,6 +1,5 @@
 import 'package:condivisionericette/backend/DbMethod.dart';
 import 'package:condivisionericette/controller/PageController.dart';
-import 'package:condivisionericette/controller/UserController.dart';
 import 'package:condivisionericette/model/User.dart';
 import 'package:condivisionericette/screens/home_screen/home_screen.dart';
 import 'package:condivisionericette/utils/utils.dart';
