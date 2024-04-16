@@ -55,34 +55,8 @@ class SideMenu extends ConsumerWidget {
             },
             icon: 'assets/icons/menu_setting.svg',
           ),
-          DrawerListTile(
-              title: "Logout",
-              onTap: () async {
-                await ref.watch(userProvider).logout(context).then((value) {
-                  if (value == 'ok') {
-                    pageController.setPage(0);
-                    MaterialPageRoute(builder: (context) => const HomeScreen());
-                  } else {
-                    showErrorSnackbar(context, value);
-                  }
-                });
-              },
-              icon: 'assets/icons/menu_setting.svg'),
-          DrawerListTile(
-              title: "Update ${ref.watch(userProvider).user.name}",
-              onTap: () async {
-                final userController = ref.read(userProvider);
-                final user = userController.user;
-                await DbMethod()
-                    .getUserFromDb("mx32OmvxMWZm2YiCTWVq86yfLef1")
-                    .then((value) async {
-                  debugPrint("name: ${value.toJson()}");
-                  await userController.setUser(User.fromJson(value.toJson()));
-                  debugPrint("name 2: ${userController.user.name} ");
-                });
-              },
-              icon: 'assets/icons/menu_setting.svg'
-          ),
+
+
         ],
       ),
     );
