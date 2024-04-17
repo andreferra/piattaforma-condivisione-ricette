@@ -17,7 +17,10 @@ class SignUpButton extends ConsumerWidget {
       onTap: isValidated
           ? () => signUpController.signUpWithEmailAndPassword()
           : null,
-      child: const RoundedButtonStyle(title: "Registrati"),
+      child: const RoundedButtonStyle(
+        title: "Registrati",
+        orizzontalePadding: 25,
+      ),
     );
   }
 }

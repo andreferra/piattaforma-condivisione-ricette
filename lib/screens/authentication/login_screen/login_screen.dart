@@ -26,88 +26,88 @@ class LoginScreen extends ConsumerWidget {
       }
     });
 
+    double spaceVert = MediaQuery.of(context).size.height * 0.05;
+    double spaceHor = MediaQuery.of(context).size.width * 0.03;
+
     return Scaffold(
-        body: Row(
-      children: [
-        spaceCenter(1),
-        Expanded(
-          flex: 2,
-          child: Row(children: [
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                const Text(
-                  "Welcome to RecipeBuddy",
-                  style: TextStyle(
-                    fontSize: 30,
-                    fontWeight: FontWeight.bold,
-                  ),
+        body: Center(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              const Text(
+                "Welcome to RecipeBuddy",
+                style: TextStyle(
+                  fontSize: 30,
+                  fontWeight: FontWeight.bold,
                 ),
-                spacer(0, 20),
-                SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.18,
-                  height: MediaQuery.of(context).size.height * 0.35,
-                  child: Column(
-                    children: [
-                      const EmailField(),
-                      spacer(0, 20),
-                      const PasswordField(),
-                      spacer(0, 10),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          TextButton(
-                            onPressed: () {},
-                            child: const Text(
-                              "Forgot password?",
-                              style: TextStyle(
-                                color: Colors.blue,
-                              ),
+              ),
+              spacer(0, spaceVert),
+              SizedBox(
+                width: MediaQuery.of(context).size.width * 0.3,
+                height: MediaQuery.of(context).size.height * 0.35,
+                child: Column(
+                  mainAxisSize: MainAxisSize.max,
+                  children: [
+                    const EmailField(),
+                    spacer(0, spaceVert),
+                    const PasswordField(),
+                    spacer(0, 10),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        TextButton(
+                          onPressed: () {},
+                          child: const Text(
+                            "Forgot password?",
+                            style: TextStyle(
+                              color: Colors.blue,
                             ),
                           ),
-                        ],
-                      ),
-                      spacer(0, 30),
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          const LoginButton(),
-                          spacer(30, 0),
-                          ElevatedButton(
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          const SignUpScreen()),
-                                );
-                              },
-                              style: ElevatedButton.styleFrom(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 40, vertical: 18),
-                              ),
-                              child: const Text(
-                                "Sign Up",
-                                style: TextStyle(fontSize: 16),
-                              )),
-                        ],
-                      )
-                    ],
-                  ),
+                        ),
+                      ],
+                    ),
+                    spacer(0, spaceVert),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        const LoginButton(),
+                        spacer(spaceHor, 0),
+                        ElevatedButton(
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => const SignUpScreen()),
+                              );
+                            },
+                            style: ElevatedButton.styleFrom(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 40, vertical: 18),
+                            ),
+                            child: const Text(
+                              "Sign Up",
+                              style: TextStyle(fontSize: 16),
+                            )),
+                      ],
+                    )
+                  ],
                 ),
-              ],
-            ),
-            spacer(100, 0),
-            Image.asset(
-              "assets/illustration/home.png",
-              width: MediaQuery.of(context).size.width * 0.3,
-              height: MediaQuery.of(context).size.height * 0.6,
-            ),
-          ]),
-        ),
-      ],
+              ),
+            ],
+          ),
+          spacer(spaceHor, 0),
+          Image.asset(
+            "assets/illustration/home.png",
+            width: MediaQuery.of(context).size.width * 0.3,
+            height: MediaQuery.of(context).size.height * 0.6,
+          ),
+        ],
+      ),
     ));
   }
 }

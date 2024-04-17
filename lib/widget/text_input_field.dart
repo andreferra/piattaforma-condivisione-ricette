@@ -45,7 +45,7 @@ class _TextInputFieldState extends State<TextInputField> {
   Widget build(BuildContext context) {
     return Column(
       mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         if (widget.testoSopra != null)
           Padding(
@@ -60,11 +60,7 @@ class _TextInputFieldState extends State<TextInputField> {
             ),
           ),
         Container(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: widget.borderRadius,
-          ),
+          padding: const EdgeInsets.symmetric(horizontal: 18),
           child: TextFormField(
             enabled: widget.enable,
             onTap: widget.onTap,
@@ -79,7 +75,7 @@ class _TextInputFieldState extends State<TextInputField> {
                   ? IconButton(
                       icon: Icon(
                         showPassword ? Icons.visibility : Icons.visibility_off,
-                        color: Colors.black,
+                        color: Colors.white.withOpacity(0.7),
                       ),
                       onPressed: () {
                         setState(() {
@@ -88,7 +84,9 @@ class _TextInputFieldState extends State<TextInputField> {
                       },
                     )
                   : null,
-              border: InputBorder.none,
+              border: const UnderlineInputBorder(
+                borderSide: BorderSide(color: Colors.grey),
+              ),
               labelText: widget.labelText,
               hintText: widget.hintText,
               hintStyle: const TextStyle(

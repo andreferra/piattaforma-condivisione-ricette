@@ -30,79 +30,79 @@ class SignUpScreen extends ConsumerWidget {
       },
     );
 
+    double spaceVert = MediaQuery.of(context).size.height * 0.05;
+    double spaceHor = MediaQuery.of(context).size.width * 0.03;
+
     return Scaffold(
-        body: Row(
-      children: [
-        spaceCenter(1),
-        Expanded(
-          flex: 2,
-          child: Row(children: [
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                const Text(
-                  "SignUp to RecipeBuddy",
-                  style: TextStyle(
-                    fontSize: 30,
-                    fontWeight: FontWeight.bold,
-                  ),
+        body: Center(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              const Text(
+                "SignUp to RecipeBuddy",
+                style: TextStyle(
+                  fontSize: 30,
+                  fontWeight: FontWeight.bold,
                 ),
-                const SizedBox(height: 20),
-                SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.18,
-                  height: MediaQuery.of(context).size.height * 0.6,
-                  child: Column(
-                    children: [
-                      const NameField(),
-                      spacer(0, 20),
-                      const NicknameField(),
-                      spacer(0, 20),
-                      const EmailField(),
-                      spacer(0, 20),
-                      //inserire numero di telefono
-                      spacer(0, 20),
-                      const PasswordField(),
-                      spacer(0, 30),
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          const SignUpButton(),
-                          spacer(30, 0),
-                          ElevatedButton(
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          const LoginScreen()),
-                                );
-                              },
-                              style: ElevatedButton.styleFrom(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 40, vertical: 18),
-                              ),
-                              child: const Text(
-                                "Login",
-                                style: TextStyle(fontSize: 16),
-                              )),
-                        ],
-                      )
-                    ],
-                  ),
-                )
-              ],
-            ),
-            spacer(100, 0),
-            Image.asset(
-              "assets/illustration/signup.png",
-              width: MediaQuery.of(context).size.width * 0.3,
-              height: MediaQuery.of(context).size.height * 0.6,
-            )
-          ]),
-        ),
-      ],
+              ),
+              spacer(0, spaceVert),
+              SizedBox(
+                width: MediaQuery.of(context).size.width * 0.3,
+                height: MediaQuery.of(context).size.height * 0.6,
+                child: Column(
+                  mainAxisSize: MainAxisSize.max,
+                  children: [
+                    const NameField(),
+                    spacer(0, spaceVert),
+                    const NicknameField(),
+                    spacer(0, spaceVert),
+                    const EmailField(),
+                    spacer(0, spaceVert),
+                    //inserire numero di telefono
+                    spacer(0, spaceVert),
+                    const PasswordField(),
+                    spacer(0, spaceVert),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        const SignUpButton(),
+                        spacer(spaceHor, 0),
+                        ElevatedButton(
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => const LoginScreen()),
+                              );
+                            },
+                            style: ElevatedButton.styleFrom(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 40, vertical: 18),
+                            ),
+                            child: const Text(
+                              "Login",
+                              style: TextStyle(fontSize: 16),
+                            )),
+                      ],
+                    )
+                  ],
+                ),
+              )
+            ],
+          ),
+          spacer(100, 0),
+          Image.asset(
+            "assets/illustration/signup.png",
+            width: MediaQuery.of(context).size.width * 0.3,
+            height: MediaQuery.of(context).size.height * 0.6,
+          )
+        ],
+      ),
     ));
   }
 }

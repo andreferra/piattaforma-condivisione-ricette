@@ -2,6 +2,8 @@ import 'package:condivisionericette/screens/authentication/login_screen/controll
 import 'package:condivisionericette/widget/button/animated_button.dart';
 import 'package:condivisionericette/widget/button/rounded_button_style.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:form_validation/form_validator.dart';
 
@@ -17,7 +19,10 @@ class LoginButton extends ConsumerWidget {
       onTap: isValidated
           ? () => signInController.signInWithEmailAndPassword()
           : null,
-      child: const RoundedButtonStyle(title: "Accedi"),
+      child: const RoundedButtonStyle(
+        title: "Accedi",
+        orizzontalePadding: 25,
+      ),
     );
   }
 }
