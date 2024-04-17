@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-
 Widget buildLoadingIndicator() {
   return const Center(
     child: CircularProgressIndicator(
@@ -29,19 +28,6 @@ Widget spacer(double width, double height) {
   );
 }
 
-Widget formInserimento(String label, TextInputType type,
-    Function(String) validator, TextEditingController controller) {
-  return TextFormField(
-    decoration: InputDecoration(
-      labelText: label,
-    ),
-    validator: (value) {
-      return validator(value!);
-    },
-    controller: controller,
-  );
-}
-
 void showErrorSnackbar(BuildContext context, String message) {
   final snackBar = SnackBar(
     content: Text(
@@ -50,8 +36,10 @@ void showErrorSnackbar(BuildContext context, String message) {
     ),
     backgroundColor: Colors.red, // Cambia il colore di sfondo
     duration: Duration(seconds: 3), // Cambia la durata di visualizzazione
-    behavior: SnackBarBehavior.floating, // Fa apparire la snackbar sopra gli altri widget
-    shape: RoundedRectangleBorder( // Aggiunge bordi arrotondati
+    behavior: SnackBarBehavior
+        .floating, // Fa apparire la snackbar sopra gli altri widget
+    shape: RoundedRectangleBorder(
+      // Aggiunge bordi arrotondati
       borderRadius: BorderRadius.circular(25.0),
     ),
   );

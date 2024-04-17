@@ -1,0 +1,12 @@
+name: "firebase_auth_repo"
+
+environment:
+  sdk: ">=2.16.0 <3.0.0"
+
+dev_dependencies:
+  flutter_lints: ^2.0.1
+
+dependencies:
+  equatable: ^2.0.5
+  firebase_auth: ^4.2.3
+  cloud_firestore: ^4.3.0
