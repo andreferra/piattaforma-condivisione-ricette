@@ -1,4 +1,4 @@
-import 'package:condivisionericette/screens/login_screen/controller/login_controller.dart';
+import 'package:condivisionericette/screens/authentication/login_screen/controller/login_controller.dart';
 import 'package:condivisionericette/widget/button/animated_button.dart';
 import 'package:condivisionericette/widget/button/rounded_button_style.dart';
 import 'package:flutter/cupertino.dart';

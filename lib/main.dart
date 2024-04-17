@@ -1,4 +1,4 @@
-import 'package:condivisionericette/screens/login_screen/login_screen.dart';
+import 'package:condivisionericette/screens/authentication/login_screen/login_screen.dart';
 import 'package:condivisionericette/screens/render_view.dart';
 import 'package:condivisionericette/utils/constant.dart';
 import 'package:firebase_auth/firebase_auth.dart';

@@ -1,4 +1,4 @@
-import 'package:condivisionericette/screens/login_screen/controller/login_controller.dart';
+import 'package:condivisionericette/screens/authentication/login_screen/controller/login_controller.dart';
 import 'package:condivisionericette/widget/text_input_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

@@ -1,30 +1,34 @@
+import 'package:condivisionericette/screens/authentication/login_screen/components/password.dart';
+import 'package:condivisionericette/screens/authentication/login_screen/login_screen.dart';
+import 'package:condivisionericette/screens/authentication/signup_screen/components/button.dart';
+import 'package:condivisionericette/screens/authentication/signup_screen/components/email.dart';
+import 'package:condivisionericette/screens/authentication/signup_screen/components/name.dart';
+import 'package:condivisionericette/screens/authentication/signup_screen/components/nickname.dart';
+import 'package:condivisionericette/screens/authentication/signup_screen/controller/signup_controller.dart';
+import 'package:condivisionericette/utils/utils.dart';
 import 'package:condivisionericette/widget/loading_errors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:form_validation/form_validator.dart';
 
-import 'package:condivisionericette/screens/login_screen/controller/login_controller.dart';
-import 'package:condivisionericette/screens/login_screen/components/button.dart';
-import 'package:condivisionericette/screens/login_screen/components/email.dart';
-import 'package:condivisionericette/screens/login_screen/components/password.dart';
-import 'package:condivisionericette/screens/signup_screen/signup_screen.dart';
-import 'package:condivisionericette/utils/utils.dart';
-
-class LoginScreen extends ConsumerWidget {
-  const LoginScreen({super.key});
+class SignUpScreen extends ConsumerWidget {
+  const SignUpScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    ref.listen<LoginState>(loginProvider, (previus, current) {
-      if (current.status.isSubmissionInProgress) {
-        LoadingSheet.show(context);
-      } else if (current.status.isSubmissionFailure) {
-        Navigator.of(context).pop();
-        ErrorDialog.show(context, "${current.errorMessage}");
-      } else if (current.status.isSubmissionSuccess) {
-        Navigator.of(context).popUntil((route) => route.isFirst);
-      }
-    });
+    ref.listen<SignUpState>(
+      signUpProvider,
+      (prev, curr) {
+        if (curr.status.isSubmissionInProgress) {
+          LoadingSheet.show(context);
+        } else if (curr.status.isSubmissionFailure) {
+          Navigator.of(context).pop();
+          ErrorDialog.show(context, "${curr.errorMessage}");
+        } else if (curr.status.isSubmissionSuccess) {
+          Navigator.of(context).popUntil((route) => route.isFirst);
+        }
+      },
+    );
 
     return Scaffold(
         body: Row(
@@ -38,42 +42,33 @@ class LoginScreen extends ConsumerWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 const Text(
-                  "Welcome to RecipeBuddy",
+                  "SignUp to RecipeBuddy",
                   style: TextStyle(
                     fontSize: 30,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                spacer(0, 20),
+                const SizedBox(height: 20),
                 SizedBox(
                   width: MediaQuery.of(context).size.width * 0.18,
-                  height: MediaQuery.of(context).size.height * 0.35,
+                  height: MediaQuery.of(context).size.height * 0.6,
                   child: Column(
                     children: [
+                      const NameField(),
+                      spacer(0, 20),
+                      const NicknameField(),
+                      spacer(0, 20),
                       const EmailField(),
                       spacer(0, 20),
+                      //inserire numero di telefono
+                      spacer(0, 20),
                       const PasswordField(),
-                      spacer(0, 10),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          TextButton(
-                            onPressed: () {},
-                            child: const Text(
-                              "Forgot password?",
-                              style: TextStyle(
-                                color: Colors.blue,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
                       spacer(0, 30),
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          const LoginButton(),
+                          const SignUpButton(),
                           spacer(30, 0),
                           ElevatedButton(
                               onPressed: () {
@@ -81,7 +76,7 @@ class LoginScreen extends ConsumerWidget {
                                   context,
                                   MaterialPageRoute(
                                       builder: (context) =>
-                                          const SignUpScreen()),
+                                          const LoginScreen()),
                                 );
                               },
                               style: ElevatedButton.styleFrom(
@@ -89,22 +84,22 @@ class LoginScreen extends ConsumerWidget {
                                     horizontal: 40, vertical: 18),
                               ),
                               child: const Text(
-                                "Sign Up",
+                                "Login",
                                 style: TextStyle(fontSize: 16),
                               )),
                         ],
                       )
                     ],
                   ),
-                ),
+                )
               ],
             ),
             spacer(100, 0),
             Image.asset(
-              "assets/illustration/home.png",
+              "assets/illustration/signup.png",
               width: MediaQuery.of(context).size.width * 0.3,
               height: MediaQuery.of(context).size.height * 0.6,
-            ),
+            )
           ]),
         ),
       ],
