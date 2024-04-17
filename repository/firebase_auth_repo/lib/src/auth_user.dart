@@ -7,25 +7,26 @@ class AuthUser extends Equatable {
   final String? password;
   final String? name;
   final String? nickname;
-  final bool emailVerified;
+  final bool? emailVerified;
   final String? phone;
   final String? photoURL;
   final String? dataRegistrazione;
   final String? dataUltimoAccesso;
-  final bool isLogged;
+  final bool? isLogged;
 
-  const AuthUser({
+  const
+  AuthUser({
     required this.uid,
     this.email,
     this.password,
     this.name,
     this.nickname,
-    this.emailVerified = false,
+    this.emailVerified,
     this.phone,
     this.photoURL,
     this.dataRegistrazione,
     this.dataUltimoAccesso,
-    this.isLogged = false,
+    this.isLogged,
   });
 
   static const empty = AuthUser(uid: '');
@@ -49,7 +50,7 @@ class AuthUser extends Equatable {
 
   factory AuthUser.fromDocument(Map<String, dynamic> data) {
     return AuthUser(
-      uid: data['id'],
+      uid: data['uid'],
       email: data['email'],
       password: data['password'],
       name: data['name'],

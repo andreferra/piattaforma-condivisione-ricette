@@ -53,6 +53,7 @@ class AuthenticationRepository {
         .collection('users')
         .doc(_firebaseAuth.currentUser!.uid)
         .get();
+    print(userDoc.data()!);
     return AuthUser.fromDocument(userDoc.data()!);
   }
 
@@ -81,6 +82,11 @@ class AuthenticationRepository {
         nickname: nickname,
         phone: phone,
         password: password,
+        emailVerified: credential.user!.emailVerified,
+        dataRegistrazione: DateTime.now().toIso8601String(),
+        dataUltimoAccesso: DateTime.now().toIso8601String(),
+        isLogged: false,
+        photoURL: 'https://firebasestorage.googleapis.com/v0/b/gestione-rice.appspot.com/o/icon.png?alt=media&token=75323f65-8735-4557-a288-55565a9ce060',
       );
       await saveUserInDatabase(user);
     } on FirebaseAuthException catch (e) {
