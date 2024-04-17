@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'auth_user.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -48,12 +46,10 @@ class AuthenticationRepository {
 
   /// Fetches the current user from the database.
   Future<AuthUser> getUserFromDatabase() async {
-    print(_firebaseAuth.currentUser!.uid);
     final userDoc = await _firestore
         .collection('users')
         .doc(_firebaseAuth.currentUser!.uid)
         .get();
-    print(userDoc.data()!);
     return AuthUser.fromDocument(userDoc.data()!);
   }
 
@@ -87,6 +83,11 @@ class AuthenticationRepository {
         dataUltimoAccesso: DateTime.now().toIso8601String(),
         isLogged: false,
         photoURL: 'https://firebasestorage.googleapis.com/v0/b/gestione-rice.appspot.com/o/icon.png?alt=media&token=75323f65-8735-4557-a288-55565a9ce060',
+        bio: '',
+        prefAlimentari: const [],
+        allergie: const [],
+        interessiCulinari: const [],
+
       );
       await saveUserInDatabase(user);
     } on FirebaseAuthException catch (e) {

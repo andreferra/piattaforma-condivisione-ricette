@@ -1,4 +1,3 @@
-
 import 'package:equatable/equatable.dart';
 
 class AuthUser extends Equatable {
@@ -13,9 +12,12 @@ class AuthUser extends Equatable {
   final String? dataRegistrazione;
   final String? dataUltimoAccesso;
   final bool? isLogged;
+  final List<String>? prefAlimentari;
+  final List<String>? allergie;
+  final List<String>? interessiCulinari;
+  final String? bio;
 
-  const
-  AuthUser({
+  const AuthUser({
     required this.uid,
     this.email,
     this.password,
@@ -27,6 +29,10 @@ class AuthUser extends Equatable {
     this.dataRegistrazione,
     this.dataUltimoAccesso,
     this.isLogged,
+    this.prefAlimentari,
+    this.allergie,
+    this.interessiCulinari,
+    this.bio,
   });
 
   static const empty = AuthUser(uid: '');
@@ -35,18 +41,22 @@ class AuthUser extends Equatable {
 
   @override
   List<Object?> get props => [
-    uid,
-    email,
-    password,
-    name,
-    nickname,
-    emailVerified,
-    phone,
-    photoURL,
-    dataRegistrazione,
-    dataUltimoAccesso,
-    isLogged,
-  ];
+        uid,
+        email,
+        password,
+        name,
+        nickname,
+        emailVerified,
+        phone,
+        photoURL,
+        dataRegistrazione,
+        dataUltimoAccesso,
+        isLogged,
+        prefAlimentari,
+        allergie,
+        interessiCulinari,
+        bio,
+      ];
 
   factory AuthUser.fromDocument(Map<String, dynamic> data) {
     return AuthUser(
@@ -61,9 +71,12 @@ class AuthUser extends Equatable {
       dataRegistrazione: data['dataRegistrazione'],
       dataUltimoAccesso: data['dataUltimoAccesso'],
       isLogged: data['isLogged'],
+      prefAlimentari: (data['prefAlimentari'] as List<dynamic>).map((item) => item.toString()).toList(),
+      allergie: (data['allergie'] as List<dynamic>).map((item) => item.toString()).toList(),
+      interessiCulinari: (data['interessiCulinari'] as List<dynamic>).map((item) => item.toString()).toList(),
+      bio: data['bio'],
     );
   }
-
 
   Map<String, dynamic> toDocument() {
     return {
@@ -78,8 +91,10 @@ class AuthUser extends Equatable {
       'dataRegistrazione': dataRegistrazione,
       'dataUltimoAccesso': dataUltimoAccesso,
       'isLogged': isLogged,
+      'prefAlimentari': prefAlimentari,
+      'allergie': allergie,
+      'interessiCulinari': interessiCulinari,
+      'bio': bio,
     };
   }
-
-
 }

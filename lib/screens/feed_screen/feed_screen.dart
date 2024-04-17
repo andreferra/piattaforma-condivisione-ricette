@@ -11,17 +11,26 @@ class FeedScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final user = ref.watch(authProvider).user;
 
+    print(user.toDocument());
+
     return SafeArea(
       child: SingleChildScrollView(
-        primary: false,
-        padding: const EdgeInsets.all(defaultPadding),
-        child: Column(
-          children: [
-            const Header(),
-
-          ],
-        )
-      ),
+          primary: false,
+          padding: const EdgeInsets.all(defaultPadding),
+          child: Column(
+            children: [
+              const Header(),
+              const SizedBox(height: defaultPadding),
+              Text(user.uid),
+              Text(user.name!),
+              Text(user.email!),
+              Text(user.photoURL!),
+              Text(user.bio!),
+              Text(user.prefAlimentari!.toString() ?? ""),
+              Text(user.allergie!.toString() ?? ""),
+              Text(user.interessiCulinari!.toString()  ?? ""),
+            ],
+          )),
     );
   }
 }
