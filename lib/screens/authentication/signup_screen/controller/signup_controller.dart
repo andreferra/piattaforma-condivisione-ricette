@@ -21,7 +21,13 @@ class SignUpController extends StateNotifier<SignUpState> {
 
     state = state.copyWith(
       email: email,
-      status: Formz.validate([email, state.password]),
+      status: Formz.validate([
+        email,
+        state.password,
+        state.name,
+        state.nickname,
+        state.phone,
+      ]),
     );
   }
 
@@ -32,7 +38,13 @@ class SignUpController extends StateNotifier<SignUpState> {
 
     state = state.copyWith(
       password: password,
-      status: Formz.validate([state.email, password]),
+      status: Formz.validate([
+        state.email,
+        password,
+        state.name,
+        state.nickname,
+        state.phone,
+      ]),
     );
   }
 
@@ -42,17 +54,45 @@ class SignUpController extends StateNotifier<SignUpState> {
 
     state = state.copyWith(
       name: name,
-      status: Formz.validate([name]),
+      status: Formz.validate([
+        name,
+        state.email,
+        state.password,
+        state.nickname,
+        state.phone,
+      ]),
     );
   }
 
   void onNicknameChanged(String value) {
     value = value.trim();
-    final nickname = Name.dirty(value);
+    final nickname = Nickname.dirty(value);
 
     state = state.copyWith(
       nickname: nickname,
-      status: Formz.validate([nickname]),
+      status: Formz.validate([
+        nickname,
+        state.email,
+        state.password,
+        state.name,
+        state.phone,
+      ]),
+    );
+  }
+
+  void onPhoneChanged(String value) {
+    value = value.trim();
+    final phone = Phone.dirty(value);
+
+    state = state.copyWith(
+      phone: phone,
+      status: Formz.validate([
+        phone,
+        state.email,
+        state.password,
+        state.name,
+        state.nickname,
+      ]),
     );
   }
 
@@ -67,7 +107,7 @@ class SignUpController extends StateNotifier<SignUpState> {
         password: state.password.value,
         name: state.name.value,
         nickname: state.nickname.value,
-        phone: "not implemented yet",
+        phone: state.phone.value,
       );
 
       state = state.copyWith(status: FormzStatus.submissionSuccess);

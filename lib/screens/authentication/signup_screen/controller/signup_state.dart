@@ -4,16 +4,17 @@ class SignUpState extends Equatable {
   final Email email;
   final Password password;
   final Name name;
-  final Name nickname;
+  final Nickname nickname;
+  final Phone phone;
   final String? errorMessage;
   final FormzStatus status;
-  //add phone number
 
   const SignUpState(
       {this.email = const Email.pure(),
       this.password = const Password.pure(),
       this.name = const Name.pure(),
-      this.nickname = const Name.pure(),
+      this.nickname = const Nickname.pure(),
+      this.phone = const Phone.pure(),
       this.errorMessage,
       this.status = FormzStatus.pure});
 
@@ -21,7 +22,8 @@ class SignUpState extends Equatable {
       {Email? email,
       Password? password,
       Name? name,
-      Name? nickname,
+      Nickname? nickname,
+      Phone? phone,
       String? errorMessage,
       FormzStatus? status}) {
     return SignUpState(
@@ -29,10 +31,11 @@ class SignUpState extends Equatable {
         password: password ?? this.password,
         name: name ?? this.name,
         nickname: nickname ?? this.nickname,
+        phone: phone ?? this.phone,
         errorMessage: errorMessage,
         status: status ?? this.status);
   }
 
   @override
-  List<Object?> get props => [email, password, name, nickname, status];
+  List<Object?> get props => [email, password, name, nickname, phone, status];
 }

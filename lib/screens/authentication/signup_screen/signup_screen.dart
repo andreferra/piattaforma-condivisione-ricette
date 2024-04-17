@@ -4,6 +4,7 @@ import 'package:condivisionericette/screens/authentication/signup_screen/compone
 import 'package:condivisionericette/screens/authentication/signup_screen/components/email.dart';
 import 'package:condivisionericette/screens/authentication/signup_screen/components/name.dart';
 import 'package:condivisionericette/screens/authentication/signup_screen/components/nickname.dart';
+import 'package:condivisionericette/screens/authentication/signup_screen/components/phone.dart';
 import 'package:condivisionericette/screens/authentication/signup_screen/controller/signup_controller.dart';
 import 'package:condivisionericette/utils/utils.dart';
 import 'package:condivisionericette/widget/loading_errors.dart';
@@ -62,7 +63,7 @@ class SignUpScreen extends ConsumerWidget {
                     spacer(0, spaceVert),
                     const EmailField(),
                     spacer(0, spaceVert),
-                    //inserire numero di telefono
+                    const PhoneField(),
                     spacer(0, spaceVert),
                     const PasswordField(),
                     spacer(0, spaceVert),

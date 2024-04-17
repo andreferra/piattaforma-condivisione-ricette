@@ -9,7 +9,7 @@ class Email extends FormzInput<String, EmailValidationError> {
   const Email.pure() : super.pure('');
   const Email.dirty([String value = '']) : super.dirty(value);
 
-  static final _regex = RegExp(kEmailPattern); 
+  static final _regex = RegExp(kEmailPattern);
 
   @override
   EmailValidationError? validator(String value) {
@@ -17,6 +17,8 @@ class Email extends FormzInput<String, EmailValidationError> {
       return null;
     } else if (value.isEmpty) {
       return EmailValidationError.empty;
+    } else if (!value.contains('@')) {
+      return EmailValidationError.invalid;
     } else {
       return EmailValidationError.invalid;
     }
