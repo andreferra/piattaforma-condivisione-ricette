@@ -23,7 +23,7 @@ class SideMenu extends ConsumerWidget {
             ),
           ),
           DrawerListTile(
-            title: 'Home',
+            title: 'Dashboard',
             onTap: () {
               pageController.setPage(0);
             },

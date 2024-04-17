@@ -48,7 +48,7 @@ class LoginScreen extends ConsumerWidget {
               spacer(0, spaceVert),
               SizedBox(
                 width: MediaQuery.of(context).size.width * 0.3,
-                height: MediaQuery.of(context).size.height * 0.35,
+                height: MediaQuery.of(context).size.height * 0.4,
                 child: Column(
                   mainAxisSize: MainAxisSize.max,
                   children: [
