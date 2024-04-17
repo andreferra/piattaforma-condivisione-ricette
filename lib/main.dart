@@ -1,4 +1,4 @@
-import 'package:condivisionericette/screens/home_screen/home_screen.dart';
+import 'package:condivisionericette/screens/login_screen/login_screen.dart';
 import 'package:condivisionericette/screens/render_view.dart';
 import 'package:condivisionericette/utils/constant.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -50,7 +50,7 @@ class MyApp extends StatelessWidget {
           if (snapshot.hasData) {
             return const RenderScreen();
           } else {
-            return const HomeScreen();
+            return const LoginScreen();
           }
         } else {
           return const CircularProgressIndicator(

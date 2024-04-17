@@ -1,5 +1,5 @@
 import 'package:condivisionericette/backend/AuthMethod.dart';
-import 'package:condivisionericette/screens/home_screen/home_screen.dart';
+import 'package:condivisionericette/screens/login_screen/login_screen.dart';
 import 'package:condivisionericette/screens/render_view.dart';
 import 'package:condivisionericette/utils/function.dart';
 import 'package:condivisionericette/utils/utils.dart';
@@ -174,7 +174,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                               context,
                                               MaterialPageRoute(
                                                   builder: (context) =>
-                                                      const HomeScreen()),
+                                                      const LoginScreen()),
                                             );
                                           },
                                           style: ElevatedButton.styleFrom(

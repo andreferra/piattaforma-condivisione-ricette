@@ -1,8 +1,4 @@
-import 'package:condivisionericette/backend/DbMethod.dart';
 import 'package:condivisionericette/controller/PageController.dart';
-import 'package:condivisionericette/model/User.dart';
-import 'package:condivisionericette/screens/home_screen/home_screen.dart';
-import 'package:condivisionericette/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -54,8 +50,6 @@ class SideMenu extends ConsumerWidget {
             },
             icon: 'assets/icons/menu_setting.svg',
           ),
-
-
         ],
       ),
     );
