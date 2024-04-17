@@ -1,0 +1,8 @@
+#!/bin/bash -e
+
+
+# Script build and deploy on firebase hosting
+
+flutter build web
+
+firebase deploy --only hosting
