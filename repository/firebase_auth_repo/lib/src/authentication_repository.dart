@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'auth_user.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -38,14 +40,15 @@ class AuthenticationRepository {
       if (firebaseUser == null) {
         return AuthUser.empty;
       } else {
-        final user = await getUserFrommDatabase();
+        final user = await getUserFromDatabase();
         return user;
       }
     });
   }
 
   /// Fetches the current user from the database.
-  Future<AuthUser> getUserFrommDatabase() async {
+  Future<AuthUser> getUserFromDatabase() async {
+    print(_firebaseAuth.currentUser!.uid);
     final userDoc = await _firestore
         .collection('users')
         .doc(_firebaseAuth.currentUser!.uid)

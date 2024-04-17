@@ -1,4 +1,4 @@
-import 'package:condivisionericette/screens/authentication/login_screen/components/password.dart';
+import 'package:condivisionericette/screens/authentication/signup_screen/components/password.dart';
 import 'package:condivisionericette/screens/authentication/login_screen/login_screen.dart';
 import 'package:condivisionericette/screens/authentication/signup_screen/components/button.dart';
 import 'package:condivisionericette/screens/authentication/signup_screen/components/email.dart';
@@ -39,6 +39,9 @@ class SignUpScreen extends ConsumerWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
+          SingleChildScrollView(
+        physics: const BouncingScrollPhysics(),
+            child:
           Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -95,6 +98,7 @@ class SignUpScreen extends ConsumerWidget {
                 ),
               )
             ],
+          ),
           ),
           spacer(100, 0),
           Image.asset(

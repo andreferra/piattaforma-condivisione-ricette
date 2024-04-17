@@ -1,13 +1,14 @@
 import 'package:condivisionericette/controller/auth_repo_provider.dart';
 import 'package:equatable/equatable.dart';
 import 'package:firebase_auth_repo/auth_repo.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:form_validation/form_validator.dart';
 
 part 'signup_state.dart';
 
-final signUpProvider = StateNotifierProvider<SignUpController, SignUpState>(
-  (ref) => SignUpController(ref.watch(authRepoProvider)),
+final signUpProvider = StateNotifierProvider.autoDispose<SignUpController, SignUpState>(
+  (ref) => SignUpController(ref.read(authRepoProvider)),
 );
 
 class SignUpController extends StateNotifier<SignUpState> {

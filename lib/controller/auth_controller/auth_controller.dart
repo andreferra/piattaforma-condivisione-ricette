@@ -29,7 +29,7 @@ class AuthController extends StateNotifier<AuthenticationState> {
       }
     }
     Future<AuthUser> refreshUser() async {
-      final user = await _authRepo.getUserFrommDatabase();
+      final user = await _authRepo.getUserFromDatabase();
       onUserChanged(user);
       return user;
     }

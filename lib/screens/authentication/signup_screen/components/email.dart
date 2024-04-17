@@ -13,7 +13,7 @@ class EmailField extends ConsumerWidget {
     final showError = signUpState.email.invalid;
     final signUpController = ref.read(signUpProvider.notifier);
     return TextInputField(
-      hintText: 'Inserisci l\'indirizzo Email*',
+      hintText: 'Inserisci la tua mail*',
       errorText: showError
           ? Email.showEmailErrorMessage(signUpState.email.error)
           : null,

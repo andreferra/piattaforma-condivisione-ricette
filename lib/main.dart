@@ -1,3 +1,4 @@
+import 'package:condivisionericette/controller/auth_controller/auth_controller.dart';
 import 'package:condivisionericette/screens/authentication/login_screen/login_screen.dart';
 import 'package:condivisionericette/screens/render_view.dart';
 import 'package:condivisionericette/utils/constant.dart';
@@ -17,11 +18,24 @@ void main() async {
   runApp(const ProviderScope(child: MyApp()));
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends ConsumerWidget {
   const MyApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final authState = ref.watch(authProvider);
+
+
+    Widget getPage() {
+      if(authState.status == AuthenticatedState.authenticated) {
+        return const RenderScreen();
+      } else if(authState.status == AuthenticatedState.unauthenticated) {
+        return const LoginScreen();
+      } else {
+        return const LoginScreen();
+      }
+    }
+
     return MaterialApp(
       title: 'RecipeBuddy',
       debugShowCheckedModeBanner: false,
@@ -30,34 +44,8 @@ class MyApp extends StatelessWidget {
         textTheme: GoogleFonts.poppinsTextTheme(Theme.of(context).textTheme)
             .apply(bodyColor: Colors.white.withOpacity(0.8)),
       ),
-      home: _getPage(),
+      home: getPage(),
     );
   }
 
-  Widget _getPage() {
-    return StreamBuilder<User?>(
-      stream: FirebaseAuth.instance.authStateChanges(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Scaffold(
-            body: Center(
-              child: CircularProgressIndicator(
-                valueColor: AlwaysStoppedAnimation<Color>(Colors.green),
-              ),
-            ),
-          );
-        } else if (snapshot.connectionState == ConnectionState.active) {
-          if (snapshot.hasData) {
-            return const RenderScreen();
-          } else {
-            return const LoginScreen();
-          }
-        } else {
-          return const CircularProgressIndicator(
-            valueColor: AlwaysStoppedAnimation<Color>(Colors.green),
-          );
-        }
-      },
-    );
-  }
 }

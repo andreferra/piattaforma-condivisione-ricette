@@ -13,7 +13,7 @@ class NameField extends ConsumerWidget {
     final showError = signUpState.name.invalid;
     final signUpController = ref.read(signUpProvider.notifier);
     return TextInputField(
-      hintText: 'Inserisci l\'Username*',
+      hintText: 'Inserisci il tuo nome*',
       errorText:
           showError ? Name.showNameErrorMessage(signUpState.name.error) : null,
       onChanged: (name) => signUpController.onNameChanged(name),

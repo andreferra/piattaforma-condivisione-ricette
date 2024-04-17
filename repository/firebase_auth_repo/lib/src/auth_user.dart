@@ -49,7 +49,7 @@ class AuthUser extends Equatable {
 
   factory AuthUser.fromDocument(Map<String, dynamic> data) {
     return AuthUser(
-      uid: data['uid'],
+      uid: data['id'],
       email: data['email'],
       password: data['password'],
       name: data['name'],

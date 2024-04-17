@@ -10,29 +10,29 @@ class Phone extends FormzInput<String, PhoneValidationError> {
 
   @override
   PhoneValidationError? validator(String value) {
-    if (_regex.hasMatch(value)) {
-      return null;
-    } else if (value.isEmpty) {
+    if (value.isEmpty) {
       return PhoneValidationError.error;
+    } else if (!_regex.hasMatch(value)) {
+      return PhoneValidationError.invalid;
     } else if (value.length != 10) {
       return PhoneValidationError.length;
     } else if (value.startsWith('+')) {
       return PhoneValidationError.prefix;
     } else {
-      return PhoneValidationError.invalid;
+      return null;
     }
   }
 
   static String? showPhoneErrorMessage(PhoneValidationError? error) {
     switch (error) {
       case PhoneValidationError.error:
-        return 'Phone number required';
+        return 'Il numero di telefono è richiesto';
       case PhoneValidationError.invalid:
-        return 'Invalid phone number';
+        return 'Il numero di telefono non è valido';
       case PhoneValidationError.length:
-        return 'Phone number must have 10 digits';
+        return 'Il numero di telefono deve contenere 10 cifre';
       case PhoneValidationError.prefix:
-        return 'Phone number must not contain the prefix';
+        return 'Il numero di telefono non deve contenere il prefisso';
       default:
         return null;
     }

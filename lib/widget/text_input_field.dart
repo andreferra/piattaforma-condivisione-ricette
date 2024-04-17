@@ -98,6 +98,17 @@ class _TextInputFieldState extends State<TextInputField> {
             keyboardType: widget.keyboardType,
           ),
         ),
+        if (widget.errorText != null)
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text(
+              widget.errorText!,
+              style: const TextStyle(
+                color: Colors.red,
+                fontSize: 12,
+              ),
+            ),
+          ),
       ],
     );
   }

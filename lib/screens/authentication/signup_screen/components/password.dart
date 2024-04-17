@@ -14,7 +14,7 @@ class PasswordField extends ConsumerWidget {
     final signUpController = ref.read(signUpProvider.notifier);
     return TextInputField(
       minLines: 1,
-      hintText: 'Inserisci la Password*',
+      hintText: 'Inserisci la password*',
       obscureText: true,
       errorText: showError
           ? Password.showPasswordErrorMessage(signUpState.password.error)

@@ -11,7 +11,7 @@ class FeedScreen extends ConsumerWidget {
 
     return Scaffold(
       body: Center(
-        child: Text("user: ${user.name}"),
+        child: Text("user: ${user.toDocument()}"),
       ),
     );
   }

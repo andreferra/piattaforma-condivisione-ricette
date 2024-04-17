@@ -13,15 +13,12 @@ class Nickname extends FormzInput<String, NicknameValidationError> {
       return NicknameValidationError.empty;
     } else if (value.length < 3) {
       return NicknameValidationError.invalid;
-      // TO DO - Add a check to see if the nickname is already used
-    } else if (value == 'Andre') {
-      return NicknameValidationError.yetUsed;
-    } else {
+    }else {
       return null;
     }
   }
 
-  static String? showNameErrorMessage(NicknameValidationError? error) {
+  static String? showNicknameErrorMessage(NicknameValidationError? error) {
     switch (error) {
       case NicknameValidationError.empty:
         return 'Nickname richiesto';

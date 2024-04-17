@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 class LoadingSheet extends StatelessWidget {
-  const LoadingSheet._({Key? key}) : super(key: key);
+  const LoadingSheet._({super.key});
 
   static Future<void> show(BuildContext context) async {
     await showModalBottomSheet(
