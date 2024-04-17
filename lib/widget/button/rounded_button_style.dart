@@ -9,9 +9,9 @@ class RoundedButtonStyle extends StatelessWidget {
   final Color? textColor;
   const RoundedButtonStyle({
     super.key,
-    this.orizzontalePadding = 18,
-    this.verticalePadding = 18,
-    this.bgColor = primaryColor,
+    this.orizzontalePadding = 14,
+    this.verticalePadding = 14,
+    this.bgColor = buttonBg,
     this.textColor = Colors.white,
     required this.title,
   });
@@ -21,11 +21,12 @@ class RoundedButtonStyle extends StatelessWidget {
     return Container(
       padding: EdgeInsets.symmetric(
         vertical: verticalePadding,
+        horizontal: orizzontalePadding,
       ),
       alignment: Alignment.center,
       decoration: BoxDecoration(
         color: bgColor,
-        borderRadius: BorderRadius.circular(30),
+        borderRadius: BorderRadius.circular(10),
       ),
       child: Text(
         title,

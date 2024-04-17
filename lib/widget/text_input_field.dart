@@ -64,10 +64,6 @@ class _TextInputFieldState extends State<TextInputField> {
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: widget.borderRadius,
-            border: Border.all(
-              color: const Color(0xFFD0D0D0),
-              width: 1.5,
-            ),
           ),
           child: TextFormField(
             enabled: widget.enable,
