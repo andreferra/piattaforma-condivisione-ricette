@@ -28,6 +28,25 @@ class ProfileController extends StateNotifier<ProfileState> {
     );
   }
 
+  void onNewAllergenoChanged(String value) {
+    final allergeno = Allergeni.dirty(value);
+
+    List<String> allergie = state.allergie;
+
+    if (allergeno.valid) {
+      if (!allergie.contains(allergeno.value)) {
+        allergie.add(allergeno.value);
+      }
+    } else {
+      allergie.remove(allergeno.value);
+    }
+
+    state = state.copyWith(
+        allergeno: allergeno,
+        allergie: allergie,
+        status: Formz.validate([allergeno]));
+  }
+
   void onNewBioChanged(String value) {
     final bio = Bio.dirty(value);
     state = state.copyWith(
