@@ -14,7 +14,16 @@ class Header extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    List<String> nameList = [
+      'Dashboard',
+      'Notifiche',
+      'Profilo',
+      'Impostazioni',
+    ];
+
     final page = ref.watch(pageControllerProvider);
+    String pageName = nameList[page.currentIndex];
+
     return Row(
       children: [
         if (!Responsive.isDesktop(context))
@@ -27,8 +36,11 @@ class Header extends ConsumerWidget {
         if (!Responsive.isMobile(context))
           Padding(
             padding: const EdgeInsets.all(defaultPadding),
-            child: Text("Dashboard",
-                style: Theme.of(context).textTheme.titleLarge),
+            child: Text(pageName,
+                style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 25)),
           ),
         if (!Responsive.isMobile(context))
           Spacer(flex: Responsive.isDesktop(context) ? 2 : 1),

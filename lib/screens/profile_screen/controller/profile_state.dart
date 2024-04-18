@@ -3,7 +3,7 @@ part of "profile_controller.dart";
 class ProfileState extends Equatable {
   final String? newPhotoUrl;
   final Nickname? newNickname;
-  final String? newBio;
+  final Bio? newBio;
   final List<String> prefAlimentari;
   final List<String> allergie;
   final List<String> interessiCulinari;
@@ -13,7 +13,7 @@ class ProfileState extends Equatable {
   const ProfileState({
     this.newPhotoUrl,
     this.newNickname = const Nickname.pure(),
-    this.newBio,
+    this.newBio = const Bio.pure(),
     this.prefAlimentari = const [],
     this.allergie = const [],
     this.interessiCulinari = const [],
@@ -24,7 +24,7 @@ class ProfileState extends Equatable {
   ProfileState copyWith({
     String? newPhotoUrl,
     Nickname? newNickname,
-    String? newBio,
+    Bio? newBio,
     List<String>? prefAlimentari,
     List<String>? allergie,
     List<String>? interessiCulinari,

@@ -24,12 +24,14 @@ class ProfileController extends StateNotifier<ProfileState> {
     final nickname = Nickname.dirty(value);
     state = state.copyWith(
       newNickname: nickname,
-      status: Formz.validate([nickname]),
+      status: Formz.validate([nickname, state.newBio!]),
     );
   }
 
   void onNewBioChanged(String value) {
-    state = state.copyWith(newBio: value);
+    final bio = Bio.dirty(value);
+    state = state.copyWith(
+        newBio: bio, status: Formz.validate([bio, state.newNickname!]));
   }
 
   void onPrefAlimentariChanged(List<String> value) {
@@ -61,7 +63,7 @@ class ProfileController extends StateNotifier<ProfileState> {
         dataUltimoAccesso: oldUser.dataUltimoAccesso,
         isLogged: oldUser.isLogged,
         photoURL: state.newPhotoUrl,
-        bio: state.newBio,
+        bio: state.newBio!.value,
         prefAlimentari: state.prefAlimentari,
         allergie: state.allergie,
         interessiCulinari: state.interessiCulinari);
@@ -69,6 +71,7 @@ class ProfileController extends StateNotifier<ProfileState> {
     try {
       await _firebaseRepo.updateProfile(user);
       state = state.copyWith(status: FormzStatus.submissionSuccess);
+      //TODO: update current user state
     } on UpdateProfileFailure catch (e) {
       state = state.copyWith(
         status: FormzStatus.submissionFailure,

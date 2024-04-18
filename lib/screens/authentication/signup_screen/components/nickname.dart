@@ -14,8 +14,9 @@ class NicknameField extends ConsumerWidget {
     final signUpController = ref.read(signUpProvider.notifier);
     return TextInputField(
       hintText: 'Inserisci un nickname*',
-      errorText:
-          showError ? Nickname.showNicknameErrorMessage(signUpState.nickname.error) : null,
+      errorText: showError
+          ? Nickname.showNicknameErrorMessage(signUpState.nickname.error)
+          : null,
       onChanged: (nickname) => signUpController.onNicknameChanged(nickname),
     );
   }

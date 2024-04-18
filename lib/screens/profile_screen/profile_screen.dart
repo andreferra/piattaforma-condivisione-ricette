@@ -1,3 +1,4 @@
+import 'package:condivisionericette/screens/profile_screen/components/buttonInfo.dart';
 import 'package:condivisionericette/screens/profile_screen/components/editProfile.dart';
 import 'package:condivisionericette/utils/constant.dart';
 import 'package:condivisionericette/widget/header.dart';
@@ -9,19 +10,22 @@ class ProfileScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return SafeArea(
+    return const SafeArea(
       child: SingleChildScrollView(
           primary: false,
-          padding: const EdgeInsets.all(defaultPadding),
+          padding: EdgeInsets.all(defaultPadding),
           child: Column(
             children: [
               Header(),
-              const SizedBox(height: defaultPadding),
+              SizedBox(height: defaultPadding),
               Row(
+                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   EditProfile(),
                 ],
               ),
+              SizedBox(height: defaultPadding),
+              SaveProfile(),
             ],
           )),
     );

@@ -16,7 +16,7 @@ class PageController extends ChangeNotifier {
     ProfileScreen(),
     SettingScreen(),
   ];
-  int _currentIndex = 0;
+  int _currentIndex = 2;
 
   int get currentIndex => _currentIndex;
 
