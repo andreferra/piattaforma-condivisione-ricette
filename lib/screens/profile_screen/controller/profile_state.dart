@@ -4,9 +4,9 @@ class ProfileState extends Equatable {
   final String? newPhotoUrl;
   final Nickname? newNickname;
   final String? newBio;
-  List<String> prefAlimentari;
-  List<String> allergie;
-  List<String> interessiCulinari;
+  final List<String> prefAlimentari;
+  final List<String> allergie;
+  final List<String> interessiCulinari;
   final FormzStatus status;
   final String? errorMessage;
 

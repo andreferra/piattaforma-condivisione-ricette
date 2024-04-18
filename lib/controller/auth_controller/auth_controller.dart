@@ -8,39 +8,38 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 part "auth_state.dart";
 
 final authProvider = StateNotifierProvider<AuthController, AuthenticationState>(
-  (ref) => AuthController(ref.watch(authRepoProvider))
-);
-
+    (ref) => AuthController(ref.watch(authRepoProvider)));
 
 class AuthController extends StateNotifier<AuthenticationState> {
   final AuthenticationRepository _authRepo;
   late final StreamSubscription _streamSubscription;
+  late final FirebaseRepository _firebaseAuth;
 
   AuthController(this._authRepo) : super(const AuthenticationState.unknown()) {
     _streamSubscription = _authRepo.user.listen((user) => onUserChanged(user));
   }
 
-  void onUserChanged(AuthUser user){
-    if(user.isEmpty)
-      {
-        state = const AuthenticationState.unauthenticated();
-      } else{
-        state = AuthenticationState.authenticated(user);
-      }
+  void onUserChanged(AuthUser user) {
+    if (user.isEmpty) {
+      state = const AuthenticationState.unauthenticated();
+    } else {
+      state = AuthenticationState.authenticated(user);
     }
-    Future<AuthUser> refreshUser() async {
-      final user = await _authRepo.getUserFromDatabase();
-      onUserChanged(user);
-      return user;
-    }
+  }
 
-    Future<void> signOut() async {
-      await _authRepo.signOut();
-    }
+  Future<AuthUser> refreshUser() async {
+    final user = await _firebaseAuth.getUserFromDatabase(state.user.uid);
+    onUserChanged(user);
+    return user;
+  }
 
-    @override
-    void dispose() {
-      _streamSubscription.cancel();
-      super.dispose();
-    }
+  Future<void> signOut() async {
+    await _authRepo.signOut();
+  }
+
+  @override
+  void dispose() {
+    _streamSubscription.cancel();
+    super.dispose();
+  }
 }

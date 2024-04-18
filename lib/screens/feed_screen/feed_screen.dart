@@ -26,9 +26,9 @@ class FeedScreen extends ConsumerWidget {
               Text(user.email!),
               Text(user.photoURL!),
               Text(user.bio!),
-              Text(user.prefAlimentari!.toString() ?? ""),
-              Text(user.allergie!.toString() ?? ""),
-              Text(user.interessiCulinari!.toString()  ?? ""),
+              Text(user.prefAlimentari!.toString()),
+              Text(user.allergie!.toString()),
+              Text(user.interessiCulinari!.toString()),
             ],
           )),
     );
