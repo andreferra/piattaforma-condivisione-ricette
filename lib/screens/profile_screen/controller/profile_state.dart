@@ -5,6 +5,7 @@ class ProfileState extends Equatable {
   final Nickname? newNickname;
   final Bio? newBio;
   final Allergeni? allergeno;
+  final InteressiCulinari? interesseCulinario;
   final List<String> prefAlimentari;
   final List<String> allergie;
   final List<String> interessiCulinari;
@@ -14,6 +15,7 @@ class ProfileState extends Equatable {
   const ProfileState({
     this.newPhotoUrl,
     this.allergeno = const Allergeni.pure(),
+    this.interesseCulinario = const InteressiCulinari.pure(),
     this.newNickname = const Nickname.pure(),
     this.newBio = const Bio.pure(),
     this.prefAlimentari = const [],
@@ -27,6 +29,7 @@ class ProfileState extends Equatable {
     String? newPhotoUrl,
     Nickname? newNickname,
     Bio? newBio,
+    InteressiCulinari? interesseCulinario,
     Allergeni? allergeno,
     List<String>? prefAlimentari,
     List<String>? allergie,
@@ -42,6 +45,7 @@ class ProfileState extends Equatable {
       prefAlimentari: prefAlimentari ?? this.prefAlimentari,
       allergie: allergie ?? this.allergie,
       interessiCulinari: interessiCulinari ?? this.interessiCulinari,
+      interesseCulinario: interesseCulinario ?? this.interesseCulinario,
       status: status ?? this.status,
       errorMessage: errorMessage,
     );
@@ -55,6 +59,7 @@ class ProfileState extends Equatable {
         prefAlimentari,
         allergie,
         interessiCulinari,
+        interesseCulinario,
         allergeno,
         status,
       ];

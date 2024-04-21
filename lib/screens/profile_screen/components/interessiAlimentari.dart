@@ -1,3 +1,5 @@
+
+
 import 'package:condivisionericette/screens/profile_screen/controller/profile_controller.dart';
 import 'package:condivisionericette/utils/utils.dart';
 import 'package:condivisionericette/widget/button/animated_button.dart';
@@ -7,37 +9,36 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:form_validation/form_validator.dart';
 
-class AllergeniField extends ConsumerWidget {
-  const AllergeniField({super.key, required this.valoreIniziale});
+class InteressiAlimentari extends ConsumerWidget {
+  const InteressiAlimentari({super.key, required this.valoreIniziale});
 
   final List<String> valoreIniziale;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final profileState = ref.watch(profileProvider);
-    final showError = profileState.allergeno!.invalid;
+    final showError = profileState.interesseCulinario!.invalid;
     final profileController = ref.read(profileProvider.notifier);
-
     return Column(
       children: [
         Row(
           children: [
             Expanded(
               child: TextInputField(
-                hintText: "Inserisci un allergeno*",
+                hintText: "Inserisci un interesse culinario*",
                 errorText: showError
-                    ? Allergeni.showAllergeniErrorMessage(
-                        profileState.allergeno!.error)
+                    ? InteressiCulinari.showInteressiCulinariErrorMessage(
+                    profileState.interesseCulinario!.error)
                     : null,
                 onChanged: (allergeni) =>
-                    profileController.checkAllergeno(allergeni),
+                    profileController.checkInteresseCulinario(allergeni),
               ),
             ),
             AnimatedButton(
                 onTap: () {
                   profileController
-                      .onNewAllergenoChanged(profileState.allergeno!.value,
-                          valoreIniziale);
+                      .onNewInteresseCulinarioChanged(profileState.interesseCulinario!.value,
+                      valoreIniziale);
                 },
                 child: const RoundedButtonStyle(
                   title: "Aggiungi",
@@ -50,12 +51,12 @@ class AllergeniField extends ConsumerWidget {
         Wrap(
           spacing: 10,
           children: valoreIniziale
-              .map((allergene) => Chip(
-                    label: Text(allergene),
-                    onDeleted: () {
-                      profileController.removeAlergeno(allergene, valoreIniziale);
-                    },
-                  ))
+              .map((interesseCulinario) => Chip(
+            label: Text(interesseCulinario),
+            onDeleted: () {
+              profileController.removeInteresseCulinario(interesseCulinario, valoreIniziale);
+            },
+          ))
               .toList(),
         ),
       ],

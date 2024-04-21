@@ -36,6 +36,13 @@ class ProfileController extends StateNotifier<ProfileState> {
         status: Formz.validate([allergeno]));
   }
 
+  void checkInteresseCulinario(String interesse) {
+    final interesseCulinario = InteressiCulinari.dirty(interesse);
+    state = state.copyWith(
+        interesseCulinario: interesseCulinario,
+        status: Formz.validate([interesseCulinario]));
+  }
+
   void onNewAllergenoChanged(String value , List<String> allergie)  {
     try {
       final allergeno = Allergeni.dirty(value);
@@ -51,12 +58,31 @@ class ProfileController extends StateNotifier<ProfileState> {
     } catch (e) {
       debugPrint(e.toString());
     }
-
-
   }
 
-  void removeAlergeno(String allergene) {
-    List<String> allergie = state.allergie;
+  void onNewInteresseCulinarioChanged(String value , List<String> interessi)  {
+    try {
+      final interesseCulinario = InteressiCulinari.dirty(value);
+
+      if (interesseCulinario.valid && !interessi.contains(interesseCulinario.value.toString())) {
+          interessi.add(interesseCulinario.value.toString());
+      }
+      state = state.copyWith(
+          interesseCulinario: const InteressiCulinari.pure(),
+          interessiCulinari: interessi,
+          status: Formz.validate([interesseCulinario]));
+
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+  }
+
+  void removeInteresseCulinario(String interesse, List<String> interessi) {
+    interessi.remove(interesse);
+    state = state.copyWith(interessiCulinari: interessi);
+  }
+
+  void removeAlergeno(String allergene, List<String> allergie) {
     allergie.remove(allergene);
     state = state.copyWith(allergie: allergie);
   }

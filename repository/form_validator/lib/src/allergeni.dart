@@ -1,6 +1,6 @@
 import 'package:form_validation/form_validator.dart';
 
-enum AllergeniValidatorError { empty, invalid, format }
+enum AllergeniValidatorError { invalid, format }
 
 const String kAllergeniPattern = r'^[a-zA-Z]+$';
 
@@ -12,9 +12,7 @@ class Allergeni extends FormzInput<String, AllergeniValidatorError> {
 
   @override
   AllergeniValidatorError? validator(String value) {
-    if (value.isEmpty) {
-      return AllergeniValidatorError.empty;
-    } else if (!_regex.hasMatch(value)) {
+  if (!_regex.hasMatch(value)) {
       return AllergeniValidatorError.invalid;
     } else if (value
         .contains(RegExp(r'[0-9] | [!@#<>?":_`~;[\]\\|=+)(*&^%$£]'))) {
@@ -26,8 +24,6 @@ class Allergeni extends FormzInput<String, AllergeniValidatorError> {
 
   static String? showAllergeniErrorMessage(AllergeniValidatorError? error) {
     switch (error) {
-      case AllergeniValidatorError.empty:
-        return 'Allergeni richiesti';
       case AllergeniValidatorError.format:
         return 'Gli allergeni possono contenere solo lettere';
       case AllergeniValidatorError.invalid:

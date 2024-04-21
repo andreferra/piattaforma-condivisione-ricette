@@ -1,4 +1,5 @@
 import 'package:condivisionericette/screens/profile_screen/components/buttonInfo.dart';
+import 'package:condivisionericette/screens/profile_screen/components/editPrefAlimentari.dart';
 import 'package:condivisionericette/screens/profile_screen/components/editProfile.dart';
 import 'package:condivisionericette/utils/constant.dart';
 import 'package:condivisionericette/widget/header.dart';
@@ -22,6 +23,7 @@ class ProfileScreen extends ConsumerWidget {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   EditProfile(),
+                  EditPrefAlimentari(),
                 ],
               ),
               SizedBox(height: defaultPadding),
