@@ -6,6 +6,7 @@ class ProfileState extends Equatable {
   final Bio? newBio;
   final Allergeni? allergeno;
   final InteressiCulinari? interesseCulinario;
+  final PreferenzeAlimentari? alimentoPreferito;
   final List<String> prefAlimentari;
   final List<String> allergie;
   final List<String> interessiCulinari;
@@ -17,6 +18,7 @@ class ProfileState extends Equatable {
     this.allergeno = const Allergeni.pure(),
     this.interesseCulinario = const InteressiCulinari.pure(),
     this.newNickname = const Nickname.pure(),
+    this.alimentoPreferito = const PreferenzeAlimentari.pure(),
     this.newBio = const Bio.pure(),
     this.prefAlimentari = const [],
     this.allergie = const [],
@@ -33,6 +35,7 @@ class ProfileState extends Equatable {
     Allergeni? allergeno,
     List<String>? prefAlimentari,
     List<String>? allergie,
+    PreferenzeAlimentari? alimentoPreferito,
     List<String>? interessiCulinari,
     FormzStatus? status,
     String? errorMessage,
@@ -44,6 +47,7 @@ class ProfileState extends Equatable {
       allergeno: allergeno ?? this.allergeno,
       prefAlimentari: prefAlimentari ?? this.prefAlimentari,
       allergie: allergie ?? this.allergie,
+      alimentoPreferito: alimentoPreferito ?? this.alimentoPreferito,
       interessiCulinari: interessiCulinari ?? this.interessiCulinari,
       interesseCulinario: interesseCulinario ?? this.interesseCulinario,
       status: status ?? this.status,
@@ -52,13 +56,15 @@ class ProfileState extends Equatable {
   }
 
   @override
-  List<Object?> get props => [
+  List<Object?> get props =>
+      [
         newPhotoUrl,
         newNickname,
         newBio,
         prefAlimentari,
         allergie,
         interessiCulinari,
+        alimentoPreferito,
         interesseCulinario,
         allergeno,
         status,

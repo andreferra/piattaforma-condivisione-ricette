@@ -29,6 +29,13 @@ class ProfileController extends StateNotifier<ProfileState> {
     );
   }
 
+  void checkPrefAlimentare(String prefAlimentare) {
+    final prefAlimentari = PreferenzeAlimentari.dirty(prefAlimentare);
+    state = state.copyWith(
+        alimentoPreferito: prefAlimentari,
+        status: Formz.validate([prefAlimentari]));
+  }
+
   void checkAllergeno(String allergene) {
     final allergeno = Allergeni.dirty(allergene);
     state = state.copyWith(
@@ -75,6 +82,28 @@ class ProfileController extends StateNotifier<ProfileState> {
     } catch (e) {
       debugPrint(e.toString());
     }
+  }
+
+  void onNewPrefAlimentareChanged(String value , List<String> preferenze)  {
+    try {
+      final prefAlimentare = PreferenzeAlimentari.dirty(value);
+
+      if (prefAlimentare.valid && !preferenze.contains(prefAlimentare.value.toString())) {
+          preferenze.add(prefAlimentare.value.toString());
+      }
+      state = state.copyWith(
+          alimentoPreferito: const PreferenzeAlimentari.pure(),
+          prefAlimentari: preferenze,
+          status: Formz.validate([prefAlimentare]));
+
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+  }
+
+  void removePrefAlimentare(String prefAlimentare, List<String> preferenze) {
+    preferenze.remove(prefAlimentare);
+    state = state.copyWith(prefAlimentari: preferenze);
   }
 
   void removeInteresseCulinario(String interesse, List<String> interessi) {

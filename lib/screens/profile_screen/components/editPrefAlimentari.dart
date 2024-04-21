@@ -1,6 +1,6 @@
 import 'package:condivisionericette/controller/auth_controller/auth_controller.dart';
 import 'package:condivisionericette/screens/profile_screen/components/interessiAlimentari.dart';
-import 'package:condivisionericette/utils/constant.dart';
+import 'package:condivisionericette/screens/profile_screen/components/preferenzeAlimentari.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -24,6 +24,7 @@ class EditPrefAlimentari extends ConsumerWidget {
             SizedBox(height: defaultHight * 1.1),
             InteressiAlimentari(valoreIniziale: user.interessiCulinari!),
             SizedBox(height: defaultHight * 0.5),
+            AlimentiPreferitiField(valoreIniziale: user.prefAlimentari!),
           ],
         ),
       ),
