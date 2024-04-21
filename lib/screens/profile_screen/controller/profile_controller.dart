@@ -1,6 +1,7 @@
 import 'package:condivisionericette/controller/auth_repo_provider.dart';
 import 'package:equatable/equatable.dart';
 import 'package:firebase_auth_repo/auth_repo.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:form_validation/form_validator.dart';
 
@@ -28,23 +29,36 @@ class ProfileController extends StateNotifier<ProfileState> {
     );
   }
 
-  void onNewAllergenoChanged(String value) {
-    final allergeno = Allergeni.dirty(value);
-
-    List<String> allergie = state.allergie;
-
-    if (allergeno.valid) {
-      if (!allergie.contains(allergeno.value)) {
-        allergie.add(allergeno.value);
-      }
-    } else {
-      allergie.remove(allergeno.value);
-    }
-
+  void checkAllergeno(String allergene) {
+    final allergeno = Allergeni.dirty(allergene);
     state = state.copyWith(
         allergeno: allergeno,
-        allergie: allergie,
         status: Formz.validate([allergeno]));
+  }
+
+  void onNewAllergenoChanged(String value , List<String> allergie)  {
+    try {
+      final allergeno = Allergeni.dirty(value);
+
+      if (allergeno.valid && !allergie.contains(allergeno.value.toString())) {
+          allergie.add(allergeno.value.toString());
+      }
+      state = state.copyWith(
+          allergeno: const Allergeni.pure(),
+          allergie: allergie,
+          status: Formz.validate([allergeno]));
+
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+
+
+  }
+
+  void removeAlergeno(String allergene) {
+    List<String> allergie = state.allergie;
+    allergie.remove(allergene);
+    state = state.copyWith(allergie: allergie);
   }
 
   void onNewBioChanged(String value) {

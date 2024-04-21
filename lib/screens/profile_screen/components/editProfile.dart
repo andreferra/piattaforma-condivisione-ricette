@@ -1,4 +1,5 @@
 import 'package:condivisionericette/controller/auth_controller/auth_controller.dart';
+import 'package:condivisionericette/screens/profile_screen/components/allergeni.dart';
 import 'package:condivisionericette/screens/profile_screen/components/bio.dart';
 import 'package:condivisionericette/screens/profile_screen/components/nickname.dart';
 import 'package:flutter/material.dart';
@@ -16,6 +17,7 @@ class EditProfile extends ConsumerWidget {
 
     return SingleChildScrollView(
       padding: EdgeInsets.all(defaultPadding),
+      primary: false,
       physics: const BouncingScrollPhysics(),
       child: SizedBox(
         width: MediaQuery.of(context).size.width * 0.3,
@@ -24,14 +26,13 @@ class EditProfile extends ConsumerWidget {
             const _EditImage(),
             SizedBox(height: defaultHight),
             SizedBox(
-              height: MediaQuery.of(context).size.height * 0.4,
-              width: MediaQuery.of(context).size.width * 0.7,
               child: Column(
                 children: [
                   NicknameField(valoreIniziale: user.nickname!),
                   SizedBox(height: defaultHight * 0.5),
                   BioField(valoreIniziale: user.bio!),
                   SizedBox(height: defaultHight * 0.5),
+                  AllergeniField(valoreIniziale: user.allergie!),
                 ],
               ),
             )
