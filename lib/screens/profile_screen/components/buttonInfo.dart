@@ -14,9 +14,9 @@ class SaveProfile extends ConsumerWidget {
     final user = ref.watch(authProvider).user;
     final profileState = ref.watch(profileProvider);
     final profileController = ref.read(profileProvider.notifier);
-    final isValidated = profileState.status.isValidated;
+    //final isValidated = profileState.status.isValidated;
     return AnimatedButton(
-      onTap: isValidated ? () => profileController.updateProfile(user) : null,
+      onTap: () => profileController.updateProfile(user),
       child: const RoundedButtonStyle(
         title: "Aggiorna profilo",
         orizzontalePadding: 25,

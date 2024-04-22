@@ -8,14 +8,16 @@ import 'package:form_validation/form_validator.dart';
 part "profile_state.dart";
 
 final profileProvider =
-    StateNotifierProvider.autoDispose<ProfileController, ProfileState>(
-        (ref) => ProfileController(ref.watch(authRepoProvider)));
+    StateNotifierProvider.autoDispose<ProfileController, ProfileState>((ref) =>
+        ProfileController(
+            ref.watch(authRepoProvider), ref.watch(firebaseRepoProvider)));
 
 class ProfileController extends StateNotifier<ProfileState> {
   final AuthenticationRepository _authRepo;
-  late FirebaseRepository _firebaseRepo;
+  final FirebaseRepository _firebaseRepo;
 
-  ProfileController(this._authRepo) : super(const ProfileState());
+  ProfileController(this._authRepo, this._firebaseRepo)
+      : super(const ProfileState());
 
   void onNewPhotoUrlChanged(String value) {
     state = state.copyWith(newPhotoUrl: value);
@@ -39,8 +41,7 @@ class ProfileController extends StateNotifier<ProfileState> {
   void checkAllergeno(String allergene) {
     final allergeno = Allergeni.dirty(allergene);
     state = state.copyWith(
-        allergeno: allergeno,
-        status: Formz.validate([allergeno]));
+        allergeno: allergeno, status: Formz.validate([allergeno]));
   }
 
   void checkInteresseCulinario(String interesse) {
@@ -50,52 +51,51 @@ class ProfileController extends StateNotifier<ProfileState> {
         status: Formz.validate([interesseCulinario]));
   }
 
-  void onNewAllergenoChanged(String value , List<String> allergie)  {
+  void onNewAllergenoChanged(String value, List<String> allergie) {
     try {
       final allergeno = Allergeni.dirty(value);
 
       if (allergeno.valid && !allergie.contains(allergeno.value.toString())) {
-          allergie.add(allergeno.value.toString());
+        allergie.add(allergeno.value.toString());
       }
       state = state.copyWith(
           allergeno: const Allergeni.pure(),
           allergie: allergie,
           status: Formz.validate([allergeno]));
-
     } catch (e) {
       debugPrint(e.toString());
     }
   }
 
-  void onNewInteresseCulinarioChanged(String value , List<String> interessi)  {
+  void onNewInteresseCulinarioChanged(String value, List<String> interessi) {
     try {
       final interesseCulinario = InteressiCulinari.dirty(value);
 
-      if (interesseCulinario.valid && !interessi.contains(interesseCulinario.value.toString())) {
-          interessi.add(interesseCulinario.value.toString());
+      if (interesseCulinario.valid &&
+          !interessi.contains(interesseCulinario.value.toString())) {
+        interessi.add(interesseCulinario.value.toString());
       }
       state = state.copyWith(
           interesseCulinario: const InteressiCulinari.pure(),
           interessiCulinari: interessi,
           status: Formz.validate([interesseCulinario]));
-
     } catch (e) {
       debugPrint(e.toString());
     }
   }
 
-  void onNewPrefAlimentareChanged(String value , List<String> preferenze)  {
+  void onNewPrefAlimentareChanged(String value, List<String> preferenze) {
     try {
       final prefAlimentare = PreferenzeAlimentari.dirty(value);
 
-      if (prefAlimentare.valid && !preferenze.contains(prefAlimentare.value.toString())) {
-          preferenze.add(prefAlimentare.value.toString());
+      if (prefAlimentare.valid &&
+          !preferenze.contains(prefAlimentare.value.toString())) {
+        preferenze.add(prefAlimentare.value.toString());
       }
       state = state.copyWith(
           alimentoPreferito: const PreferenzeAlimentari.pure(),
           prefAlimentari: preferenze,
           status: Formz.validate([prefAlimentare]));
-
     } catch (e) {
       debugPrint(e.toString());
     }
@@ -135,31 +135,40 @@ class ProfileController extends StateNotifier<ProfileState> {
   }
 
   void updateProfile(AuthUser oldUser) async {
-    if (!state.status.isValidated) return;
-
     state = state.copyWith(status: FormzStatus.submissionInProgress);
 
+    print(state);
+
+    final profiloImmagine = state.newPhotoUrl ?? oldUser.photoURL;
+
     AuthUser user = AuthUser(
-        uid: oldUser.uid,
-        email: oldUser.email,
-        name: oldUser.name,
-        nickname: state.newNickname!.value,
-        phone: oldUser.phone,
-        password: oldUser.password,
-        emailVerified: oldUser.emailVerified,
-        dataRegistrazione: oldUser.dataRegistrazione,
-        dataUltimoAccesso: oldUser.dataUltimoAccesso,
-        isLogged: oldUser.isLogged,
-        photoURL: state.newPhotoUrl,
-        bio: state.newBio!.value,
-        prefAlimentari: state.prefAlimentari,
-        allergie: state.allergie,
-        interessiCulinari: state.interessiCulinari);
+      uid: oldUser.uid,
+      email: oldUser.email,
+      name: oldUser.name,
+      nickname: state.newNickname!.value.isEmpty
+          ? oldUser.nickname
+          : state.newNickname!.value,
+      phone: oldUser.phone,
+      password: oldUser.password,
+      emailVerified: oldUser.emailVerified,
+      dataRegistrazione: oldUser.dataRegistrazione,
+      dataUltimoAccesso: oldUser.dataUltimoAccesso,
+      isLogged: oldUser.isLogged,
+      photoURL: profiloImmagine,
+      bio: state.newBio!.value.isEmpty ? oldUser.bio : state.newBio!.value,
+      prefAlimentari: state.prefAlimentari.isEmpty
+          ? oldUser.prefAlimentari
+          : state.prefAlimentari,
+      allergie: state.allergie.isEmpty ? oldUser.allergie : state.allergie,
+      interessiCulinari: state.interessiCulinari.isEmpty
+          ? oldUser.interessiCulinari
+          : state.interessiCulinari,
+    );
 
     try {
       await _firebaseRepo.updateProfile(user);
+
       state = state.copyWith(status: FormzStatus.submissionSuccess);
-      //TODO: update current user state
     } on UpdateProfileFailure catch (e) {
       state = state.copyWith(
         status: FormzStatus.submissionFailure,

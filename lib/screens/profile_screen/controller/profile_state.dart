@@ -10,7 +10,7 @@ class ProfileState extends Equatable {
   final List<String> prefAlimentari;
   final List<String> allergie;
   final List<String> interessiCulinari;
-  final FormzStatus status;
+  final FormzStatus  status;
   final String? errorMessage;
 
   const ProfileState({

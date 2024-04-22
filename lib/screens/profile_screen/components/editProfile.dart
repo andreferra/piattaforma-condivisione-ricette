@@ -57,7 +57,7 @@ class _EditImage extends ConsumerWidget {
           radius: 50,
           backgroundImage: user.photoURL != null
               ? NetworkImage(user.photoURL!)
-              : const AssetImage('assets/images/default_profile.png')
+              : const AssetImage('assets/images/profile_pic.png')
                   as ImageProvider,
         ),
         SizedBox(height: defaultPadding),

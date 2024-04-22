@@ -17,10 +17,18 @@ class FirebaseRepository {
 
   /// Updates the profile of the current user.
   Future<void> updateProfile(AuthUser user) {
-    return _firestore
-        .collection('users')
-        .doc(user.uid)
-        .update(user.toDocument());
+    try {
+      return _firestore
+          .collection('users')
+          .doc(user.uid)
+          .update(user.toDocument());
+    } on FirebaseException catch (e) {
+      print(e.code);
+      return Future.error(UpdateProfileFailure(e.code));
+    } catch (e) {
+      print(e.toString());
+      return Future.error(UpdateProfileFailure(e.toString()));
+    }
   }
 }
 

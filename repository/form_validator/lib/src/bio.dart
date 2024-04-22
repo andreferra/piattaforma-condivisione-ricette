@@ -10,7 +10,7 @@ class Bio extends FormzInput<String, BioValidatorError> {
   BioValidatorError? validator(String value) {
     if (value.isEmpty) {
       return BioValidatorError.empty;
-    } else if (value.length > 20) {
+    } else if (value.length > 100) {
       return BioValidatorError.tooLong;
     } else {
       return null;
@@ -22,7 +22,7 @@ class Bio extends FormzInput<String, BioValidatorError> {
       case BioValidatorError.empty:
         return 'Bio richiesta';
       case BioValidatorError.tooLong:
-        return 'Il Bio deve avere al massimo 20 caratteri';
+        return 'Il Bio deve avere al massimo 100 caratteri';
       default:
         return null;
     }
