@@ -97,4 +97,40 @@ class AuthUser extends Equatable {
       'bio': bio,
     };
   }
+
+  AuthUser copyWith({
+    String? uid,
+    String? email,
+    String? password,
+    String? name,
+    String? nickname,
+    bool? emailVerified,
+    String? phone,
+    String? photoURL,
+    String? dataRegistrazione,
+    String? dataUltimoAccesso,
+    bool? isLogged,
+    List<String>? prefAlimentari,
+    List<String>? allergie,
+    List<String>? interessiCulinari,
+    String? bio,
+  }) {
+    return AuthUser(
+      uid: uid ?? this.uid,
+      email: email ?? this.email,
+      password: password ?? this.password,
+      name: name ?? this.name,
+      nickname: nickname ?? this.nickname,
+      emailVerified: emailVerified ?? this.emailVerified,
+      phone: phone ?? this.phone,
+      photoURL: photoURL ?? this.photoURL,
+      dataRegistrazione: dataRegistrazione ?? this.dataRegistrazione,
+      dataUltimoAccesso: dataUltimoAccesso ?? this.dataUltimoAccesso,
+      isLogged: isLogged ?? this.isLogged,
+      prefAlimentari: prefAlimentari ?? this.prefAlimentari,
+      allergie: allergie ?? this.allergie,
+      interessiCulinari: interessiCulinari ?? this.interessiCulinari,
+      bio: bio ?? this.bio,
+    );
+  }
 }
