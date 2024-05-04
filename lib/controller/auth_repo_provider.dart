@@ -6,3 +6,5 @@ import 'package:firebase_auth_repo/auth_repo.dart';
 // to the widgets that are listening to it.
 // The instance is created using the default constructor of AuthenticationRepository.
 final authRepoProvider = Provider<AuthenticationRepository>((_) => AuthenticationRepository());
+
+final firebaseRepoProvider = Provider<FirebaseRepository>((ref) => FirebaseRepository());

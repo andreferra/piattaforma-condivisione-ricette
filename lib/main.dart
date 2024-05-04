@@ -2,7 +2,6 @@ import 'package:condivisionericette/controller/auth_controller/auth_controller.d
 import 'package:condivisionericette/screens/authentication/login_screen/login_screen.dart';
 import 'package:condivisionericette/screens/render_view.dart';
 import 'package:condivisionericette/utils/constant.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -25,11 +24,10 @@ class MyApp extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final authState = ref.watch(authProvider);
 
-
     Widget getPage() {
-      if(authState.status == AuthenticatedState.authenticated) {
+      if (authState.status == AuthenticatedState.authenticated) {
         return const RenderScreen();
-      } else if(authState.status == AuthenticatedState.unauthenticated) {
+      } else if (authState.status == AuthenticatedState.unauthenticated) {
         return const LoginScreen();
       } else {
         return const LoginScreen();
@@ -47,5 +45,4 @@ class MyApp extends ConsumerWidget {
       home: getPage(),
     );
   }
-
 }
