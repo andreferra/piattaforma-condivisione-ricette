@@ -22,9 +22,9 @@ class ProfileScreen extends ConsumerWidget {
         Navigator.of(context).pop();
         ErrorDialog.show(context, "${current.errorMessage}");
       } else if (current.status.isSubmissionSuccess) {
-        SnackBar snackBar = SnackBar(
+        SnackBar snackBar = const SnackBar(
           content: Text("Profilo aggiornato con successo"),
-          duration: const Duration(seconds: 2),
+          duration: Duration(seconds: 2),
         );
         Navigator.of(context).popUntil((route) => route.isFirst);
       }

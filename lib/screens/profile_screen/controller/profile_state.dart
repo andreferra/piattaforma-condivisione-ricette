@@ -12,6 +12,7 @@ class ProfileState extends Equatable {
   final List<String> interessiCulinari;
   final FormzStatus  status;
   final String? errorMessage;
+  final Uint8List? newPhoto;
 
   const ProfileState({
     this.newPhotoUrl,
@@ -25,6 +26,7 @@ class ProfileState extends Equatable {
     this.interessiCulinari = const [],
     this.status = FormzStatus.pure,
     this.errorMessage,
+    this.newPhoto,
   });
 
   ProfileState copyWith({
@@ -39,6 +41,7 @@ class ProfileState extends Equatable {
     List<String>? interessiCulinari,
     FormzStatus? status,
     String? errorMessage,
+    Uint8List? newPhoto,
   }) {
     return ProfileState(
       newPhotoUrl: newPhotoUrl ?? this.newPhotoUrl,
@@ -52,6 +55,7 @@ class ProfileState extends Equatable {
       interesseCulinario: interesseCulinario ?? this.interesseCulinario,
       status: status ?? this.status,
       errorMessage: errorMessage,
+      newPhoto: newPhoto ?? this.newPhoto,
     );
   }
 
@@ -67,6 +71,7 @@ class ProfileState extends Equatable {
         alimentoPreferito,
         interesseCulinario,
         allergeno,
+        newPhoto,
         status,
       ];
 }

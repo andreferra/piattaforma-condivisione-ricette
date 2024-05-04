@@ -4,7 +4,6 @@ import 'package:condivisionericette/widget/button/animated_button.dart';
 import 'package:condivisionericette/widget/button/rounded_button_style.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:form_validation/form_validator.dart';
 
 class SaveProfile extends ConsumerWidget {
   const SaveProfile({super.key});

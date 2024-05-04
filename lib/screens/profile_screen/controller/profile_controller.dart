@@ -1,3 +1,6 @@
+import 'dart:typed_data';
+
+import 'package:universal_html/html.dart' as html;
 import 'package:condivisionericette/controller/auth_repo_provider.dart';
 import 'package:equatable/equatable.dart';
 import 'package:firebase_auth_repo/auth_repo.dart';
@@ -126,6 +129,10 @@ class ProfileController extends StateNotifier<ProfileState> {
     state = state.copyWith(prefAlimentari: value);
   }
 
+  void onNewPhotoChanged(Uint8List value) {
+    state = state.copyWith(newPhoto: value);
+  }
+
   void onAllergieChanged(List<String> value) {
     state = state.copyWith(allergie: value);
   }
@@ -166,9 +173,12 @@ class ProfileController extends StateNotifier<ProfileState> {
     );
 
     try {
-      await _firebaseRepo.updateProfile(user);
+      await _firebaseRepo.updateProfile(user, state.newPhoto);
 
       state = state.copyWith(status: FormzStatus.submissionSuccess);
+
+      //reload page
+      html.window.location.reload();
     } on UpdateProfileFailure catch (e) {
       state = state.copyWith(
         status: FormzStatus.submissionFailure,

@@ -1,4 +1,4 @@
-import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth_repo/auth_repo.dart';
@@ -20,7 +20,7 @@ class FirebaseRepository {
   }
 
   /// Updates the profile of the current user.
-  Future<void> updateProfile(AuthUser user, File? file) async {
+  Future<void> updateProfile(AuthUser user, Uint8List? file) async {
     try {
       late String? url = user.photoURL;
       if (file != null)  {
@@ -28,6 +28,7 @@ class FirebaseRepository {
         user = user.copyWith(photoURL: url);
         print(url);
       }
+
       
       return _firestore
           .collection('users')
