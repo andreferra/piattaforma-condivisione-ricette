@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
+
 class SideMenu extends ConsumerWidget {
   const SideMenu({super.key});
 
@@ -30,23 +31,30 @@ class SideMenu extends ConsumerWidget {
             icon: 'assets/icons/menu_dashboard.svg',
           ),
           DrawerListTile(
-            title: 'Notifiche',
+            title: 'Le mie ricette',
             onTap: () {
               pageController.setPage(1);
+            },
+            icon: 'assets/icons/menu_recipes.svg',
+          ),
+          DrawerListTile(
+            title: 'Notifiche',
+            onTap: () {
+              pageController.setPage(2);
             },
             icon: 'assets/icons/menu_notification.svg',
           ),
           DrawerListTile(
             title: 'Profilo',
             onTap: () {
-              pageController.setPage(2);
+              pageController.setPage(3);
             },
             icon: 'assets/icons/menu_profile.svg',
           ),
           DrawerListTile(
             title: 'Impostazioni',
             onTap: () {
-              pageController.setPage(3);
+              pageController.setPage(4);
             },
             icon: 'assets/icons/menu_setting.svg',
           ),
