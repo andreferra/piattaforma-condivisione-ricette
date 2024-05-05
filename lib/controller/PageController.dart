@@ -1,6 +1,7 @@
 import 'package:condivisionericette/screens/feed_screen/feed_screen.dart';
 import 'package:condivisionericette/screens/notifiche_screen/notifiche_scren.dart';
 import 'package:condivisionericette/screens/profile_screen/profile_screen.dart';
+import 'package:condivisionericette/screens/recipes/add_recipes/add_recipes_screen.dart';
 import 'package:condivisionericette/screens/recipes/recipes_screen/recipes_screen.dart';
 import 'package:condivisionericette/screens/setting_screen/setting_screen.dart';
 import 'package:flutter/cupertino.dart';
@@ -17,8 +18,9 @@ class PageController extends ChangeNotifier {
     NotificheScreen(),
     ProfileScreen(),
     SettingScreen(),
+    AddRecipesScreen(),
   ];
-  int _currentIndex = 1;
+  int _currentIndex = 5;
 
   int get currentIndex => _currentIndex;
 
