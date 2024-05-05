@@ -1,7 +1,7 @@
 import 'package:condivisionericette/screens/feed_screen/feed_screen.dart';
 import 'package:condivisionericette/screens/notifiche_screen/notifiche_scren.dart';
 import 'package:condivisionericette/screens/profile_screen/profile_screen.dart';
-import 'package:condivisionericette/screens/recipes_screen/recipes_screen.dart';
+import 'package:condivisionericette/screens/recipes/recipes_screen/recipes_screen.dart';
 import 'package:condivisionericette/screens/setting_screen/setting_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
