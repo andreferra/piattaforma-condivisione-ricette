@@ -1,5 +1,3 @@
-
-
 import 'package:condivisionericette/screens/profile_screen/controller/profile_controller.dart';
 import 'package:condivisionericette/utils/utils.dart';
 import 'package:condivisionericette/widget/button/animated_button.dart';

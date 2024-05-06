@@ -43,8 +43,24 @@ class AddRecipesController extends StateNotifier<RecipesState> {
     state = state.copyWith(ingrediente: value);
   }
 
-  void addIngredienti(String value) {
-    state = state.copyWith(ingredienti: [...state.ingredienti, value]);
+  void addIngredienti() {
+    String misura = state.misura!;
+    switch (state.misura!) {
+      case "grammi":
+        misura = "g";
+        break;
+      case "millilitri":
+        misura = "ml";
+        break;
+      case "litri":
+        misura = "l";
+        break;
+      case "chilogrammi":
+        misura = "kg";
+        break;
+    }
+    String ingrediente = state.ingrediente! + " " + state.quantita! + " " + misura;
+    state = state.copyWith(ingredienti: [...state.ingredienti, ingrediente]);
   }
 
   void removeIngredienti(String value) {
@@ -66,6 +82,14 @@ class AddRecipesController extends StateNotifier<RecipesState> {
   void onImmaginiChanged(List<Uint8List> value) {
     state = state.copyWith(immagini: value);
   }
-}
 
-void addRecipes() {}
+  void onMisuraChanged(String value) {
+    state = state.copyWith(misura: value);
+  }
+
+  void onQuantitaChanged(String value) {
+    state = state.copyWith(quantita: value);
+  }
+
+
+}

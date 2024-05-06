@@ -17,6 +17,8 @@ class RecipesState extends Equatable {
   final String? tagSingolo;
   final String? passaggio;
   final String? allergia;
+  final String? misura;
+  final String? quantita;
 
   const RecipesState({
     this.nomePiatto,
@@ -33,6 +35,8 @@ class RecipesState extends Equatable {
     this.tagSingolo,
     this.passaggio,
     this.allergia,
+    this.misura,
+    this.quantita,
   });
 
   RecipesState copyWith({
@@ -50,6 +54,8 @@ class RecipesState extends Equatable {
     String? tagSingolo,
     String? passaggio,
     String? allergia,
+    String? misura,
+    String? quantita,
   }) {
     return RecipesState(
       nomePiatto: nomePiatto ?? this.nomePiatto,
@@ -66,6 +72,8 @@ class RecipesState extends Equatable {
       tagSingolo: tagSingolo ?? this.tagSingolo,
       passaggio: passaggio ?? this.passaggio,
       allergia: allergia ?? this.allergia,
+      misura: misura ?? this.misura,
+      quantita: quantita ?? this.quantita,
     );
   }
 
@@ -85,5 +93,7 @@ class RecipesState extends Equatable {
         tagSingolo,
         passaggio,
         allergia,
+        misura,
+        quantita,
       ];
 }

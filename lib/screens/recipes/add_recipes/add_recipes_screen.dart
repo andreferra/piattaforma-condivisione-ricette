@@ -1,3 +1,4 @@
+import 'package:condivisionericette/screens/profile_screen/components/interessiAlimentari.dart';
 import 'package:condivisionericette/screens/recipes/add_recipes/components/GeneralInfo.dart';
 import 'package:condivisionericette/screens/recipes/add_recipes/components/header_recipes.dart';
 import 'package:condivisionericette/utils/constant.dart';
@@ -22,7 +23,11 @@ class AddRecipesScreen extends ConsumerWidget {
             ),
             SizedBox(
               width: MediaQuery.of(context).size.width * 0.8,
-              child: const GeneralInfo(),
+              child: const Row(
+                children:  [
+                   Ingredienti(),
+                ],
+              ),
             ),
           ],
         ),

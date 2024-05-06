@@ -6,10 +6,12 @@ import 'package:condivisionericette/widget/text_input_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class GeneralInfo extends ConsumerWidget {
-  const GeneralInfo({super.key});
+class Ingredienti extends ConsumerWidget {
+  const Ingredienti({super.key});
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+
+    List<String> misure = ["grammi", "millilitri", "litri", "chilogrammi"];
 
     final recipeState = ref.watch(addRecipesProvider);
     final recipeController = ref.read(addRecipesProvider.notifier);
@@ -18,18 +20,53 @@ class GeneralInfo extends ConsumerWidget {
         Column(
           children: [
             Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Expanded(
+                  flex: 4,
                   child: TextInputField(
-                    hintText: "Ingrediente (grammi)",
+                    hintText: "Ingrediente",
                     onChanged: (p0) {
                       recipeController.onIngredientiChanged(p0);
                     },
                   ),
                 ),
+                Expanded(
+                  flex: 2,
+                  child: TextInputField(
+                    hintText: "Quantità",
+                    onChanged: (p0) {
+                      recipeController.onQuantitaChanged(p0);
+                    },
+                  ),
+                ),
+                Expanded(
+                  flex: 1,
+                    child:  DropdownButton<String>(
+                      value: recipeState.misura,
+                      style: const TextStyle(color: Colors.white),
+                      autofocus: false,
+                      focusColor: Colors.transparent,
+                      alignment: Alignment.bottomCenter,
+                      borderRadius: BorderRadius.circular(12),
+                      underline: Container(
+                        color: Colors.white,
+                      ),
+                      onChanged: (String? newValue) {
+                        recipeController.onMisuraChanged(newValue!);
+                      },
+                      items: misure
+                          .map<DropdownMenuItem<String>>((String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(value.toUpperCase(), selectionColor: Colors.white,),
+                        );
+                      }).toList(),
+                    )
+                ),
                 AnimatedButton(
                     onTap: () {
-                      recipeController.addIngredienti(recipeState.ingrediente!);
+                      recipeController.addIngredienti();
                     },
                     child: const RoundedButtonStyle(
                       title: "Aggiungi",
@@ -39,16 +76,21 @@ class GeneralInfo extends ConsumerWidget {
               ],
             ),
             spacer(0, 10),
-            Wrap(
-              spacing: 10,
-              children: recipeState.ingredienti
-                  .map((ingrediente) => Chip(
-                        label: Text(ingrediente),
-                        onDeleted: () {
-                          recipeController.removeIngredienti(ingrediente);
-                        },
-                      ))
-                  .toList(),
+            SizedBox(
+              width: MediaQuery.of(context).size.width * 0.8,
+              height: MediaQuery.of(context).size.height * 0.3,
+              child:  ListView.builder(
+                itemCount: recipeState.ingredienti.length,
+                itemBuilder: (context, index) {
+                  return ListTile(
+                    onLongPress: () {
+                      recipeController.removeIngredienti(recipeState.ingredienti[index]);
+                    },
+
+                    title: Text(recipeState.ingredienti[index]),
+                  );
+                },
+              )
             ),
           ],
         ),
