@@ -7,20 +7,28 @@
   - porzioni della ricetta
 */
 
+import 'dart:typed_data';
+
 import 'package:condivisionericette/screens/recipes/add_recipes/controller/recipes_controller.dart';
 import 'package:condivisionericette/utils/constant.dart';
 import 'package:condivisionericette/widget/text_input_field.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:image_picker/image_picker.dart';
 
 class HeaderRecipes extends ConsumerWidget {
   const HeaderRecipes({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final recipesState = ref.watch(addRecipesProvider.notifier);
+    List<String> difficolta = ["facile", "media", "difficile"];
+
+    final recipesController = ref.watch(addRecipesProvider.notifier);
+    final recipesState = ref.watch(addRecipesProvider);
 
     return Container(
+      width: MediaQuery.of(context).size.width,
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -35,33 +43,73 @@ class HeaderRecipes extends ConsumerWidget {
             ),
           ),
           const SizedBox(height: defaultPadding * 3),
-          TextInputField(
-              hintText: "Inserisci titolo della ricetta",
-              onChanged: (value) {
-                recipesState.onNomePiattoChanged(value);
-              }),
-          const SizedBox(height: defaultPadding * 3),
-          TextInputField(
-              hintText: "Inserisci una breve descrizione",
-              onChanged: (value) {
-                recipesState.onDescrizioneChanged(value);
-              }),
-          const SizedBox(height: defaultPadding * 3),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Column(
+                children: [
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width / 2.5,
+                    child: TextInputField(
+                        hintText: "Inserisci titolo della ricetta",
+                        onChanged: (value) {
+                          recipesController.onNomePiattoChanged(value);
+                        }),
+                  ),
+                  const SizedBox(height: defaultPadding * 3),
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width / 2.5,
+                    child: TextInputField(
+                        hintText: "Inserisci una breve descrizione",
+                        onChanged: (value) {
+                          recipesController.onDescrizioneChanged(value);
+                        }),
+                  ),
+                ],
+              ),
+              const SizedBox(width: defaultPadding * 5),
+              //inserisci piking immagine
+              const Column(children: [
+                Text("Inserisci un'immagine di copertina"),
+                AddCoverImage(),
+              ]),
+            ],
+          ),
+          const SizedBox(height: defaultPadding * 5),
           Row(
             children: [
               Expanded(
-                child: TextInputField(
-                    hintText: "Difficoltà (Facile, Media, Difficile)",
-                    onChanged: (value) {
-                      recipesState.onDifficoltaChanged(value);
-                    }),
-              ),
+                  child: DropdownButton<String>(
+                value: recipesState.difficolta,
+                style: const TextStyle(color: Colors.white),
+                autofocus: false,
+                focusColor: Colors.transparent,
+                alignment: Alignment.center,
+                borderRadius: BorderRadius.circular(12),
+                underline: Container(
+                  color: Colors.white,
+                ),
+                onChanged: (String? newValue) {
+                  recipesController.onDifficoltaChanged(newValue!);
+                },
+                items: difficolta.map<DropdownMenuItem<String>>((String value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(
+                      value.toUpperCase(),
+                      selectionColor: Colors.white,
+                    ),
+                  );
+                }).toList(),
+              )),
               const SizedBox(width: defaultPadding * 2),
               Expanded(
                 child: TextInputField(
                     hintText: "Tempo di preparazione (minuti)",
                     onChanged: (value) {
-                      recipesState.onTempoPreparazioneChanged(int.parse(value));
+                      recipesController
+                          .onTempoPreparazioneChanged(int.parse(value));
                     }),
               ),
               const SizedBox(width: defaultPadding * 2),
@@ -69,13 +117,60 @@ class HeaderRecipes extends ConsumerWidget {
                 child: TextInputField(
                     hintText: "Numero di porzioni",
                     onChanged: (value) {
-                      recipesState.onPorzioniChanged(int.parse(value));
+                      recipesController.onPorzioniChanged(int.parse(value));
                     }),
               ),
             ],
           )
         ],
       ),
+    );
+  }
+}
+
+class AddCoverImage extends ConsumerWidget {
+  const AddCoverImage({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final recipesController = ref.watch(addRecipesProvider.notifier);
+    final coverImage = ref.watch(addRecipesProvider).coverImage;
+    return InkWell(
+      onTap: () async {
+        final image =
+            await ImagePicker().pickImage(source: ImageSource.gallery);
+
+        if (image != null) {
+          Uint8List file = await image.readAsBytes();
+          recipesController.onCoverImageChanged(file);
+        }
+      },
+      child: coverImage == null
+          ? Container(
+              width: MediaQuery.of(context).size.width * 0.1,
+              height: MediaQuery.of(context).size.width * 0.1,
+              decoration: BoxDecoration(
+                color: Theme.of(context).colorScheme.secondary,
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: const Icon(
+                Icons.add_a_photo,
+                color: Colors.white,
+                size: 50,
+              ),
+            )
+          : Container(
+              width: MediaQuery.of(context).size.width * 0.1,
+              height: MediaQuery.of(context).size.width * 0.1,
+              decoration: BoxDecoration(
+                color: Theme.of(context).colorScheme.secondary,
+                borderRadius: BorderRadius.circular(12),
+                image: DecorationImage(
+                  image: Image.memory(coverImage).image,
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ),
     );
   }
 }

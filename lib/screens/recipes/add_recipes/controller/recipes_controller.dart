@@ -67,16 +67,32 @@ class AddRecipesController extends StateNotifier<RecipesState> {
     state = state.copyWith(ingredienti: state.ingredienti.where((e) => e != value).toList());
   }
 
-  void onTagChanged(List<String> value) {
-    state = state.copyWith(tag: value);
+  void onTagChanged(String value) {
+    state = state.copyWith(tagSingolo: value);
+  }
+
+  void addTag() {
+    state = state.copyWith(tag: [...state.tag, state.tagSingolo!]);
+  }
+
+  void removeTag(String value) {
+    state = state.copyWith(tag: state.tag.where((e) => e != value).toList());
   }
 
   void onPassaggiChanged(List<String> value) {
     state = state.copyWith(passaggi: value);
   }
 
-  void onAllergieChanged(List<String> value) {
-    state = state.copyWith(allergie: value);
+  void onAllergieChanged(String value) {
+    state = state.copyWith(allergia: value);
+  }
+
+  void addAllergie() {
+    state = state.copyWith(allergie: [...state.allergie, state.allergia!]);
+  }
+
+  void removeAllergie(String value) {
+    state = state.copyWith(allergie: state.allergie.where((e) => e != value).toList());
   }
 
   void onImmaginiChanged(List<Uint8List> value) {
@@ -89,6 +105,10 @@ class AddRecipesController extends StateNotifier<RecipesState> {
 
   void onQuantitaChanged(String value) {
     state = state.copyWith(quantita: value);
+  }
+
+  void onCoverImageChanged(Uint8List value) {
+    state = state.copyWith(coverImage: value);
   }
 
 

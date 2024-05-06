@@ -1,5 +1,6 @@
-import 'package:condivisionericette/screens/profile_screen/components/interessiAlimentari.dart';
-import 'package:condivisionericette/screens/recipes/add_recipes/components/GeneralInfo.dart';
+import 'package:condivisionericette/screens/recipes/add_recipes/components/Allergie.dart';
+import 'package:condivisionericette/screens/recipes/add_recipes/components/Ingredienti.dart';
+import 'package:condivisionericette/screens/recipes/add_recipes/components/Tag.dart';
 import 'package:condivisionericette/screens/recipes/add_recipes/components/header_recipes.dart';
 import 'package:condivisionericette/utils/constant.dart';
 import 'package:flutter/material.dart';
@@ -19,16 +20,56 @@ class AddRecipesScreen extends ConsumerWidget {
             ),
             const HeaderRecipes(),
             const SizedBox(
-              height: defaultPadding * 1.25,
+              height: defaultPadding,
             ),
-            SizedBox(
-              width: MediaQuery.of(context).size.width * 0.8,
-              child: const Row(
-                children:  [
-                   Ingredienti(),
-                ],
+            const Divider(
+              color: Colors.white,
+              thickness: 1,
+            ),
+            const SizedBox(
+              height: defaultPadding,
+            ),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Expanded(
+                  child: SizedBox(
+                    width: MediaQuery.of(context).size.width / 3,
+                    child: const Ingredienti(),
+                  ),
+                ),
+                Expanded(
+                  child: SizedBox(
+                    width: MediaQuery.of(context).size.width / 3,
+                    child: const Allergie(),
+                  ),
+                ),
+                Expanded(
+                  child: SizedBox(
+                    width: MediaQuery.of(context).size.width / 3,
+                    child: const Tag(),
+                  ),
+                ),
+              ],
+            ),
+            const Divider(
+              color: Colors.white,
+              thickness: 1,
+            ),
+            //inizio seconda parte della ricetta con gli step
+            const SizedBox(height: defaultPadding * 3),
+
+            Center(
+              child: Text(
+                'CREA GLI STEP DELLA RICETTA',
+                style: Theme.of(context).textTheme.headlineLarge!.copyWith(
+                  fontWeight: FontWeight.bold,
+                  color: Theme.of(context).colorScheme.primary,
+                ),
               ),
             ),
+            const SizedBox(height: defaultPadding * 3),
           ],
         ),
       ),

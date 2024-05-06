@@ -11,6 +11,7 @@ class RecipesState extends Equatable {
   final List<String> tag;
   final List<String> passaggi;
   final List<String> allergie;
+  final Uint8List? coverImage;
 
   //utili
   final String? ingrediente;
@@ -20,12 +21,13 @@ class RecipesState extends Equatable {
   final String? misura;
   final String? quantita;
 
+
   const RecipesState({
     this.nomePiatto,
     this.descrizione,
     this.tempoPreparazione,
     this.porzioni,
-    this.difficolta,
+    this.difficolta = "facile",
     this.immagini = const [],
     this.ingredienti = const [],
     this.tag = const [],
@@ -37,6 +39,7 @@ class RecipesState extends Equatable {
     this.allergia,
     this.misura,
     this.quantita,
+    this.coverImage,
   });
 
   RecipesState copyWith({
@@ -56,6 +59,7 @@ class RecipesState extends Equatable {
     String? allergia,
     String? misura,
     String? quantita,
+    Uint8List? coverImage,
   }) {
     return RecipesState(
       nomePiatto: nomePiatto ?? this.nomePiatto,
@@ -74,6 +78,7 @@ class RecipesState extends Equatable {
       allergia: allergia ?? this.allergia,
       misura: misura ?? this.misura,
       quantita: quantita ?? this.quantita,
+      coverImage: coverImage ?? this.coverImage,
     );
   }
 
@@ -95,5 +100,6 @@ class RecipesState extends Equatable {
         allergia,
         misura,
         quantita,
+        coverImage,
       ];
 }
