@@ -16,6 +16,8 @@ class TextInputField extends StatefulWidget {
   final String? testoSopra;
   final BorderRadius? borderRadius;
   final TextEditingController? controller;
+  final int? maxLength;
+  final bool hasMaxLenght;
   const TextInputField({
     super.key,
     this.controller,
@@ -32,6 +34,8 @@ class TextInputField extends StatefulWidget {
     this.errorText,
     this.valoreIniziale,
     this.obscureText = false,
+    this.maxLength,
+    this.hasMaxLenght = false,
   });
 
   @override
@@ -62,6 +66,7 @@ class _TextInputFieldState extends State<TextInputField> {
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 18),
           child: TextFormField(
+            maxLength: widget.hasMaxLenght? widget.maxLength : null,
             enabled: widget.enable,
             onTap: widget.onTap,
             controller: widget.controller,
@@ -70,6 +75,7 @@ class _TextInputFieldState extends State<TextInputField> {
             onChanged: widget.onChanged,
             obscureText: widget.obscureText ? showPassword : false,
             decoration: InputDecoration(
+              counterText: widget.hasMaxLenght ? '${widget.controller?.text.length ?? 0}/${widget.maxLength}' : null,
               prefixIcon: widget.prefixIcon,
               suffixIcon: widget.obscureText
                   ? IconButton(
