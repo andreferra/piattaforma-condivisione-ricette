@@ -1,5 +1,6 @@
 import 'package:condivisionericette/screens/recipes/add_recipes/components/Allergie.dart';
 import 'package:condivisionericette/screens/recipes/add_recipes/components/Ingredienti.dart';
+import 'package:condivisionericette/screens/recipes/add_recipes/components/ReceptStep.dart';
 import 'package:condivisionericette/screens/recipes/add_recipes/components/Tag.dart';
 import 'package:condivisionericette/screens/recipes/add_recipes/components/header_recipes.dart';
 import 'package:condivisionericette/utils/constant.dart';
@@ -13,6 +14,8 @@ class AddRecipesScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return SafeArea(
       child: SingleChildScrollView(
+        physics: const BouncingScrollPhysics(),
+        padding: const EdgeInsets.symmetric(horizontal: defaultPadding),
         child: Column(
           children: [
             const SizedBox(
@@ -64,12 +67,13 @@ class AddRecipesScreen extends ConsumerWidget {
               child: Text(
                 'CREA GLI STEP DELLA RICETTA',
                 style: Theme.of(context).textTheme.headlineLarge!.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: Theme.of(context).colorScheme.primary,
-                ),
+                      fontWeight: FontWeight.bold,
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
               ),
             ),
             const SizedBox(height: defaultPadding * 3),
+            const ReceptsStep(),
           ],
         ),
       ),

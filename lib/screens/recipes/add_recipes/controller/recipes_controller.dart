@@ -59,12 +59,14 @@ class AddRecipesController extends StateNotifier<RecipesState> {
         misura = "kg";
         break;
     }
-    String ingrediente = state.ingrediente! + " " + state.quantita! + " " + misura;
+    String ingrediente =
+        state.ingrediente! + " " + state.quantita! + " " + misura;
     state = state.copyWith(ingredienti: [...state.ingredienti, ingrediente]);
   }
 
   void removeIngredienti(String value) {
-    state = state.copyWith(ingredienti: state.ingredienti.where((e) => e != value).toList());
+    state = state.copyWith(
+        ingredienti: state.ingredienti.where((e) => e != value).toList());
   }
 
   void onTagChanged(String value) {
@@ -92,7 +94,8 @@ class AddRecipesController extends StateNotifier<RecipesState> {
   }
 
   void removeAllergie(String value) {
-    state = state.copyWith(allergie: state.allergie.where((e) => e != value).toList());
+    state = state.copyWith(
+        allergie: state.allergie.where((e) => e != value).toList());
   }
 
   void onImmaginiChanged(List<Uint8List> value) {
@@ -111,5 +114,43 @@ class AddRecipesController extends StateNotifier<RecipesState> {
     state = state.copyWith(coverImage: value);
   }
 
+  void onStepIndexChanged(int value) {
+    state = state.copyWith(stepIndex: value);
+  }
 
+  void addStep() {
+    if (state.stepImage != null && state.stepText != null) {
+      state = state.copyWith(
+        passaggi: [...state.passaggi, state.stepText!],
+        immagini: [...state.immagini, state.stepImage!],
+        stepIndex: state.stepIndex! + 1,
+      );
+    }
+  }
+
+  void removeStep(int value) {
+    state = state.copyWith(
+      passaggi:
+          state.passaggi.where((e) => e != state.passaggi[value]).toList(),
+      immagini:
+          state.immagini.where((e) => e != state.immagini[value]).toList(),
+      stepIndex: state.stepIndex! - 1,
+    );
+  }
+
+  void addStepImage(Uint8List value) {
+    state = state.copyWith(stepImage: value);
+  }
+
+  void addStepText(String value) {
+    state = state.copyWith(stepText: value);
+  }
+
+  Future<void> addRecipes() async {
+    try {
+      state.copyWith(state: StateRecipes.submit);
+    } catch (e) {
+      state.copyWith(state: StateRecipes.error);
+    }
+  }
 }
