@@ -16,6 +16,7 @@ class AuthUser extends Equatable {
   final List<String>? allergie;
   final List<String>? interessiCulinari;
   final String? bio;
+  final bool? notification;
 
   const AuthUser({
     required this.uid,
@@ -33,6 +34,7 @@ class AuthUser extends Equatable {
     this.allergie,
     this.interessiCulinari,
     this.bio,
+    this.notification = true,
   });
 
   static const empty = AuthUser(uid: '');
@@ -54,6 +56,7 @@ class AuthUser extends Equatable {
         isLogged,
         prefAlimentari,
         allergie,
+        notification,
         interessiCulinari,
         bio,
       ];
@@ -75,6 +78,7 @@ class AuthUser extends Equatable {
       allergie: (data['allergie'] as List<dynamic>).map((item) => item.toString()).toList(),
       interessiCulinari: (data['interessiCulinari'] as List<dynamic>).map((item) => item.toString()).toList(),
       bio: data['bio'],
+      notification: data['notification'],
     );
   }
 
@@ -95,6 +99,7 @@ class AuthUser extends Equatable {
       'allergie': allergie,
       'interessiCulinari': interessiCulinari,
       'bio': bio,
+      'notification': notification,
     };
   }
 
@@ -114,6 +119,7 @@ class AuthUser extends Equatable {
     List<String>? allergie,
     List<String>? interessiCulinari,
     String? bio,
+    bool? notification,
   }) {
     return AuthUser(
       uid: uid ?? this.uid,
@@ -131,6 +137,7 @@ class AuthUser extends Equatable {
       allergie: allergie ?? this.allergie,
       interessiCulinari: interessiCulinari ?? this.interessiCulinari,
       bio: bio ?? this.bio,
+      notification: notification ?? this.notification,
     );
   }
 }

@@ -20,7 +20,7 @@ class PageController extends ChangeNotifier {
     SettingScreen(),
     AddRecipesScreen(),
   ];
-  int _currentIndex = 0;
+  int _currentIndex = 4;
 
   int get currentIndex => _currentIndex;
 

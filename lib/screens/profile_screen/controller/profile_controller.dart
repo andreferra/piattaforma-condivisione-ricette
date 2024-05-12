@@ -144,8 +144,6 @@ class ProfileController extends StateNotifier<ProfileState> {
   void updateProfile(AuthUser oldUser) async {
     state = state.copyWith(status: FormzStatus.submissionInProgress);
 
-    print(state);
-
     final profiloImmagine = state.newPhotoUrl ?? oldUser.photoURL;
 
     AuthUser user = AuthUser(

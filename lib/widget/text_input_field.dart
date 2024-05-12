@@ -48,11 +48,16 @@ class _TextInputFieldState extends State<TextInputField> {
   bool showPassword = true;
 
   @override
-  Widget build(BuildContext context) {
-
+  void initState() {
     if(widget.valoreIniziale != null){
       controllerTest.text = widget.valoreIniziale!;
     }
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -63,9 +68,9 @@ class _TextInputFieldState extends State<TextInputField> {
             child: Text(
               widget.testoSopra!,
               style: TextStyle(
-                fontSize: 16,
+                fontSize: 18,
                 fontWeight: FontWeight.w500,
-                color: primaryColor.withOpacity(0.7),
+                color: Colors.white.withOpacity(0.7),
               ),
             ),
           ),
@@ -76,7 +81,7 @@ class _TextInputFieldState extends State<TextInputField> {
             enabled: widget.enable,
             onTap: widget.onTap,
             controller: widget.controller ?? controllerTest,
-            maxLines: widget.minLines,
+            maxLines: widget.obscureText ? 1 : widget.minLines,
             onChanged: widget.onChanged,
             obscureText: widget.obscureText ? showPassword : false,
             decoration: InputDecoration(
