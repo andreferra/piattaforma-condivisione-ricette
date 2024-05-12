@@ -1,6 +1,5 @@
 part of 'recipes_controller.dart';
 
-
 class RecipesState extends Equatable {
   final String? nomePiatto;
   final String? descrizione;
@@ -28,7 +27,7 @@ class RecipesState extends Equatable {
   final String? stepText;
   final String? linkCoverImage;
   final List<String>? linkStepImages;
-
+  final RecipeInteraction? recipeInteraction;
   final StateRecipes status;
   final FileState fileState;
 
@@ -55,6 +54,7 @@ class RecipesState extends Equatable {
     this.stepText,
     this.linkCoverImage,
     this.linkStepImages,
+    this.recipeInteraction,
     this.status = StateRecipes.initial,
     this.fileState = FileState.initial,
   });
@@ -82,6 +82,7 @@ class RecipesState extends Equatable {
     String? stepText,
     String? linkCoverImage,
     List<String>? linkStepImages,
+    RecipeInteraction? recipeInteraction,
     StateRecipes? status,
     FileState? fileState,
   }) {
@@ -107,6 +108,34 @@ class RecipesState extends Equatable {
       stepImage: stepImage ?? this.stepImage,
       stepText: stepText ?? this.stepText,
       status: status ?? this.status,
+      recipeInteraction: recipeInteraction ?? this.recipeInteraction,
+    );
+  }
+
+  //converti fa snapshot in RecipesState
+  factory RecipesState.fromSnapshot(DocumentSnapshot document) {
+    return RecipesState(
+      nomePiatto: document["nome_piatto"],
+      descrizione: document["descrizione"],
+      tempoPreparazione: document["tempo_preparazione"],
+      porzioni: document["porzioni"],
+      difficolta: document["difficolta"],
+      passaggi: List<String>.from(document["step_texts"]),
+      linkStepImages: List<String>.from(document["step_images"]),
+      ingredienti: List<String>.from(document["ingredienti"]),
+      tag: List<String>.from(document["tag"]),
+      allergie: List<String>.from(document["allergie"]),
+      linkCoverImage: document["cover_image"],
+      recipeInteraction: RecipeInteraction(
+        commenti: List<String>.from(document["commenti"]),
+        dataCreazione: document["data_creazione"],
+        like: document["like"],
+        numeroCommenti: document["numero_commenti"],
+        numeroLike: document["numero_like"],
+        numeroCondivisioni: document["numero_condivisioni"],
+        visualizzazioni: document["numero_visualizzazioni"],
+      ),
+
     );
   }
 
@@ -134,6 +163,7 @@ class RecipesState extends Equatable {
         stepText,
         linkCoverImage,
         linkStepImages,
+        recipeInteraction,
         status,
         fileState,
       ];

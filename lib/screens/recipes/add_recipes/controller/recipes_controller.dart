@@ -1,6 +1,8 @@
 import 'dart:typed_data';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:condivisionericette/controller/auth_repo_provider.dart';
+import 'package:condivisionericette/model/RecipeInteraction.dart';
 import 'package:condivisionericette/utils/constant.dart';
 import 'package:equatable/equatable.dart';
 import 'package:firebase_auth_repo/auth_repo.dart';
