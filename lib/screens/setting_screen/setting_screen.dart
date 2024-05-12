@@ -1,5 +1,6 @@
 import 'package:condivisionericette/controller/PageController.dart';
 import 'package:condivisionericette/controller/auth_controller/auth_controller.dart';
+import 'package:condivisionericette/screens/setting_screen/components/delete_account_component.dart';
 import 'package:condivisionericette/screens/setting_screen/components/edit_email_component.dart';
 import 'package:condivisionericette/screens/setting_screen/components/edit_password_component.dart';
 import 'package:condivisionericette/screens/setting_screen/components/notification_component.dart';
@@ -76,7 +77,15 @@ class SettingScreen extends ConsumerWidget {
             endIndent: 20,
           ),
           const SizedBox(height: defaultPadding * 2),
-
+          const DeleteAccount(),
+          const SizedBox(height: defaultPadding * 2),
+          Divider(
+            color: Colors.white.withOpacity(0.7),
+            thickness: 1,
+            indent: 20,
+            endIndent: 20,
+          ),
+          const SizedBox(height: defaultPadding * 2),
         ],
       ),
     );

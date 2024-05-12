@@ -81,6 +81,16 @@ class AuthenticationRepository {
     }
   }
 
+  /// Deletes the account of the given [user_id].
+  Future<void> deleteAccount(String user_id) async {
+    try {
+      await _firebaseRepo.deleteUserFromDatabase(user_id);
+      await _firebaseAuth.currentUser!.delete();
+    } on FirebaseAuthException catch (e) {
+      throw DeleteAccountFailure(e.code);
+    }
+  }
+
   /// Signs out the current user.
   Future<void> signOut() async {
     try {
@@ -89,6 +99,12 @@ class AuthenticationRepository {
       throw SignOutFailure();
     }
   }
+}
+
+class DeleteAccountFailure implements Exception {
+  final String code;
+
+  const DeleteAccountFailure(this.code);
 }
 
 /// Exception thrown when sign up with email and password fails.

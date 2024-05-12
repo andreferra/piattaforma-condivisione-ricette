@@ -63,7 +63,6 @@ class SettingController extends StateNotifier<SettingState> {
         return;
       }
       if (state.status.isValidated) {
-
         await _firebaseRepo.updateUserSetting(
           email,
           password,
@@ -71,6 +70,19 @@ class SettingController extends StateNotifier<SettingState> {
           oldUser.uid,
         );
       }
+      state = state.copyWith(status: FormzStatus.submissionSuccess);
+    } catch (e) {
+      state = state.copyWith(
+        status: FormzStatus.submissionFailure,
+        errorMessage: e.toString(),
+      );
+    }
+  }
+
+  Future<void> deleteAccount(String uid) async {
+    try {
+      state = state.copyWith(status: FormzStatus.submissionInProgress);
+      await _authRepo.deleteAccount(uid);
       state = state.copyWith(status: FormzStatus.submissionSuccess);
     } catch (e) {
       state = state.copyWith(

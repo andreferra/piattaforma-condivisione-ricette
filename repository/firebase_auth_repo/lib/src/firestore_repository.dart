@@ -56,6 +56,18 @@ class FirebaseRepository {
     }
   }
 
+
+  /// Delete user from database
+  Future<void> deleteUserFromDatabase(String uid) async {
+    try {
+      await _firestore.collection('users').doc(uid).delete();
+    } on FirebaseException catch (e) {
+      return Future.error(UpdateProfileFailure(e.code));
+    } catch (e) {
+      return Future.error(UpdateProfileFailure(e.toString()));
+    }
+  }
+
   /// Adds a recipe to the database.
   Future<String> addRecipe(AuthUser user, state, String uuidRicetta) async {
     try {
