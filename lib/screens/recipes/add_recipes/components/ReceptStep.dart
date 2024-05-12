@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 
+import 'package:condivisionericette/controller/PageController.dart';
 import 'package:condivisionericette/controller/auth_controller/auth_controller.dart';
 import 'package:condivisionericette/screens/recipes/add_recipes/controller/recipes_controller.dart';
 import 'package:condivisionericette/utils/constant.dart';
@@ -18,9 +19,9 @@ class ReceptsStep extends ConsumerWidget {
     final recipesController = ref.watch(addRecipesProvider.notifier);
     final recipesState = ref.watch(addRecipesProvider);
     final stepImage = recipesState.stepImage;
-    final loadState = ref.watch(addRecipesProvider).state;
+    final loadState = ref.watch(addRecipesProvider).status;
     final user = ref.watch(authProvider).user;
-
+    final pageController = ref.watch(pageControllerProvider);
     return Column(
       children: [
         // form creazione step
@@ -156,7 +157,6 @@ class ReceptsStep extends ConsumerWidget {
                 const SizedBox(
                   height: defaultPadding * 3,
                 ),
-
               ],
             ),
         if (recipesState.passaggi.isNotEmpty)
@@ -165,21 +165,38 @@ class ReceptsStep extends ConsumerWidget {
             child: AnimatedButton(
                 onTap: () async {
                   try {
-                    await recipesController.addRecipes(user);
+                    String res = await recipesController.addRecipes(user);
+                    if (res == "ok") {
+                      SnackBar snackBar = const SnackBar(
+                        content: Text("Ricetta pubblicata con successo"),
+                        duration: Duration(seconds: 2),
+                        padding: EdgeInsets.all(defaultPadding * 3),
+                      );
+                      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                      pageController.setPage(1);
+                    } else if(res == "error"){
+                      SnackBar snackBar = const SnackBar(
+                        content: Text(
+                            "Errore durante la pubblicazione della ricetta"),
+                        duration: Duration(seconds: 2),
+                        padding: EdgeInsets.all(defaultPadding * 3),
+                      );
+                      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                    }
                   } catch (e) {
                     print(e);
                   }
                 },
                 child: loadState == StateRecipes.initial
                     ? const RoundedButtonStyle(
-                  title: "PUBBLICA RICETTA",
-                  orizzontalePadding: 18,
-                  verticalePadding: 12,
-                  bgColor: Colors.green,
-                )
+                        title: "PUBBLICA RICETTA",
+                        orizzontalePadding: 18,
+                        verticalePadding: 12,
+                        bgColor: Colors.green,
+                      )
                     : const CircularProgressIndicator(
-                  backgroundColor: Colors.white,
-                )),
+                        backgroundColor: Colors.white,
+                      )),
           ),
       ],
     );

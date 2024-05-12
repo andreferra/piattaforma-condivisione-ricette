@@ -7,3 +7,7 @@ const bgColor = Color(0xFF212332);
 const buttonBg = Color(0xFF3A3E4A);
 
 const defaultPadding = 16.0;
+
+enum StateRecipes { initial, inProgress, done, error }
+
+enum FileState { create, find, notFound, error, initial, inProgress }

@@ -1,8 +1,6 @@
 part of 'recipes_controller.dart';
 
 
-enum StateRecipes {initial, submit, inProgress, done, error}
-
 class RecipesState extends Equatable {
   final String? nomePiatto;
   final String? descrizione;
@@ -28,8 +26,11 @@ class RecipesState extends Equatable {
   final int? stepIndex;
   final Uint8List? stepImage;
   final String? stepText;
+  final String? linkCoverImage;
+  final List<String>? linkStepImages;
 
-  final StateRecipes state;
+  final StateRecipes status;
+  final FileState fileState;
 
   const RecipesState({
     this.nomePiatto,
@@ -52,7 +53,10 @@ class RecipesState extends Equatable {
     this.stepIndex = 0,
     this.stepImage,
     this.stepText,
-    this.state = StateRecipes.initial,
+    this.linkCoverImage,
+    this.linkStepImages,
+    this.status = StateRecipes.initial,
+    this.fileState = FileState.initial,
   });
 
   RecipesState copyWith({
@@ -76,7 +80,10 @@ class RecipesState extends Equatable {
     int? stepIndex,
     Uint8List? stepImage,
     String? stepText,
-    StateRecipes? state,
+    String? linkCoverImage,
+    List<String>? linkStepImages,
+    StateRecipes? status,
+    FileState? fileState,
   }) {
     return RecipesState(
       nomePiatto: nomePiatto ?? this.nomePiatto,
@@ -99,7 +106,7 @@ class RecipesState extends Equatable {
       stepIndex: stepIndex ?? this.stepIndex,
       stepImage: stepImage ?? this.stepImage,
       stepText: stepText ?? this.stepText,
-      state: state ?? this.state,
+      status: status ?? this.status,
     );
   }
 
@@ -125,6 +132,9 @@ class RecipesState extends Equatable {
         stepIndex,
         stepImage,
         stepText,
-        state,
+        linkCoverImage,
+        linkStepImages,
+        status,
+        fileState,
       ];
 }

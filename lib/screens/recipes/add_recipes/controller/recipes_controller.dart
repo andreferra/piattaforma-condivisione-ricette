@@ -1,9 +1,11 @@
 import 'dart:typed_data';
 
 import 'package:condivisionericette/controller/auth_repo_provider.dart';
+import 'package:condivisionericette/utils/constant.dart';
 import 'package:equatable/equatable.dart';
 import 'package:firebase_auth_repo/auth_repo.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:uuid/uuid.dart';
 
 part 'recipes_state.dart';
 
@@ -146,11 +148,20 @@ class AddRecipesController extends StateNotifier<RecipesState> {
     state = state.copyWith(stepText: value);
   }
 
-  Future<void> addRecipes() async {
+  Future<String> addRecipes(AuthUser oldUser) async {
     try {
-      state.copyWith(state: StateRecipes.submit);
+      state.copyWith(status: StateRecipes.inProgress);
+      _firebaseRepo.addRecipe(
+        oldUser,
+        state,
+        const Uuid().v4(),
+      );
+      state.copyWith(status: StateRecipes.done);
+
+      return "ok";
     } catch (e) {
-      state.copyWith(state: StateRecipes.error);
+      state.copyWith(status: StateRecipes.error);
+      return "error";
     }
   }
 }
