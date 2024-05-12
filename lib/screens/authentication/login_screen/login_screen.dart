@@ -1,3 +1,4 @@
+import 'package:condivisionericette/screens/authentication/recuperoPWD/recupero_pwd_screen.dart';
 import 'package:condivisionericette/widget/loading_errors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -60,7 +61,13 @@ class LoginScreen extends ConsumerWidget {
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         TextButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const RecuperoPWD()),
+                            );
+                          },
                           child: const Text(
                             "Forgot password?",
                             style: TextStyle(
