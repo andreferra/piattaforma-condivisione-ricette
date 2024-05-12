@@ -71,6 +71,15 @@ class FirebaseRepository {
         'step_images': stepImagesUrl,
         'step_texts': state.passaggi,
         'user_id': user.uid,
+        "data_creazione": FieldValue.serverTimestamp(),
+        "numero_recensioni" : 0,
+        "media_recensioni" : 0.0,
+        "numero_like" : 0,
+        "numero_commenti" : 0,
+        "commenti" : [],
+        "like" : [],
+        "numero_condivisioni" : 0,
+        "numero_visualizzazioni" : 0,
       };
 
       //aggiungi ricetta al database

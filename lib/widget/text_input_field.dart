@@ -49,6 +49,10 @@ class _TextInputFieldState extends State<TextInputField> {
 
   @override
   Widget build(BuildContext context) {
+
+    if(widget.valoreIniziale != null){
+      controllerTest.text = widget.valoreIniziale!;
+    }
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -73,7 +77,6 @@ class _TextInputFieldState extends State<TextInputField> {
             onTap: widget.onTap,
             controller: widget.controller ?? controllerTest,
             maxLines: widget.minLines,
-            initialValue: widget.valoreIniziale,
             onChanged: widget.onChanged,
             obscureText: widget.obscureText ? showPassword : false,
             decoration: InputDecoration(

@@ -1,4 +1,5 @@
 import 'package:condivisionericette/utils/constant.dart';
+import 'package:condivisionericette/utils/utils.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/material.dart';
 
@@ -6,12 +7,19 @@ class RecipeListItem extends ConsumerWidget {
   final String imageUrl;
   final String title;
   final String description;
-
+  final String numeroLike;
+  final String numeroCommenti;
+  final String numeroCondivisioni;
+  final String visualizzazioni;
   const RecipeListItem({
     super.key,
     required this.imageUrl,
     required this.title,
     required this.description,
+    required this.numeroLike,
+    required this.numeroCommenti,
+    required this.numeroCondivisioni,
+    required this.visualizzazioni,
   });
 
   @override
@@ -58,6 +66,44 @@ class RecipeListItem extends ConsumerWidget {
                   style: const TextStyle(
                     fontSize: 16,
                   ),
+                ),
+              ],
+            ),
+          ),
+          Expanded(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Row(
+                  children: [
+                    const Icon(Icons.favorite),
+                    spacer(10, 0),
+                    Text(numeroLike),
+                  ],
+                ),
+                spacer(0, 10),
+                Row(
+                  children: [
+                    const Icon(Icons.comment),
+                    spacer(10, 0),
+                    Text(numeroCommenti),
+                  ],
+                ),
+                spacer(0, 10),
+                Row(
+                  children: [
+                    const Icon(Icons.share),
+                    spacer(10, 0),
+                    Text(numeroCondivisioni),
+                  ],
+                ),
+                spacer(0, 10),
+                Row(
+                  children: [
+                    const Icon(Icons.remove_red_eye),
+                    spacer(10, 0),
+                    Text(visualizzazioni),
+                  ],
                 ),
               ],
             ),
