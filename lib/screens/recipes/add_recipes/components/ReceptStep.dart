@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 
+import 'package:condivisionericette/controller/auth_controller/auth_controller.dart';
 import 'package:condivisionericette/screens/recipes/add_recipes/controller/recipes_controller.dart';
 import 'package:condivisionericette/utils/constant.dart';
 import 'package:condivisionericette/widget/button/animated_button.dart';
@@ -18,7 +19,7 @@ class ReceptsStep extends ConsumerWidget {
     final recipesState = ref.watch(addRecipesProvider);
     final stepImage = recipesState.stepImage;
     final loadState = ref.watch(addRecipesProvider).state;
-    TextEditingController stepTextController = TextEditingController();
+    final user = ref.watch(authProvider).user;
 
     return Column(
       children: [
@@ -155,30 +156,31 @@ class ReceptsStep extends ConsumerWidget {
                 const SizedBox(
                   height: defaultPadding * 3,
                 ),
-                if (recipesState.passaggi.isNotEmpty)
-                  Padding(
-                    padding: const EdgeInsets.all(defaultPadding * 2),
-                    child: AnimatedButton(
-                        onTap: () async {
-                          try {
-                            recipesController.addStep();
-                          } catch (e) {
-                            print(e);
-                          }
-                        },
-                        child: loadState == StateRecipes.initial
-                            ? const RoundedButtonStyle(
-                                title: "PUBBLICA RICETTA",
-                                orizzontalePadding: 18,
-                                verticalePadding: 12,
-                                bgColor: Colors.green,
-                              )
-                            : const CircularProgressIndicator(
-                                backgroundColor: Colors.white,
-                              )),
-                  ),
+
               ],
             ),
+        if (recipesState.passaggi.isNotEmpty)
+          Padding(
+            padding: const EdgeInsets.all(defaultPadding * 2),
+            child: AnimatedButton(
+                onTap: () async {
+                  try {
+                    await recipesController.addRecipes(user);
+                  } catch (e) {
+                    print(e);
+                  }
+                },
+                child: loadState == StateRecipes.initial
+                    ? const RoundedButtonStyle(
+                  title: "PUBBLICA RICETTA",
+                  orizzontalePadding: 18,
+                  verticalePadding: 12,
+                  bgColor: Colors.green,
+                )
+                    : const CircularProgressIndicator(
+                  backgroundColor: Colors.white,
+                )),
+          ),
       ],
     );
   }
