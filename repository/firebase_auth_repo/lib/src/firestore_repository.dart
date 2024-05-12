@@ -54,9 +54,9 @@ class FirebaseRepository {
   Future<String> addRecipe(AuthUser user, state, String uuidRicetta) async {
     try {
       String coverImageUrl = await _storage.uploadFile(
-          'cover_images/${user.uid}', state.coverImage!);
+          'cover_images/$uuidRicetta', state.coverImage!);
       List<String> stepImagesUrl = await _storage.uploadMultipleFiles(
-          'step_images/${user.uid}', state.immagini);
+          'step_images/$uuidRicetta', state.immagini);
       final recipe = {
         'uid': uuidRicetta,
         'nome_piatto': state.nomePiatto,
