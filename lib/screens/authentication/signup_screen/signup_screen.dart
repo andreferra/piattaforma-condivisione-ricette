@@ -23,7 +23,6 @@ class SignUpScreen extends ConsumerWidget {
         if (curr.status.isSubmissionInProgress) {
           LoadingSheet.show(context);
         } else if (curr.status.isSubmissionFailure) {
-          Navigator.of(context).pop();
           ErrorDialog.show(context, "${curr.errorMessage}");
         } else if (curr.status.isSubmissionSuccess) {
           Navigator.of(context).popUntil((route) => route.isFirst);

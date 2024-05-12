@@ -116,6 +116,15 @@ class FirebaseRepository {
     }
   }
 
+  /// Check if the nickname is already in use
+  Future<bool> checkNickname(String nickname) async {
+    final query = await _firestore
+        .collection('users')
+        .where('nickname', isEqualTo: nickname)
+        .get();
+    return query.docs.isNotEmpty;
+  }
+
   /// Updates the user's settings.
   Future<void> updateUserSetting(
       String email, String password, bool notification, String userid) async {

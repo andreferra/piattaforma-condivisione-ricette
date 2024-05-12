@@ -17,7 +17,9 @@ class NicknameField extends ConsumerWidget {
       errorText: showError
           ? Nickname.showNicknameErrorMessage(signUpState.nickname.error)
           : null,
-      onChanged: (nickname) => signUpController.onNicknameChanged(nickname),
+      onChanged: (nickname) async {
+        signUpController.onNicknameChanged(nickname);
+      },
     );
   }
 }
