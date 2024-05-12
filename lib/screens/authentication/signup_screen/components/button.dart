@@ -13,7 +13,6 @@ class SignUpButton extends ConsumerWidget {
     final signUpState = ref.watch(signUpProvider);
     final signUpController = ref.read(signUpProvider.notifier);
     final bool isValidated = signUpState.status.isValidated;
-    print(isValidated);
     return AnimatedButton(
       onTap: isValidated
           ? () => signUpController.signUpWithEmailAndPassword()

@@ -8,13 +8,16 @@ part 'signup_state.dart';
 
 final signUpProvider =
     StateNotifierProvider.autoDispose<SignUpController, SignUpState>(
-  (ref) => SignUpController(ref.read(authRepoProvider)),
+  (ref) => SignUpController(
+      ref.read(authRepoProvider), ref.read(firebaseRepoProvider)),
 );
 
 class SignUpController extends StateNotifier<SignUpState> {
   final AuthenticationRepository _authRepo;
+  final FirebaseRepository _firebaseRepo;
 
-  SignUpController(this._authRepo) : super(const SignUpState());
+  SignUpController(this._authRepo, this._firebaseRepo)
+      : super(const SignUpState());
 
   void onEmailChanged(String value) {
     value = value.trim();
@@ -65,9 +68,17 @@ class SignUpController extends StateNotifier<SignUpState> {
     );
   }
 
-  void onNicknameChanged(String value) {
+  Future<void> onNicknameChanged(String value) async {
     value = value.trim();
     final nickname = Nickname.dirty(value);
+
+    await _firebaseRepo.checkNickname(value).then((isNicknameInUse) {
+      if (isNicknameInUse) {
+        state = state.copyWith(
+            status: FormzStatus.submissionFailure,
+            errorMessage: "Utente già registrato con questo nickname");
+      }
+    });
 
     state = state.copyWith(
       nickname: nickname,
@@ -79,6 +90,8 @@ class SignUpController extends StateNotifier<SignUpState> {
         state.phone,
       ]),
     );
+
+
   }
 
   void onPhoneChanged(String value) {

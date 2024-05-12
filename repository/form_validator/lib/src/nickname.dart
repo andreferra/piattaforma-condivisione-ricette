@@ -1,7 +1,7 @@
 import 'package:form_validation/form_validator.dart';
 import 'package:formz/formz.dart';
 
-enum NicknameValidationError { empty, invalid, yetUsed }
+enum NicknameValidationError { empty, invalid, yetUsed, alreadyExist}
 
 class Nickname extends FormzInput<String, NicknameValidationError> {
   const Nickname.pure() : super.pure('');
@@ -24,6 +24,8 @@ class Nickname extends FormzInput<String, NicknameValidationError> {
         return 'Nickname richiesto';
       case NicknameValidationError.invalid:
         return 'Il Nickname deve avere almeno 3 caratteri';
+      case NicknameValidationError.alreadyExist:
+        return 'Nickname già in uso';
       default:
         return null;
     }
