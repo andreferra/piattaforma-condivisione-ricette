@@ -46,7 +46,7 @@ class RecipesScreen extends ConsumerWidget {
                     children:
                         snapshot.data!.docs.map((DocumentSnapshot document) {
                       return Padding(
-                          padding: const EdgeInsets.all(defaultPadding ),
+                          padding: const EdgeInsets.all(defaultPadding),
                           child: RecipeListItem(
                               imageUrl: document["cover_image"],
                               title: document["nome_piatto"],
