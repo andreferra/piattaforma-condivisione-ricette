@@ -48,7 +48,7 @@ class Header extends ConsumerWidget {
         const Expanded(child: SearchField()),
         InkWell(
           onTap: () {
-            page.setPage(2);
+            page.setPage(3);
           },
           hoverColor: Colors.transparent,
           focusColor: Colors.transparent,
