@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:condivisionericette/controller/PageController.dart';
+import 'package:condivisionericette/controller/auth_controller/auth_controller.dart';
 import 'package:condivisionericette/utils/constant.dart';
 import 'package:condivisionericette/widget/header.dart';
 import 'package:condivisionericette/widget/recipe_card.dart';
@@ -11,6 +12,7 @@ class RecipesScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final userId = ref.read(authProvider).user.uid;
     return Scaffold(
       body: SingleChildScrollView(
         primary: false,
@@ -25,6 +27,8 @@ class RecipesScreen extends ConsumerWidget {
               child: StreamBuilder(
                 stream: FirebaseFirestore.instance
                     .collection("recipes")
+                    .where("user_id", isEqualTo: userId)
+                    .orderBy("data_creazione", descending: true)
                     .snapshots(),
                 builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
@@ -33,8 +37,9 @@ class RecipesScreen extends ConsumerWidget {
                     );
                   }
                   if (snapshot.hasError) {
-                    return const Center(
-                      child: Text("Something went wrong"),
+                    print(snapshot.error);
+                    return Center(
+                      child: Text("Something went wrong${snapshot.error}"),
                     );
                   }
                   if (snapshot.data!.docs.isEmpty) {
@@ -51,6 +56,13 @@ class RecipesScreen extends ConsumerWidget {
                               imageUrl: document["cover_image"],
                               title: document["nome_piatto"],
                               description: document["descrizione"],
+                              numeroLike: document["numero_like"].toString(),
+                              numeroCommenti:
+                                  document["numero_commenti"].toString(),
+                              numeroCondivisioni:
+                                  document["numero_condivisioni"].toString(),
+                              visualizzazioni:
+                                  document["numero_visualizzazioni"].toString(),
                               key: ValueKey(document.id)));
                     }).toList(),
                   );
