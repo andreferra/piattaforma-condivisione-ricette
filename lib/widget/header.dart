@@ -16,6 +16,7 @@ class Header extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     List<String> nameList = [
       'Dashboard',
+      'Le mie ricette',
       'Notifiche',
       'Profilo',
       'Impostazioni',

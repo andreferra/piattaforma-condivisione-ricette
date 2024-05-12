@@ -1,6 +1,8 @@
 import 'package:condivisionericette/screens/feed_screen/feed_screen.dart';
 import 'package:condivisionericette/screens/notifiche_screen/notifiche_scren.dart';
 import 'package:condivisionericette/screens/profile_screen/profile_screen.dart';
+import 'package:condivisionericette/screens/recipes/add_recipes/add_recipes_screen.dart';
+import 'package:condivisionericette/screens/recipes/recipes_screen/recipes_screen.dart';
 import 'package:condivisionericette/screens/setting_screen/setting_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -12,11 +14,13 @@ final pageControllerProvider = ChangeNotifierProvider<PageController>((ref) {
 class PageController extends ChangeNotifier {
   static const List<Widget> widgetList = [
     FeedScreen(),
+    RecipesScreen(),
     NotificheScreen(),
     ProfileScreen(),
     SettingScreen(),
+    AddRecipesScreen(),
   ];
-  int _currentIndex = 2;
+  int _currentIndex = 1;
 
   int get currentIndex => _currentIndex;
 

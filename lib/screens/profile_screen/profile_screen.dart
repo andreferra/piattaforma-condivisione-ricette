@@ -1,3 +1,4 @@
+import 'package:condivisionericette/controller/auth_controller/auth_controller.dart';
 import 'package:condivisionericette/screens/profile_screen/components/buttonInfo.dart';
 import 'package:condivisionericette/screens/profile_screen/components/editPrefAlimentari.dart';
 import 'package:condivisionericette/screens/profile_screen/components/editProfile.dart';
@@ -26,12 +27,13 @@ class ProfileScreen extends ConsumerWidget {
           content: Text("Profilo aggiornato con successo"),
           duration: Duration(seconds: 2),
         );
+        ScaffoldMessenger.of(context).showSnackBar(snackBar);
         Navigator.of(context).popUntil((route) => route.isFirst);
       }
     });
 
-    return const SafeArea(
-      child: SingleChildScrollView(
+    return  Scaffold(
+      body: const SingleChildScrollView(
           primary: false,
           padding: EdgeInsets.all(defaultPadding),
           child: Column(
@@ -49,6 +51,12 @@ class ProfileScreen extends ConsumerWidget {
               SaveProfile(),
             ],
           )),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          ref.read(authProvider.notifier).signOut();
+        },
+        child: const Icon(Icons.logout),
+      ),
     );
   }
 }

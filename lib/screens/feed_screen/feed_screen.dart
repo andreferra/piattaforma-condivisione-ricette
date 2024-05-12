@@ -1,3 +1,4 @@
+import 'package:condivisionericette/controller/PageController.dart';
 import 'package:condivisionericette/controller/auth_controller/auth_controller.dart';
 import 'package:condivisionericette/utils/constant.dart';
 import 'package:condivisionericette/widget/header.dart';
@@ -11,10 +12,8 @@ class FeedScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final user = ref.watch(authProvider).user;
 
-    print(user.toDocument());
-
-    return SafeArea(
-      child: SingleChildScrollView(
+    return Scaffold(
+      body: SingleChildScrollView(
           primary: false,
           padding: const EdgeInsets.all(defaultPadding),
           child: Column(
@@ -31,6 +30,12 @@ class FeedScreen extends ConsumerWidget {
               Text(user.interessiCulinari!.toString()),
             ],
           )),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+         ref.read(pageControllerProvider).setPage(5);
+        },
+        child: const Icon(Icons.add),
+      ),
     );
   }
 }

@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:firebase_auth/firebase_auth.dart';
@@ -28,6 +27,18 @@ class StorageRepository {
     }
   }
 
+  /// Uploads multiple files to Firebase Storage.
+  ///
+  /// This method takes a `path` and a list of `files` as parameters. The `path` is the location
+  /// in Firebase Storage where the files need to be stored. The `files` parameter is a list of
+  /// files (in Uint8List format) that need to be uploaded.
+  Future<List<String>> uploadMultipleFiles(String path, List<Uint8List> files) async {
+    List<String> urls = [];
+    for (int i = 0; i < files.length; i++) {
+      urls.add(await uploadFile(path, files[i]));
+    }
+    return urls;
+  }
   /// This method is used to delete a file from Firebase Storage.
   Future<void> eliminaImgStorage(String child) async {
     try {

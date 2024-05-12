@@ -1,4 +1,5 @@
 import 'package:condivisionericette/utils/constant.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class TextInputField extends StatefulWidget {
@@ -16,6 +17,8 @@ class TextInputField extends StatefulWidget {
   final String? testoSopra;
   final BorderRadius? borderRadius;
   final TextEditingController? controller;
+  final int? maxLength;
+  final bool hasMaxLenght;
   const TextInputField({
     super.key,
     this.controller,
@@ -32,6 +35,8 @@ class TextInputField extends StatefulWidget {
     this.errorText,
     this.valoreIniziale,
     this.obscureText = false,
+    this.maxLength,
+    this.hasMaxLenght = false,
   });
 
   @override
@@ -39,6 +44,7 @@ class TextInputField extends StatefulWidget {
 }
 
 class _TextInputFieldState extends State<TextInputField> {
+  TextEditingController controllerTest = TextEditingController();
   bool showPassword = true;
 
   @override
@@ -62,14 +68,16 @@ class _TextInputFieldState extends State<TextInputField> {
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 18),
           child: TextFormField(
+            maxLength: widget.hasMaxLenght? widget.maxLength : null,
             enabled: widget.enable,
             onTap: widget.onTap,
-            controller: widget.controller,
+            controller: widget.controller ?? controllerTest,
             maxLines: widget.minLines,
             initialValue: widget.valoreIniziale,
             onChanged: widget.onChanged,
             obscureText: widget.obscureText ? showPassword : false,
             decoration: InputDecoration(
+              counterText: widget.hasMaxLenght ? '${ controllerTest.text.length}/${widget.maxLength}' : null,
               prefixIcon: widget.prefixIcon,
               suffixIcon: widget.obscureText
                   ? IconButton(

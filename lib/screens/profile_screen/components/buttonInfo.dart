@@ -11,7 +11,6 @@ class SaveProfile extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final user = ref.watch(authProvider).user;
-    final profileState = ref.watch(profileProvider);
     final profileController = ref.read(profileProvider.notifier);
     //final isValidated = profileState.status.isValidated;
     return AnimatedButton(
