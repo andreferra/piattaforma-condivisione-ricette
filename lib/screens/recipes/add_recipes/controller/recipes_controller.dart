@@ -150,17 +150,17 @@ class AddRecipesController extends StateNotifier<RecipesState> {
 
   Future<String> addRecipes(AuthUser oldUser) async {
     try {
-      state.copyWith(status: StateRecipes.inProgress);
+      state = state.copyWith(status: StateRecipes.inProgress);
       _firebaseRepo.addRecipe(
         oldUser,
         state,
         const Uuid().v4(),
       );
-      state.copyWith(status: StateRecipes.done);
+     state =  state.copyWith(status: StateRecipes.done);
 
       return "ok";
     } catch (e) {
-      state.copyWith(status: StateRecipes.error);
+      state = state.copyWith(status: StateRecipes.error);
       return "error";
     }
   }

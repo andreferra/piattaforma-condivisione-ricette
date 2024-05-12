@@ -3,7 +3,9 @@ import 'package:condivisionericette/screens/recipes/add_recipes/components/Ingre
 import 'package:condivisionericette/screens/recipes/add_recipes/components/ReceptStep.dart';
 import 'package:condivisionericette/screens/recipes/add_recipes/components/Tag.dart';
 import 'package:condivisionericette/screens/recipes/add_recipes/components/header_recipes.dart';
+import 'package:condivisionericette/screens/recipes/add_recipes/controller/recipes_controller.dart';
 import 'package:condivisionericette/utils/constant.dart';
+import 'package:condivisionericette/widget/loading_errors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -12,6 +14,22 @@ class AddRecipesScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    ref.listen<RecipesState>(addRecipesProvider, (previous, current) {
+      if (current.status == StateRecipes.inProgress) {
+        LoadingSheet.show(context);
+      } else if (current.status == StateRecipes.error) {
+        Navigator.of(context).pop();
+        ErrorDialog.show(context, "Errore pubblicazione della ricetta");
+      } else if (current.status == StateRecipes.done) {
+        SnackBar snackBar = const SnackBar(
+          content: Text("Impostazioni aggiornate con successo"),
+          duration: Duration(seconds: 2),
+        );
+        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+        Navigator.of(context).popUntil((route) => route.isFirst);
+      }
+    });
+
     return SafeArea(
       child: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),

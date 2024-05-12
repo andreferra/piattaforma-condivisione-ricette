@@ -16,6 +16,12 @@ class AddRecipesFailure implements Exception {
   const AddRecipesFailure(this.code);
 }
 
+class UpdateSettingFailure implements Exception {
+  final String code;
+
+  const UpdateSettingFailure(this.code);
+}
+
 class FirebaseRepository {
   final _firestore = FirebaseFirestore.instance;
   final _storage = StorageRepository();
@@ -72,14 +78,14 @@ class FirebaseRepository {
         'step_texts': state.passaggi,
         'user_id': user.uid,
         "data_creazione": FieldValue.serverTimestamp(),
-        "numero_recensioni" : 0,
-        "media_recensioni" : 0.0,
-        "numero_like" : 0,
-        "numero_commenti" : 0,
-        "commenti" : [],
-        "like" : [],
-        "numero_condivisioni" : 0,
-        "numero_visualizzazioni" : 0,
+        "numero_recensioni": 0,
+        "media_recensioni": 0.0,
+        "numero_like": 0,
+        "numero_commenti": 0,
+        "commenti": [],
+        "like": [],
+        "numero_condivisioni": 0,
+        "numero_visualizzazioni": 0,
       };
 
       //aggiungi ricetta al database
@@ -95,6 +101,22 @@ class FirebaseRepository {
       return Future.error(AddRecipesFailure(e.code));
     } catch (e) {
       return Future.error(AddRecipesFailure(e.toString()));
+    }
+  }
+
+  /// Updates the user's settings.
+  Future<void> updateUserSetting(
+      String email, String password, bool notification, String userid) async {
+    try {
+      await _firestore.collection('users').doc(userid).update({
+        'email': email,
+        'password': password,
+        'notification': notification,
+      });
+    } on FirebaseException catch (e) {
+      return Future.error(UpdateSettingFailure(e.code));
+    } catch (e) {
+      return Future.error(UpdateSettingFailure(e.toString()));
     }
   }
 }
