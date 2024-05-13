@@ -127,8 +127,8 @@ class RecipesState extends Equatable {
       allergie: List<String>.from(document["allergie"]),
       linkCoverImage: document["cover_image"],
       recipeInteraction: RecipeInteraction(
-        commenti: List<String>.from(document["commenti"]),
         dataCreazione: document["data_creazione"],
+        commenti: List<String>.from(document["commenti"]),
         like: document["like"],
         numeroCommenti: document["numero_commenti"],
         numeroLike: document["numero_like"],

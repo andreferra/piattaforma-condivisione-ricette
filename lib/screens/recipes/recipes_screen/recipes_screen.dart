@@ -57,6 +57,7 @@ class RecipesScreen extends ConsumerWidget {
                               onTap: () {
                                 Navigator.of(context).push(MaterialPageRoute(
                                     builder: (context) => ViewRecipeScreen(
+                                        isMine: true,
                                         recipesState: RecipesState.fromSnapshot(
                                             document))));
                               },

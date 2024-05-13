@@ -16,6 +16,12 @@ class AddRecipesFailure implements Exception {
   const AddRecipesFailure(this.code);
 }
 
+class UpdateVisualizationsFailure implements Exception {
+  final String code;
+
+  const UpdateVisualizationsFailure(this.code);
+}
+
 class UpdateSettingFailure implements Exception {
   final String code;
 
@@ -138,6 +144,21 @@ class FirebaseRepository {
       return Future.error(UpdateSettingFailure(e.code));
     } catch (e) {
       return Future.error(UpdateSettingFailure(e.toString()));
+    }
+  }
+
+  /// Update the recipes visualizations
+  Future<void> updateVisualizations(String recipeId) async {
+    try {
+    final recipe = await _firestore.collection('recipes').doc(recipeId).get();
+    final visualizzazioni = recipe['numero_visualizzazioni'] + 1;
+    await _firestore.collection('recipes').doc(recipeId).update({
+      'numero_visualizzazioni': visualizzazioni,
+    });
+    } on FirebaseException catch (e) {
+      return Future.error(UpdateVisualizationsFailure(e.code));
+    } catch (e) {
+      return Future.error(UpdateVisualizationsFailure(e.toString()));
     }
   }
 }

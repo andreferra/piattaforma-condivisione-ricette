@@ -1,16 +1,21 @@
 import 'package:condivisionericette/screens/recipes/add_recipes/controller/recipes_controller.dart';
+import 'package:condivisionericette/screens/recipes/view_screen/components/add_comment_component.dart';
 import 'package:condivisionericette/utils/constant.dart';
 import 'package:condivisionericette/utils/recipes/step_view_components.dart';
 import 'package:flutter/material.dart';
 
 class ViewRecipeScreen extends StatelessWidget {
+  final bool isMine;
   final RecipesState recipesState;
+  final int? visualizzazioni;
 
-  const ViewRecipeScreen({super.key, required this.recipesState});
+  const ViewRecipeScreen({super.key, required this.recipesState, required this.isMine, this.visualizzazioni});
 
   @override
   Widget build(BuildContext context) {
     const spazio = SizedBox(height: defaultPadding * 2);
+
+
 
     return Scaffold(
       appBar: AppBar(
@@ -101,7 +106,7 @@ class ViewRecipeScreen extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 Text(
-                    "Visualizzazioni: ${recipesState.recipeInteraction!.visualizzazioni}",
+                    "Visualizzazioni: ${visualizzazioni ?? recipesState.recipeInteraction!.visualizzazioni}",
                     style: const TextStyle(fontSize: 16)),
                 Text("Like: ${recipesState.recipeInteraction!.numeroLike}",
                     style: const TextStyle(fontSize: 16, color: Colors.green)),
@@ -130,9 +135,11 @@ class ViewRecipeScreen extends StatelessWidget {
                 key: UniqueKey(),
               ),
             spazio,
-            const Text("COMMENTI",
+            const Text("RECENSIONI",
                 style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
             spazio,
+            if(!isMine)
+              const AddCommentComponent(),
             for (var i = 0; i < recipesState.recipeInteraction!.commenti!.length; i++)
               Column(
                 children: [
