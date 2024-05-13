@@ -33,14 +33,21 @@ class RecipeInteractionController extends StateNotifier<RecipeInteraction> {
     );
   }
 
-  void onCommentSubmitted() {
-    final comment = state.commento;
-    if (comment != null) {
-      state = state.copyWith(
-        commenti: [...state.commenti!, comment.idCommento!],
-        numeroCommenti: state.numeroCommenti! + 1,
-        commento: null,
-      );
+  Future<String> onCommentSubmitted(String recipeId) async {
+    try {
+      final comment = state.commento;
+      if (comment != null) {
+        await _firebaseRepo.addComment(comment.toMap(), recipeId);
+        state = state.copyWith(
+          commenti: [...state.commenti!, comment],
+          commento: Comment.empty,
+        );
+        return "ok";
+      }
+      return "error";
+    } catch (e) {
+      print(e);
+      return "error";
     }
   }
 }

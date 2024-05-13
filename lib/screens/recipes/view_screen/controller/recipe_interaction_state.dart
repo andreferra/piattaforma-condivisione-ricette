@@ -1,7 +1,7 @@
 part of 'recipe_interaction_controller.dart';
 
 class RecipeInteraction extends Equatable {
-  final List<String>? commenti;
+  final List<Comment>? commenti;
   final Timestamp? dataCreazione;
   final List? like;
   final int? numeroCommenti;
@@ -13,7 +13,7 @@ class RecipeInteraction extends Equatable {
   final int? numeroStelle;
 
   const RecipeInteraction({
-    this.commenti,
+    this.commenti = const [],
     this.dataCreazione,
     this.like,
     this.numeroCommenti,
@@ -25,7 +25,7 @@ class RecipeInteraction extends Equatable {
   });
 
   RecipeInteraction copyWith({
-    List<String>? commenti,
+    List<Comment>? commenti,
     Timestamp? dataCreazione,
     List? like,
     int? numeroCommenti,

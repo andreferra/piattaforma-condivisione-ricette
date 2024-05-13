@@ -9,13 +9,15 @@ class ViewRecipeScreen extends StatelessWidget {
   final RecipesState recipesState;
   final int? visualizzazioni;
 
-  const ViewRecipeScreen({super.key, required this.recipesState, required this.isMine, this.visualizzazioni});
+  const ViewRecipeScreen(
+      {super.key,
+      required this.recipesState,
+      required this.isMine,
+      this.visualizzazioni});
 
   @override
   Widget build(BuildContext context) {
     const spazio = SizedBox(height: defaultPadding * 2);
-
-
 
     return Scaffold(
       appBar: AppBar(
@@ -138,16 +140,23 @@ class ViewRecipeScreen extends StatelessWidget {
             const Text("RECENSIONI",
                 style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
             spazio,
-            if(!isMine)
-              const AddCommentComponent(),
-            for (var i = 0; i < recipesState.recipeInteraction!.commenti!.length; i++)
-              Column(
+            if (!isMine)
+              SizedBox(
+                width: MediaQuery.of(context).size.width * 0.5,
+                child: AddCommentComponent(
+                  recipesState: recipesState,
+                ),
+              ),
+            /*  for (var i = 0;
+                i < recipesState.recipeInteraction!.commenti!.length;
+                i++)
+               Column(
                 children: [
                   Text(recipesState.recipeInteraction!.commenti![i],
                       style: const TextStyle(fontSize: 16)),
                   spazio,
                 ],
-              ),
+              ), */
           ],
         ),
       ),

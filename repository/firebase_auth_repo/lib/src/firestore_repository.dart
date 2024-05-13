@@ -28,6 +28,12 @@ class UpdateSettingFailure implements Exception {
   const UpdateSettingFailure(this.code);
 }
 
+class AddCommentFailure implements Exception {
+  final String code;
+
+  const AddCommentFailure(this.code);
+}
+
 class FirebaseRepository {
   final _firestore = FirebaseFirestore.instance;
   final _storage = StorageRepository();
@@ -61,7 +67,6 @@ class FirebaseRepository {
       return Future.error(UpdateProfileFailure(e.toString()));
     }
   }
-
 
   /// Delete user from database
   Future<void> deleteUserFromDatabase(String uid) async {
@@ -150,15 +155,29 @@ class FirebaseRepository {
   /// Update the recipes visualizations
   Future<void> updateVisualizations(String recipeId) async {
     try {
-    final recipe = await _firestore.collection('recipes').doc(recipeId).get();
-    final visualizzazioni = recipe['numero_visualizzazioni'] + 1;
-    await _firestore.collection('recipes').doc(recipeId).update({
-      'numero_visualizzazioni': visualizzazioni,
-    });
+      final recipe = await _firestore.collection('recipes').doc(recipeId).get();
+      final visualizzazioni = recipe['numero_visualizzazioni'] + 1;
+      await _firestore.collection('recipes').doc(recipeId).update({
+        'numero_visualizzazioni': visualizzazioni,
+      });
     } on FirebaseException catch (e) {
       return Future.error(UpdateVisualizationsFailure(e.code));
     } catch (e) {
       return Future.error(UpdateVisualizationsFailure(e.toString()));
+    }
+  }
+
+  /// Adds a comment to the recipe.
+  Future<void> addComment(Map comment, String recipesId) async {
+    try {
+      await _firestore.collection('recipes').doc(recipesId).set({
+        'commenti': FieldValue.arrayUnion([comment]),
+        'numero_commenti': FieldValue.increment(1),
+      }, SetOptions(merge: true));
+    } on FirebaseException catch (e) {
+      return Future.error(AddCommentFailure(e.code));
+    } catch (e) {
+      return Future.error(AddCommentFailure(e.toString()));
     }
   }
 }

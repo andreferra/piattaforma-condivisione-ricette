@@ -39,4 +39,15 @@ class Comment {
       'urlUtente': urlUtente,
     };
   }
+
+  //empty comment
+  static Comment get empty => Comment(
+    idCommento: '',
+    userId: '',
+    commento: '',
+    dataCreazione: Timestamp.now(),
+    nicknameUtente: '',
+    urlUtente: '',
+  );
+
 }

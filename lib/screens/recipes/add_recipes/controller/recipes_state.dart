@@ -10,6 +10,7 @@ class RecipesState extends Equatable {
   final List<String> tag;
   final List<String> allergie;
   final Uint8List? coverImage;
+  final String? recipeID;
 
   //utili
   final String? ingrediente;
@@ -32,6 +33,7 @@ class RecipesState extends Equatable {
   final FileState fileState;
 
   const RecipesState({
+    this.recipeID,
     this.nomePiatto,
     this.descrizione,
     this.tempoPreparazione,
@@ -82,11 +84,13 @@ class RecipesState extends Equatable {
     String? stepText,
     String? linkCoverImage,
     List<String>? linkStepImages,
+    String? recipeID,
     RecipeInteraction? recipeInteraction,
     StateRecipes? status,
     FileState? fileState,
   }) {
     return RecipesState(
+      recipeID: recipeID ?? this.recipeID,
       nomePiatto: nomePiatto ?? this.nomePiatto,
       descrizione: descrizione ?? this.descrizione,
       tempoPreparazione: tempoPreparazione ?? this.tempoPreparazione,
@@ -114,7 +118,10 @@ class RecipesState extends Equatable {
 
   //converti fa snapshot in RecipesState
   factory RecipesState.fromSnapshot(DocumentSnapshot document) {
+    List<Comment> commenti =
+        (document["commenti"] as List).map((e) => Comment.fromMap(e )).toList();
     return RecipesState(
+      recipeID: document["uid"],
       nomePiatto: document["nome_piatto"],
       descrizione: document["descrizione"],
       tempoPreparazione: document["tempo_preparazione"],
@@ -128,20 +135,20 @@ class RecipesState extends Equatable {
       linkCoverImage: document["cover_image"],
       recipeInteraction: RecipeInteraction(
         dataCreazione: document["data_creazione"],
-        commenti: List<String>.from(document["commenti"]),
+        commenti: commenti,
         like: document["like"],
         numeroCommenti: document["numero_commenti"],
         numeroLike: document["numero_like"],
         numeroCondivisioni: document["numero_condivisioni"],
         visualizzazioni: document["numero_visualizzazioni"],
       ),
-
     );
   }
 
   @override
   List<Object?> get props => [
         nomePiatto,
+        recipeID,
         descrizione,
         tempoPreparazione,
         porzioni,

@@ -1,4 +1,5 @@
 import 'package:condivisionericette/controller/auth_controller/auth_controller.dart';
+import 'package:condivisionericette/screens/recipes/add_recipes/controller/recipes_controller.dart';
 import 'package:condivisionericette/screens/recipes/view_screen/controller/recipe_interaction_controller.dart';
 import 'package:condivisionericette/utils/constant.dart';
 import 'package:condivisionericette/widget/button/animated_button.dart';
@@ -8,7 +9,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class AddCommentComponent extends ConsumerWidget {
-  const AddCommentComponent({super.key});
+  final RecipesState recipesState;
+
+  const AddCommentComponent({super.key, required this.recipesState});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -30,8 +33,18 @@ class AddCommentComponent extends ConsumerWidget {
           ),
           const SizedBox(height: defaultPadding),
           AnimatedButton(
-              onTap: () {
-
+              onTap: () async {
+                await recipeInteractionController
+                    .onCommentSubmitted(recipesState.recipeID!)
+                    .then((value) {
+                  if (value == "ok") {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text("Commento aggiunto")));
+                  } else if(value == "error") {
+                    ScaffoldMessenger.of(context)
+                        .showSnackBar(const SnackBar(content: Text("Errore")));
+                  }
+                });
               },
               child: const RoundedButtonStyle(title: "Pubblica commento"))
         ],
