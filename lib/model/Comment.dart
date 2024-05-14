@@ -7,6 +7,7 @@ class Comment {
   final Timestamp? dataCreazione;
   final String? nicknameUtente;
   final String? urlUtente;
+  final int? numeroStelle;
 
 
   Comment({
@@ -16,6 +17,7 @@ class Comment {
     this.dataCreazione,
     this.nicknameUtente,
     this.urlUtente,
+    this.numeroStelle,
   });
 
   factory Comment.fromMap(Map<String, dynamic> map) {
@@ -26,6 +28,7 @@ class Comment {
       dataCreazione: map['dataCreazione'],
       nicknameUtente: map['nicknameUtente'],
       urlUtente: map['urlUtente'],
+      numeroStelle: map['numeroStelle'],
     );
   }
 
@@ -37,6 +40,7 @@ class Comment {
       'dataCreazione': dataCreazione,
       'nicknameUtente': nicknameUtente,
       'urlUtente': urlUtente,
+      'numeroStelle': numeroStelle,
     };
   }
 
@@ -48,6 +52,7 @@ class Comment {
     dataCreazione: Timestamp.now(),
     nicknameUtente: '',
     urlUtente: '',
+    numeroStelle: 0,
   );
 
 }

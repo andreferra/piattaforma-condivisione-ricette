@@ -1,6 +1,7 @@
 import 'package:condivisionericette/screens/recipes/add_recipes/controller/recipes_controller.dart';
 import 'package:condivisionericette/screens/recipes/view_screen/components/add_comment_component.dart';
 import 'package:condivisionericette/utils/constant.dart';
+import 'package:condivisionericette/utils/recipes/comment_view_components.dart';
 import 'package:condivisionericette/utils/recipes/step_view_components.dart';
 import 'package:flutter/material.dart';
 
@@ -147,16 +148,27 @@ class ViewRecipeScreen extends StatelessWidget {
                   recipesState: recipesState,
                 ),
               ),
-            /*  for (var i = 0;
-                i < recipesState.recipeInteraction!.commenti!.length;
-                i++)
-               Column(
+            SizedBox(
+              height: MediaQuery.of(context).size.height * 0.6,
+              width: MediaQuery.of(context).size.width * 0.8,
+              child: ListView(
+                padding: const EdgeInsets.all(defaultPadding),
+                shrinkWrap: true,
+                physics: const BouncingScrollPhysics(),
                 children: [
-                  Text(recipesState.recipeInteraction!.commenti![i],
-                      style: const TextStyle(fontSize: 16)),
-                  spazio,
+                  for (var i = 0;
+                      i < recipesState.recipeInteraction!.commenti!.length;
+                      i++)
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: defaultPadding * 2,
+                          vertical: defaultPadding),
+                      child: CommentCard(
+                          recipesState.recipeInteraction!.commenti![i]),
+                    ),
                 ],
-              ), */
+              ),
+            ),
           ],
         ),
       ),
