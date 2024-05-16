@@ -1,3 +1,4 @@
+import 'package:condivisionericette/controller/auth_controller/auth_controller.dart';
 import 'package:condivisionericette/model/Comment.dart';
 import 'package:condivisionericette/screens/recipes/add_recipes/controller/recipes_controller.dart';
 import 'package:condivisionericette/screens/recipes/view_screen/components/add_comment_component.dart';
@@ -20,7 +21,6 @@ class CommentCard extends ConsumerWidget {
     final recipeInteractionController =
         ref.read(recipeInteractionProvider.notifier);
 
-    final newCommento = ref.watch(recipeInteractionProvider).commenti;
     final commentoId =
         ref.watch(recipeInteractionProvider).idCommentoReply ?? "";
 
@@ -33,28 +33,57 @@ class CommentCard extends ConsumerWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 InkWell(
-                  onTap: () {
-                    //TODO: Add navigation to user profile
-                  },
-                  child: CircleAvatar(
-                    radius: 20,
-                    backgroundImage: NetworkImage(commento.urlUtente!),
-                  ),
+                  onTap: () {},
+                  child: Row(children: [
+                    CircleAvatar(
+                      radius: 20,
+                      backgroundImage: NetworkImage(commento.urlUtente!),
+                    ),
+                    const SizedBox(width: 8),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(commento.nicknameUtente!),
+                        Text(commento.dataCreazione!
+                            .toDate()
+                            .toString()
+                            .substring(0, 10)),
+                      ],
+                    )
+                  ]),
                 ),
-                const SizedBox(width: 8),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(commento.nicknameUtente!),
-                    Text(commento.dataCreazione!
-                        .toDate()
-                        .toString()
-                        .substring(0, 10)),
-                  ],
-                )
+                if (commento.userId == ref.watch(authProvider).user.uid)
+                  IconButton(
+                      onPressed: () async {
+                        await recipeInteractionController
+                            .onDeleteComment(
+                                commento.idCommento!, recipesState.recipeID!)
+                            .then((value) {
+                          switch (value) {
+                            case "ok":
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                      content: Text("Commento eliminato")));
+                              break;
+                            case "error":
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                      content: Text(
+                                          "Errore durante l'eliminazione del commento")));
+                              break;
+                            default:
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                      content: Text("Errore sconosciuto")));
+                              break;
+                          }
+                        });
+                      },
+                      icon: const Icon(Icons.delete))
               ],
             ),
             const SizedBox(height: 8),
@@ -104,8 +133,6 @@ class CommentCard extends ConsumerWidget {
             if (commento.risposte != null)
               for (var i = 0; i < commento.risposte!.length; i++)
                 CommentCard(commento.risposte![i], recipesState),
-
-            const SizedBox(height: defaultPadding * 3),
           ],
         ),
       ),

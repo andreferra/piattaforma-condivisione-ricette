@@ -170,10 +170,15 @@ class ViewRecipeScreen extends StatelessWidget {
                         recipesState,
                       ),
                     ),
+                  const SizedBox(height: defaultPadding * 3),
+
                 ],
               ),
             ),
+            const SizedBox(height: defaultPadding * 3),
+
           ],
+
         ),
       ),
     );

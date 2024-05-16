@@ -2,6 +2,7 @@ import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth_repo/auth_repo.dart';
+import 'package:firebase_auth_repo/src/authentication_repository.dart';
 import 'package:firebase_auth_repo/src/storage_respository.dart';
 
 class UpdateProfileFailure implements Exception {
@@ -32,6 +33,12 @@ class AddCommentFailure implements Exception {
   final String code;
 
   const AddCommentFailure(this.code);
+}
+
+class DeleteCommentFailure implements Exception {
+  final String code;
+
+  const DeleteCommentFailure(this.code);
 }
 
 class FirebaseRepository {
@@ -182,22 +189,64 @@ class FirebaseRepository {
   }
 
   /// Adds a reply to the comment.
-  Future<void> addReply(Map comment, String recipesId, String idCommentoPadre) async {
+  Future<String> addReply(
+      Map reply, String recipesId, String idCommentoPadre) async {
     try {
-      var querySnapshot = await _firestore
-          .collection('recipes')
-          .doc(recipesId)
-          .collection('commenti')
-          .where('idCommento', isEqualTo: idCommentoPadre)
-          .get();
-      var docToUpdate = querySnapshot.docs.first;
-      await docToUpdate.reference.update({
-        'risposte': FieldValue.arrayUnion([comment])
-      });
+      print('Adding reply to comment with id: $idCommentoPadre');
+      var recipeDoc =
+          await _firestore.collection('recipes').doc(recipesId).get();
+      var commenti = List<Map<String, dynamic>>.from(recipeDoc['commenti']);
+      var commentIndex = commenti
+          .indexWhere((commento) => commento['idCommento'] == idCommentoPadre);
+      if (commentIndex != -1) {
+        var commento = commenti[commentIndex];
+        if (commento['risposte'] == null) {
+          commento['risposte'] = [reply];
+        } else {
+          commento['risposte'].add(reply);
+        }
+        commenti[commentIndex] = commento;
+        await _firestore.collection('recipes').doc(recipesId).update({
+          'commenti': commenti,
+        });
+        return 'ok';
+      } else {
+        print('No comment found with id: $idCommentoPadre');
+        return 'error';
+      }
     } on FirebaseException catch (e) {
-      return Future.error(AddCommentFailure(e.code));
+      print(e);
+      return 'error';
     } catch (e) {
-      return Future.error(AddCommentFailure(e.toString()));
+      print(e);
+      return 'error';
+    }
+  }
+
+  /// Delete comments
+  Future<String> deleteComment(String recipesId, String idCommento) async {
+    try {
+      print('Deleting comment with id: $idCommento');
+      var recipeDoc =
+          await _firestore.collection('recipes').doc(recipesId).get();
+      var commenti = List<Map<String, dynamic>>.from(recipeDoc['commenti']);
+      var commentIndex = commenti
+          .indexWhere((commento) => commento['idCommento'] == idCommento);
+      if (commentIndex != -1) {
+        commenti.removeAt(commentIndex);
+        await _firestore.collection('recipes').doc(recipesId).update({
+          'commenti': commenti,
+          'numero_commenti': FieldValue.increment(-1),
+        });
+        return 'ok';
+      }
+      return 'error';
+    } on FirebaseException catch (e) {
+      print(e);
+      return Future.error(DeleteCommentFailure(e.code));
+    } catch (e) {
+      print(e);
+      return Future.error(DeleteCommentFailure(e.toString()));
     }
   }
 }
