@@ -57,7 +57,7 @@ class AddCommentComponent extends ConsumerWidget {
                 switch (res) {
                   case "ok":
                     ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text("Commento aggiunto")));
+                        const SnackBar(content: Text("Commento aggiunto, ricarica la pagina per visualizzarlo")));
                     break;
                   case "error":
                     ScaffoldMessenger.of(context)

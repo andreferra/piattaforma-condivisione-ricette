@@ -8,7 +8,7 @@ class Comment {
   final String? nicknameUtente;
   final String? urlUtente;
   final int? numeroStelle;
-
+  final List<Comment>? risposte;
 
   Comment({
     this.idCommento,
@@ -17,8 +17,34 @@ class Comment {
     this.dataCreazione,
     this.nicknameUtente,
     this.urlUtente,
-    this.numeroStelle,
+    this.numeroStelle = 1,
+    this.risposte,
   });
+
+
+  Comment copyWith({
+    String? idCommento,
+    String? userId,
+    String? commento,
+    Timestamp? dataCreazione,
+    String? nicknameUtente,
+    String? urlUtente,
+    int? numeroStelle,
+    List<Comment>? risposte,
+  }) {
+    return Comment(
+      idCommento: idCommento ?? this.idCommento,
+      userId: userId ?? this.userId,
+      commento: commento ?? this.commento,
+      dataCreazione: dataCreazione ?? this.dataCreazione,
+      nicknameUtente: nicknameUtente ?? this.nicknameUtente,
+      urlUtente: urlUtente ?? this.urlUtente,
+      numeroStelle: numeroStelle ?? this.numeroStelle,
+      risposte: risposte ?? this.risposte,
+    );
+  }
+
+
 
   factory Comment.fromMap(Map<String, dynamic> map) {
     return Comment(
@@ -29,6 +55,8 @@ class Comment {
       nicknameUtente: map['nicknameUtente'],
       urlUtente: map['urlUtente'],
       numeroStelle: map['numeroStelle'],
+      risposte: map['risposte'],
+
     );
   }
 
@@ -41,18 +69,20 @@ class Comment {
       'nicknameUtente': nicknameUtente,
       'urlUtente': urlUtente,
       'numeroStelle': numeroStelle,
+      'risposte': risposte,
     };
   }
 
+
   //empty comment
   static Comment get empty => Comment(
-    idCommento: '',
-    userId: '',
-    commento: '',
-    dataCreazione: Timestamp.now(),
-    nicknameUtente: '',
-    urlUtente: '',
-    numeroStelle: 0,
-  );
-
+        idCommento: '',
+        userId: '',
+        commento: '',
+        dataCreazione: Timestamp.now(),
+        nicknameUtente: '',
+        urlUtente: '',
+        numeroStelle: 0,
+        risposte: [],
+      );
 }

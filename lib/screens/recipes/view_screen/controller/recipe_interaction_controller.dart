@@ -18,7 +18,7 @@ class RecipeInteractionController extends StateNotifier<RecipeInteraction> {
   final FirebaseRepository _firebaseRepo;
 
   RecipeInteractionController(this._firebaseRepo, this._authRepo)
-      : super(const RecipeInteraction());
+      : super(RecipeInteraction());
 
   void onCommentTextChanged(String value, AuthUser user) {
     state = state.copyWith(
@@ -37,6 +37,11 @@ class RecipeInteractionController extends StateNotifier<RecipeInteraction> {
     try {
       final comment = state.commento;
       if (comment != null) {
+        if (comment.numeroStelle != state.numeroStelle) {
+          comment.copyWith(
+            numeroStelle: state.numeroStelle,
+          );
+        }
         await _firebaseRepo.addComment(comment.toMap(), recipeId);
         state = state.copyWith(
           commenti: [...state.commenti!, comment],
@@ -49,5 +54,37 @@ class RecipeInteractionController extends StateNotifier<RecipeInteraction> {
       print(e);
       return "error";
     }
+  }
+
+  Future<String> addOnReply(String recipeId) async {
+    try {
+      final comment = state.commento;
+      if (comment != null) {
+        await _firebaseRepo.addReply(
+            comment.toMap(), recipeId, state.idCommentoReply!);
+        state = state.copyWith(
+          commenti: [...state.commenti!, comment],
+          commento: Comment.empty,
+        );
+        return "ok";
+      }
+      return "error";
+    } catch (e) {
+      print(e);
+      return "error";
+    }
+  }
+
+  onReplyComment(String idCommento) {
+    state = state.copyWith(
+      reply: !state.reply!,
+      idCommentoReply: idCommento,
+    );
+  }
+
+  onSetStars(int stars) {
+    state = state.copyWith(
+      numeroStelle: stars,
+    );
   }
 }

@@ -20,6 +20,7 @@ class CommentCard extends ConsumerWidget {
     final recipeInteractionController =
         ref.read(recipeInteractionProvider.notifier);
 
+    final newCommento = ref.watch(recipeInteractionProvider).commenti;
     final commentoId =
         ref.watch(recipeInteractionProvider).idCommentoReply ?? "";
 

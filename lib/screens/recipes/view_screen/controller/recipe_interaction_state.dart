@@ -12,7 +12,10 @@ class RecipeInteraction extends Equatable {
   final Comment? commento;
   final int? numeroStelle;
 
-  const RecipeInteraction({
+  bool? reply;
+  String? idCommentoReply;
+
+  RecipeInteraction({
     this.commenti = const [],
     this.dataCreazione,
     this.like,
@@ -22,6 +25,8 @@ class RecipeInteraction extends Equatable {
     this.visualizzazioni,
     this.commento,
     this.numeroStelle,
+    this.reply = false,
+    this.idCommentoReply,
   });
 
   RecipeInteraction copyWith({
@@ -34,6 +39,8 @@ class RecipeInteraction extends Equatable {
     int? visualizzazioni,
     Comment? commento,
     int? numeroStelle,
+    bool? reply,
+    String? idCommentoReply,
   }) {
     return RecipeInteraction(
       commenti: commenti ?? this.commenti,
@@ -45,6 +52,8 @@ class RecipeInteraction extends Equatable {
       visualizzazioni: visualizzazioni ?? this.visualizzazioni,
       commento: commento ?? this.commento,
       numeroStelle: numeroStelle ?? this.numeroStelle,
+      reply: reply ?? this.reply,
+      idCommentoReply: idCommentoReply ?? this.idCommentoReply,
     );
   }
 
@@ -54,10 +63,12 @@ class RecipeInteraction extends Equatable {
         dataCreazione,
         like,
         numeroCommenti,
+        reply,
         numeroLike,
         numeroCondivisioni,
         visualizzazioni,
         commento,
         numeroStelle,
+        idCommentoReply,
       ];
 }
