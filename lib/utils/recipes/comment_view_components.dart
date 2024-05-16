@@ -1,5 +1,6 @@
 import 'package:condivisionericette/controller/auth_controller/auth_controller.dart';
 import 'package:condivisionericette/model/Comment.dart';
+import 'package:condivisionericette/screens/public_profile/public_profile_screen.dart';
 import 'package:condivisionericette/screens/recipes/add_recipes/controller/recipes_controller.dart';
 import 'package:condivisionericette/screens/recipes/view_screen/components/add_comment_component.dart';
 import 'package:condivisionericette/screens/recipes/view_screen/controller/recipe_interaction_controller.dart';
@@ -9,10 +10,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class CommentCard extends ConsumerWidget {
   final Comment commento;
-
+  final bool risposta;
   final RecipesState recipesState;
 
-  const CommentCard(this.commento, this.recipesState, {super.key});
+  const CommentCard(this.commento, this.recipesState, this.risposta,
+      {super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -36,7 +38,10 @@ class CommentCard extends ConsumerWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 InkWell(
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => PublicProfile(commento.userId!)));
+                  },
                   child: Row(children: [
                     CircleAvatar(
                       radius: 20,
@@ -96,7 +101,7 @@ class CommentCard extends ConsumerWidget {
             ),
             const SizedBox(height: 8),
             //TODO: Add recipes photo
-            if (commento.numeroStelle != 0)
+            if (commento.numeroStelle != 0 && risposta)
               Row(
                 children: [
                   for (var i = 0; i < commento.numeroStelle!; i++)
@@ -132,7 +137,7 @@ class CommentCard extends ConsumerWidget {
               ),
             if (commento.risposte != null)
               for (var i = 0; i < commento.risposte!.length; i++)
-                CommentCard(commento.risposte![i], recipesState),
+                CommentCard(commento.risposte![i], recipesState, true),
           ],
         ),
       ),

@@ -39,7 +39,7 @@ class AddCommentComponent extends ConsumerWidget {
             },
           ),
           const SizedBox(height: defaultPadding),
-          const AddStars(),
+          if (!subComment) ...[const AddStars()],
           const SizedBox(height: defaultPadding),
           AnimatedButton(
               onTap: () async {
@@ -56,8 +56,9 @@ class AddCommentComponent extends ConsumerWidget {
 
                 switch (res) {
                   case "ok":
-                    ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text("Commento aggiunto, ricarica la pagina per visualizzarlo")));
+                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                        content: Text(
+                            "Commento aggiunto, ricarica la pagina per visualizzarlo")));
                     break;
                   case "error":
                     ScaffoldMessenger.of(context)

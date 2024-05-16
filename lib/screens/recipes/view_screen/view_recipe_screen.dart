@@ -168,6 +168,7 @@ class ViewRecipeScreen extends StatelessWidget {
                       child: CommentCard(
                         recipesState.recipeInteraction!.commenti![i],
                         recipesState,
+                        false,
                       ),
                     ),
                   const SizedBox(height: defaultPadding * 3),

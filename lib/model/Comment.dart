@@ -21,7 +21,6 @@ class Comment {
     this.risposte,
   });
 
-
   Comment copyWith({
     String? idCommento,
     String? userId,
@@ -56,7 +55,6 @@ class Comment {
       urlUtente: map['urlUtente'],
       numeroStelle: map['numeroStelle'],
       risposte: map['risposte'],
-
     );
   }
 
@@ -72,7 +70,6 @@ class Comment {
       'risposte': risposte,
     };
   }
-
 
   //empty comment
   static Comment get empty => Comment(
