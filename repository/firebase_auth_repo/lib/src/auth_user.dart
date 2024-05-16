@@ -20,6 +20,7 @@ class AuthUser extends Equatable {
   final List<String>? follower;
   final List<String>? following;
   final int? posts;
+  final List<String>? listaNotifiche;
 
   const AuthUser({
     required this.uid,
@@ -38,6 +39,7 @@ class AuthUser extends Equatable {
     this.interessiCulinari,
     this.bio,
     this.notification = true,
+    this.listaNotifiche,
     this.follower,
     this.following,
     this.posts,
@@ -67,6 +69,7 @@ class AuthUser extends Equatable {
         bio,
         follower,
         following,
+        listaNotifiche,
         posts,
       ];
 
@@ -101,6 +104,9 @@ class AuthUser extends Equatable {
           .map((e) => e.toString())
           .toList(),
       posts: data['posts'],
+      listaNotifiche: (data['listaNotifiche'] as List<dynamic>)
+          .map((e) => e.toString())
+          .toList(),
     );
   }
 
@@ -125,6 +131,7 @@ class AuthUser extends Equatable {
       'follower': follower,
       'following': following,
       'posts': posts,
+      'listaNotifiche': listaNotifiche,
     };
   }
 
@@ -148,6 +155,7 @@ class AuthUser extends Equatable {
     List<String>? follower,
     List<String>? following,
     int? posts,
+    List<String>? listaNotifiche,
   }) {
     return AuthUser(
       uid: uid ?? this.uid,
@@ -169,6 +177,7 @@ class AuthUser extends Equatable {
       follower: follower ?? this.follower,
       following: following ?? this.following,
       posts: posts ?? this.posts,
+      listaNotifiche: listaNotifiche ?? this.listaNotifiche,
     );
   }
 }

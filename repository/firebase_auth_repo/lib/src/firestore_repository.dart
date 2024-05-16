@@ -283,4 +283,32 @@ class FirebaseRepository {
       return Future.error(UpdateProfileFailure(e.toString()));
     }
   }
+
+  /// Add a notification to the user
+  Future<String> addNotification(String user1, String user2) async {
+    try {
+      await _firestore.collection('users').doc(user2).update({
+        'listaNotifiche': FieldValue.arrayUnion([user1])
+      });
+      return 'ok';
+    } on FirebaseException catch (e) {
+      return Future.error(UpdateProfileFailure(e.code));
+    } catch (e) {
+      return Future.error(UpdateProfileFailure(e.toString()));
+    }
+  }
+
+  /// Delete a notification from the user
+  Future<String> deleteNotification(String user1, String user2) async {
+    try {
+      await _firestore.collection('users').doc(user2).update({
+        'listaNotifiche': FieldValue.arrayRemove([user1])
+      });
+      return 'ok';
+    } on FirebaseException catch (e) {
+      return Future.error(UpdateProfileFailure(e.code));
+    } catch (e) {
+      return Future.error(UpdateProfileFailure(e.toString()));
+    }
+  }
 }

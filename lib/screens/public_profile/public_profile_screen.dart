@@ -22,6 +22,7 @@ class _PublicProfileState extends State<PublicProfile> {
   AuthUser user = AuthUser.empty;
   bool isLoad = false;
   bool loSeguo = false;
+  bool notifiche = false;
 
   void laodUserData() async {
     await _firebaseRepository.getUserFromDatabase(widget.userID).then((user) {
@@ -32,6 +33,9 @@ class _PublicProfileState extends State<PublicProfile> {
           user.follower!.contains(widget.mioId)
               ? loSeguo = true
               : loSeguo = false;
+          user.listaNotifiche!.contains(widget.mioId)
+              ? notifiche = true
+              : notifiche = false;
         });
       }
     });
@@ -75,6 +79,56 @@ class _PublicProfileState extends State<PublicProfile> {
             });
             ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(content: Text("utente seguito con successo")));
+            break;
+          default:
+            ScaffoldMessenger.of(context)
+                .showSnackBar(const SnackBar(content: Text("Errore")));
+            break;
+        }
+      });
+    } on UpdateProfileFailure catch (e) {
+      print(e);
+    }
+  }
+
+  Future<void> _notificaUser() async {
+    try {
+      await _firebaseRepository
+          .addNotification(widget.mioId, user.uid)
+          .then((value) {
+        switch (value) {
+          case 'ok':
+            setState(() {
+              notifiche = true;
+              user.listaNotifiche!.add(widget.mioId);
+            });
+            ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text("Notifiche attivate")));
+            break;
+          default:
+            ScaffoldMessenger.of(context)
+                .showSnackBar(const SnackBar(content: Text("Errore")));
+            break;
+        }
+      });
+    } on UpdateProfileFailure catch (e) {
+      print(e);
+    }
+  }
+
+  Future<void> _togliNotifiche() async {
+    try {
+      await _firebaseRepository
+          .deleteNotification(widget.mioId, user.uid)
+          .then((value) {
+        switch (value) {
+          case 'ok':
+            setState(() {
+              notifiche = false;
+              user.listaNotifiche!.remove(widget.mioId);
+            });
+            ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text("Notifiche disattivate")));
             break;
           default:
             ScaffoldMessenger.of(context)
@@ -154,6 +208,24 @@ class _PublicProfileState extends State<PublicProfile> {
                               label: const Text("Message"),
                               icon: const Icon(Icons.message_rounded),
                             ),
+                            const SizedBox(width: 16.0),
+                            if (loSeguo)
+                              FloatingActionButton.extended(
+                                onPressed: () {
+                                  !notifiche
+                                      ? _notificaUser()
+                                      : _togliNotifiche();
+                                },
+                                heroTag: "Notifiche",
+                                elevation: 0,
+                                backgroundColor: Colors.blue,
+                                label: notifiche
+                                    ? const Text("Notifiche attive")
+                                    : const Text("Notifiche disattive"),
+                                icon: notifiche
+                                    ? const Icon(Icons.notifications_active)
+                                    : const Icon(Icons.notifications_off),
+                              ),
                           ],
                         ),
                         const SizedBox(height: 16),
