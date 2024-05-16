@@ -1,6 +1,5 @@
 part of 'recipes_controller.dart';
 
-
 class RecipesState extends Equatable {
   final String? nomePiatto;
   final String? descrizione;
@@ -11,6 +10,9 @@ class RecipesState extends Equatable {
   final List<String> tag;
   final List<String> allergie;
   final Uint8List? coverImage;
+  final String? recipeID;
+  final String? userID;
+  final Timestamp? dataCreazione;
 
   //utili
   final String? ingrediente;
@@ -28,13 +30,15 @@ class RecipesState extends Equatable {
   final String? stepText;
   final String? linkCoverImage;
   final List<String>? linkStepImages;
-
+  final RecipeInteraction? recipeInteraction;
   final StateRecipes status;
   final FileState fileState;
 
   const RecipesState({
+    this.recipeID,
     this.nomePiatto,
     this.descrizione,
+    this.dataCreazione,
     this.tempoPreparazione,
     this.porzioni,
     this.difficolta = "facile",
@@ -55,6 +59,8 @@ class RecipesState extends Equatable {
     this.stepText,
     this.linkCoverImage,
     this.linkStepImages,
+    this.userID,
+    this.recipeInteraction,
     this.status = StateRecipes.initial,
     this.fileState = FileState.initial,
   });
@@ -82,10 +88,13 @@ class RecipesState extends Equatable {
     String? stepText,
     String? linkCoverImage,
     List<String>? linkStepImages,
+    String? recipeID,
+    RecipeInteraction? recipeInteraction,
     StateRecipes? status,
     FileState? fileState,
   }) {
     return RecipesState(
+      recipeID: recipeID ?? this.recipeID,
       nomePiatto: nomePiatto ?? this.nomePiatto,
       descrizione: descrizione ?? this.descrizione,
       tempoPreparazione: tempoPreparazione ?? this.tempoPreparazione,
@@ -107,12 +116,45 @@ class RecipesState extends Equatable {
       stepImage: stepImage ?? this.stepImage,
       stepText: stepText ?? this.stepText,
       status: status ?? this.status,
+      recipeInteraction: recipeInteraction ?? this.recipeInteraction,
+    );
+  }
+
+  //converti fa snapshot in RecipesState
+  factory RecipesState.fromSnapshot(DocumentSnapshot document) {
+    List<Comment> commenti =
+        (document["commenti"] as List).map((e) => Comment.fromMap(e)).toList();
+    return RecipesState(
+      userID: document["user_id"],
+      recipeID: document["uid"],
+      nomePiatto: document["nome_piatto"],
+      descrizione: document["descrizione"],
+      dataCreazione: document["data_creazione"],
+      tempoPreparazione: document["tempo_preparazione"],
+      porzioni: document["porzioni"],
+      difficolta: document["difficolta"],
+      passaggi: List<String>.from(document["step_texts"]),
+      linkStepImages: List<String>.from(document["step_images"]),
+      ingredienti: List<String>.from(document["ingredienti"]),
+      tag: List<String>.from(document["tag"]),
+      allergie: List<String>.from(document["allergie"]),
+      linkCoverImage: document["cover_image"],
+      recipeInteraction: RecipeInteraction(
+        dataCreazione: document["data_creazione"],
+        commenti: commenti,
+        like: document["like"],
+        numeroCommenti: document["numero_commenti"],
+        numeroLike: document["numero_like"],
+        numeroCondivisioni: document["numero_condivisioni"],
+        visualizzazioni: document["numero_visualizzazioni"],
+      ),
     );
   }
 
   @override
   List<Object?> get props => [
         nomePiatto,
+        recipeID,
         descrizione,
         tempoPreparazione,
         porzioni,
@@ -134,6 +176,7 @@ class RecipesState extends Equatable {
         stepText,
         linkCoverImage,
         linkStepImages,
+        recipeInteraction,
         status,
         fileState,
       ];

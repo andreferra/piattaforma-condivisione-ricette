@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 
+import 'package:condivisionericette/utils/constant.dart';
 import 'package:flutter/material.dart';
 
 class StepViewComponents extends StatelessWidget {
@@ -17,43 +18,58 @@ class StepViewComponents extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Text(
-          "Step $stepIndex",
-          style: const TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        const SizedBox(
-          width: 10,
-        ),
-        Expanded(
-          child: Text(
-            testo,
-            style: const TextStyle(
-              fontSize: 20,
+    return Padding(
+        padding: const EdgeInsets.symmetric(horizontal: defaultPadding * 3),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              "Step $stepIndex",
+              style: const TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
             ),
-          ),
-        ),
-        immagineUrl != null
-            ? Image.network(
-                immagineUrl!,
-                width: 100,
-                height: 100,
-              )
-            : immagineUint8List != null
-                ? Image.memory(
-                    immagineUint8List!,
-                    width: 100,
-                    height: 100,
-                  )
-                : const SizedBox(
-                    width: 100,
-                    height: 100,
-                  ),
-      ],
-    );
+            const SizedBox(
+              height: 10,
+            ),
+            Card(
+              child: Padding(
+                padding: const EdgeInsets.all(defaultPadding),
+                child: Row(
+                  children: [
+                    immagineUrl != null
+                        ? Image.network(
+                            immagineUrl!,
+                            width: MediaQuery.of(context).size.width * 0.2,
+                            height: MediaQuery.of(context).size.height * 0.2,
+                          )
+                        : immagineUint8List != null
+                            ? Image.memory(
+                                immagineUint8List!,
+                                width: MediaQuery.of(context).size.width * 0.4,
+                                height:
+                                    MediaQuery.of(context).size.height * 0.4,
+                              )
+                            : const SizedBox(
+                                width: 100,
+                                height: 100,
+                              ),
+                    const SizedBox(
+                      width: 10,
+                    ),
+                    Text(
+                      testo,
+                      style: const TextStyle(
+                        fontSize: 20,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ));
   }
 }

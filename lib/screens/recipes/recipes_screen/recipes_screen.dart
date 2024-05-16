@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:condivisionericette/controller/PageController.dart';
 import 'package:condivisionericette/controller/auth_controller/auth_controller.dart';
+import 'package:condivisionericette/screens/recipes/add_recipes/controller/recipes_controller.dart';
+import 'package:condivisionericette/screens/recipes/view_screen/view_recipe_screen.dart';
 import 'package:condivisionericette/utils/constant.dart';
 import 'package:condivisionericette/widget/header.dart';
 import 'package:condivisionericette/widget/recipe_card.dart';
@@ -37,7 +39,6 @@ class RecipesScreen extends ConsumerWidget {
                     );
                   }
                   if (snapshot.hasError) {
-                    print(snapshot.error);
                     return Center(
                       child: Text("Something went wrong${snapshot.error}"),
                     );
@@ -52,18 +53,29 @@ class RecipesScreen extends ConsumerWidget {
                         snapshot.data!.docs.map((DocumentSnapshot document) {
                       return Padding(
                           padding: const EdgeInsets.all(defaultPadding),
-                          child: RecipeListItem(
-                              imageUrl: document["cover_image"],
-                              title: document["nome_piatto"],
-                              description: document["descrizione"],
-                              numeroLike: document["numero_like"].toString(),
-                              numeroCommenti:
-                                  document["numero_commenti"].toString(),
-                              numeroCondivisioni:
-                                  document["numero_condivisioni"].toString(),
-                              visualizzazioni:
-                                  document["numero_visualizzazioni"].toString(),
-                              key: ValueKey(document.id)));
+                          child: InkWell(
+                              onTap: () {
+                                Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (context) => ViewRecipeScreen(
+                                        isMine: true,
+                                        recipesState: RecipesState.fromSnapshot(
+                                            document))));
+                              },
+                              child: RecipeListItem(
+                                  imageUrl: document["cover_image"],
+                                  title: document["nome_piatto"],
+                                  description: document["descrizione"],
+                                  numeroLike:
+                                      document["numero_like"].toString(),
+                                  numeroCommenti:
+                                      document["numero_commenti"].toString(),
+                                  numeroCondivisioni:
+                                      document["numero_condivisioni"]
+                                          .toString(),
+                                  visualizzazioni:
+                                      document["numero_visualizzazioni"]
+                                          .toString(),
+                                  key: ValueKey(document.id))));
                     }).toList(),
                   );
                 },

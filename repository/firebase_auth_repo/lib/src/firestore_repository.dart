@@ -2,6 +2,7 @@ import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth_repo/auth_repo.dart';
+import 'package:firebase_auth_repo/src/authentication_repository.dart';
 import 'package:firebase_auth_repo/src/storage_respository.dart';
 
 class UpdateProfileFailure implements Exception {
@@ -16,10 +17,28 @@ class AddRecipesFailure implements Exception {
   const AddRecipesFailure(this.code);
 }
 
+class UpdateVisualizationsFailure implements Exception {
+  final String code;
+
+  const UpdateVisualizationsFailure(this.code);
+}
+
 class UpdateSettingFailure implements Exception {
   final String code;
 
   const UpdateSettingFailure(this.code);
+}
+
+class AddCommentFailure implements Exception {
+  final String code;
+
+  const AddCommentFailure(this.code);
+}
+
+class DeleteCommentFailure implements Exception {
+  final String code;
+
+  const DeleteCommentFailure(this.code);
 }
 
 class FirebaseRepository {
@@ -55,7 +74,6 @@ class FirebaseRepository {
       return Future.error(UpdateProfileFailure(e.toString()));
     }
   }
-
 
   /// Delete user from database
   Future<void> deleteUserFromDatabase(String uid) async {
@@ -138,6 +156,97 @@ class FirebaseRepository {
       return Future.error(UpdateSettingFailure(e.code));
     } catch (e) {
       return Future.error(UpdateSettingFailure(e.toString()));
+    }
+  }
+
+  /// Update the recipes visualizations
+  Future<void> updateVisualizations(String recipeId) async {
+    try {
+      final recipe = await _firestore.collection('recipes').doc(recipeId).get();
+      final visualizzazioni = recipe['numero_visualizzazioni'] + 1;
+      await _firestore.collection('recipes').doc(recipeId).update({
+        'numero_visualizzazioni': visualizzazioni,
+      });
+    } on FirebaseException catch (e) {
+      return Future.error(UpdateVisualizationsFailure(e.code));
+    } catch (e) {
+      return Future.error(UpdateVisualizationsFailure(e.toString()));
+    }
+  }
+
+  /// Adds a comment to the recipe.
+  Future<void> addComment(Map comment, String recipesId) async {
+    try {
+      await _firestore.collection('recipes').doc(recipesId).set({
+        'commenti': FieldValue.arrayUnion([comment]),
+        'numero_commenti': FieldValue.increment(1),
+      }, SetOptions(merge: true));
+    } on FirebaseException catch (e) {
+      return Future.error(AddCommentFailure(e.code));
+    } catch (e) {
+      return Future.error(AddCommentFailure(e.toString()));
+    }
+  }
+
+  /// Adds a reply to the comment.
+  Future<String> addReply(
+      Map reply, String recipesId, String idCommentoPadre) async {
+    try {
+      print('Adding reply to comment with id: $idCommentoPadre');
+      var recipeDoc =
+          await _firestore.collection('recipes').doc(recipesId).get();
+      var commenti = List<Map<String, dynamic>>.from(recipeDoc['commenti']);
+      var commentIndex = commenti
+          .indexWhere((commento) => commento['idCommento'] == idCommentoPadre);
+      if (commentIndex != -1) {
+        var commento = commenti[commentIndex];
+        if (commento['risposte'] == null) {
+          commento['risposte'] = [reply];
+        } else {
+          commento['risposte'].add(reply);
+        }
+        commenti[commentIndex] = commento;
+        await _firestore.collection('recipes').doc(recipesId).update({
+          'commenti': commenti,
+        });
+        return 'ok';
+      } else {
+        print('No comment found with id: $idCommentoPadre');
+        return 'error';
+      }
+    } on FirebaseException catch (e) {
+      print(e);
+      return 'error';
+    } catch (e) {
+      print(e);
+      return 'error';
+    }
+  }
+
+  /// Delete comments
+  Future<String> deleteComment(String recipesId, String idCommento) async {
+    try {
+      print('Deleting comment with id: $idCommento');
+      var recipeDoc =
+          await _firestore.collection('recipes').doc(recipesId).get();
+      var commenti = List<Map<String, dynamic>>.from(recipeDoc['commenti']);
+      var commentIndex = commenti
+          .indexWhere((commento) => commento['idCommento'] == idCommento);
+      if (commentIndex != -1) {
+        commenti.removeAt(commentIndex);
+        await _firestore.collection('recipes').doc(recipesId).update({
+          'commenti': commenti,
+          'numero_commenti': FieldValue.increment(-1),
+        });
+        return 'ok';
+      }
+      return 'error';
+    } on FirebaseException catch (e) {
+      print(e);
+      return Future.error(DeleteCommentFailure(e.code));
+    } catch (e) {
+      print(e);
+      return Future.error(DeleteCommentFailure(e.toString()));
     }
   }
 }
