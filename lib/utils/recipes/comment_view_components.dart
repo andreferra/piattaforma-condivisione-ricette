@@ -1,4 +1,7 @@
 import 'package:condivisionericette/model/Comment.dart';
+import 'package:condivisionericette/screens/recipes/add_recipes/controller/recipes_controller.dart';
+import 'package:condivisionericette/screens/recipes/view_screen/components/add_comment_component.dart';
+import 'package:condivisionericette/screens/recipes/view_screen/controller/recipe_interaction_controller.dart';
 import 'package:condivisionericette/utils/constant.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -6,10 +9,20 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 class CommentCard extends ConsumerWidget {
   final Comment commento;
 
-  const CommentCard(this.commento, {super.key});
+  final RecipesState recipesState;
+
+  const CommentCard(this.commento, this.recipesState, {super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final reply = ref.watch(recipeInteractionProvider).reply;
+
+    final recipeInteractionController =
+        ref.read(recipeInteractionProvider.notifier);
+
+    final commentoId =
+        ref.watch(recipeInteractionProvider).idCommentoReply ?? "";
+
     return Card(
       margin: const EdgeInsets.all(defaultPadding),
       child: Padding(
@@ -46,21 +59,9 @@ class CommentCard extends ConsumerWidget {
             const SizedBox(height: 8),
             const Text("Commento:"),
             const SizedBox(height: 8),
-            if (commento.commento!.length > 200)
-              Text(
-                commento.commento!.substring(0, 200),
-                textAlign: TextAlign.center,
-                softWrap: true,
-              )
-            else
-              Text(
-                commento.commento!,
-                textAlign: TextAlign.center,
-                softWrap: true,
-              ),
             Text(
               commento.commento!,
-              textAlign: TextAlign.center,
+              textAlign: TextAlign.left,
               softWrap: true,
             ),
             const SizedBox(height: 8),
@@ -71,8 +72,39 @@ class CommentCard extends ConsumerWidget {
                   for (var i = 0; i < commento.numeroStelle!; i++)
                     const Icon(Icons.star, color: Colors.yellow, size: 20),
                 ],
-              )
-            // aggiungere reply button
+              ),
+            Row(
+              children: [
+                IconButton(
+                    icon: const Icon(Icons.reply),
+                    onPressed: () {
+                      recipeInteractionController
+                          .onReplyComment(commento.idCommento!);
+                    }),
+                const Text("Rispondi"),
+              ],
+            ),
+            if (commentoId.isNotEmpty &&
+                reply! &&
+                commento.idCommento == commentoId)
+              SizedBox(
+                width: MediaQuery.of(context).size.width * 0.8,
+                child: AddCommentComponent(
+                  subComment: true,
+                  title: "Rispondi al commento",
+                  recipesState: recipesState,
+                ),
+              ),
+            if (commento.risposte != null && commento.risposte!.isNotEmpty)
+              const Divider(
+                thickness: 1,
+                color: Colors.white,
+              ),
+            if (commento.risposte != null)
+              for (var i = 0; i < commento.risposte!.length; i++)
+                CommentCard(commento.risposte![i], recipesState),
+
+            const SizedBox(height: defaultPadding * 3),
           ],
         ),
       ),

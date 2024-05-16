@@ -145,6 +145,8 @@ class ViewRecipeScreen extends StatelessWidget {
               SizedBox(
                 width: MediaQuery.of(context).size.width * 0.5,
                 child: AddCommentComponent(
+                  subComment: false,
+                  title: "Lascia un commento alla ricetta",
                   recipesState: recipesState,
                 ),
               ),
@@ -164,7 +166,9 @@ class ViewRecipeScreen extends StatelessWidget {
                           horizontal: defaultPadding * 2,
                           vertical: defaultPadding),
                       child: CommentCard(
-                          recipesState.recipeInteraction!.commenti![i]),
+                        recipesState.recipeInteraction!.commenti![i],
+                        recipesState,
+                      ),
                     ),
                 ],
               ),

@@ -180,4 +180,24 @@ class FirebaseRepository {
       return Future.error(AddCommentFailure(e.toString()));
     }
   }
+
+  /// Adds a reply to the comment.
+  Future<void> addReply(Map comment, String recipesId, String idCommentoPadre) async {
+    try {
+      var querySnapshot = await _firestore
+          .collection('recipes')
+          .doc(recipesId)
+          .collection('commenti')
+          .where('idCommento', isEqualTo: idCommentoPadre)
+          .get();
+      var docToUpdate = querySnapshot.docs.first;
+      await docToUpdate.reference.update({
+        'risposte': FieldValue.arrayUnion([comment])
+      });
+    } on FirebaseException catch (e) {
+      return Future.error(AddCommentFailure(e.code));
+    } catch (e) {
+      return Future.error(AddCommentFailure(e.toString()));
+    }
+  }
 }
