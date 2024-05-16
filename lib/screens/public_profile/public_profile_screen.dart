@@ -5,20 +5,23 @@ import 'package:condivisionericette/screens/public_profile/components/top_sectio
 import 'package:condivisionericette/screens/public_profile/components/user_info.dart';
 import 'package:firebase_auth_repo/auth_repo.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 
 class PublicProfile extends StatefulWidget {
   final String userID;
+  final String mioId;
 
-  const PublicProfile(this.userID, {super.key});
+  const PublicProfile(this.userID, this.mioId, {super.key});
 
   @override
   State<PublicProfile> createState() => _PublicProfileState();
 }
 
 class _PublicProfileState extends State<PublicProfile> {
-  FirebaseRepository _firebaseRepository = FirebaseRepository();
+  final FirebaseRepository _firebaseRepository = FirebaseRepository();
   AuthUser user = AuthUser.empty;
   bool isLoad = false;
+  bool loSeguo = false;
 
   void laodUserData() async {
     await _firebaseRepository.getUserFromDatabase(widget.userID).then((user) {
@@ -26,9 +29,62 @@ class _PublicProfileState extends State<PublicProfile> {
         setState(() {
           isLoad = true;
           this.user = user;
+          user.follower!.contains(widget.mioId)
+              ? loSeguo = true
+              : loSeguo = false;
         });
       }
     });
+  }
+
+  Future<void> _unfollowUser() async {
+    try {
+      await _firebaseRepository
+          .unfollowUser(widget.mioId, user.uid)
+          .then((value) {
+        switch (value) {
+          case 'ok':
+            setState(() {
+              loSeguo = false;
+              user.follower!.remove(widget.mioId);
+            });
+            ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text("utente smesso di seguire")));
+            break;
+          default:
+            ScaffoldMessenger.of(context)
+                .showSnackBar(const SnackBar(content: Text("Errore")));
+            break;
+        }
+      });
+    } on UpdateProfileFailure catch (e) {
+      print(e);
+    }
+  }
+
+  Future<void> _followUser() async {
+    try {
+      await _firebaseRepository
+          .followUser(widget.mioId, user.uid)
+          .then((value) {
+        switch (value) {
+          case 'ok':
+            setState(() {
+              loSeguo = true;
+              user.follower!.add(widget.mioId);
+            });
+            ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text("utente seguito con successo")));
+            break;
+          default:
+            ScaffoldMessenger.of(context)
+                .showSnackBar(const SnackBar(content: Text("Errore")));
+            break;
+        }
+      });
+    } on UpdateProfileFailure catch (e) {
+      print(e);
+    }
   }
 
   @override
@@ -72,13 +128,20 @@ class _PublicProfileState extends State<PublicProfile> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             FloatingActionButton.extended(
-                              onPressed: () {
+                              onPressed: () async {
+                                loSeguo
+                                    ? await _unfollowUser()
+                                    : await _followUser();
                                 //TODO follow user and active notification
                               },
-                              heroTag: 'follow',
+                              heroTag: !loSeguo ? 'follow' : "unfollow",
                               elevation: 0,
-                              label: const Text("Follow"),
-                              icon: const Icon(Icons.person_add_alt_1),
+                              label: !loSeguo
+                                  ? const Text("Follow")
+                                  : const Text("Unfollow"),
+                              icon: !loSeguo
+                                  ? const Icon(Icons.person_add_alt_1)
+                                  : const Icon(Icons.person_remove_alt_1),
                             ),
                             const SizedBox(width: 16.0),
                             FloatingActionButton.extended(

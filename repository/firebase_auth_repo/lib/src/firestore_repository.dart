@@ -249,4 +249,38 @@ class FirebaseRepository {
       return Future.error(DeleteCommentFailure(e.toString()));
     }
   }
+
+  /// Follow a user
+  Future<String> followUser(String user1, String user2) async {
+    try {
+      await _firestore.collection('users').doc(user2).update({
+        'follower': FieldValue.arrayUnion([user1])
+      });
+      await _firestore.collection('users').doc(user1).update({
+        'following': FieldValue.arrayUnion([user2])
+      });
+      return 'ok';
+    } on FirebaseException catch (e) {
+      return Future.error(UpdateProfileFailure(e.code));
+    } catch (e) {
+      return Future.error(UpdateProfileFailure(e.toString()));
+    }
+  }
+
+  /// Unfollow a user
+  Future<String> unfollowUser(String user1, String user2) async {
+    try {
+      await _firestore.collection('users').doc(user2).update({
+        'follower': FieldValue.arrayRemove([user1])
+      });
+      await _firestore.collection('users').doc(user1).update({
+        'following': FieldValue.arrayRemove([user2])
+      });
+      return 'ok';
+    } on FirebaseException catch (e) {
+      return Future.error(UpdateProfileFailure(e.code));
+    } catch (e) {
+      return Future.error(UpdateProfileFailure(e.toString()));
+    }
+  }
 }

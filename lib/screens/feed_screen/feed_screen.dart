@@ -73,6 +73,7 @@ class FeedScreen extends ConsumerWidget {
                                         visualizzazioni:
                                             document['numero_visualizzazioni'] +
                                                 1,
+                                        mioId: user.uid,
                                         isMine: isMine,
                                         recipesState: RecipesState.fromSnapshot(
                                             document))));
