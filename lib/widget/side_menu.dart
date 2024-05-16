@@ -38,6 +38,14 @@ class SideMenu extends ConsumerWidget {
             icon: 'assets/icons/menu_recipes.svg',
           ),
           DrawerListTile(
+            title: 'Messaggi',
+            onTap: () {
+              pageController.setPage(6);
+            },
+            icon: 'assets/icons/messaggi_dashboard.svg',
+          ),
+
+          DrawerListTile(
             title: 'Notifiche',
             onTap: () {
               pageController.setPage(2);

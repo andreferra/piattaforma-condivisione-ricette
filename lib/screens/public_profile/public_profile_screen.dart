@@ -48,6 +48,9 @@ class _PublicProfileState extends State<PublicProfile> {
           .then((value) {
         switch (value) {
           case 'ok':
+            if (loSeguo) {
+              _togliNotifiche();
+            }
             setState(() {
               loSeguo = false;
               user.follower!.remove(widget.mioId);
@@ -186,7 +189,6 @@ class _PublicProfileState extends State<PublicProfile> {
                                 loSeguo
                                     ? await _unfollowUser()
                                     : await _followUser();
-                                //TODO follow user and active notification
                               },
                               heroTag: !loSeguo ? 'follow' : "unfollow",
                               elevation: 0,
@@ -200,7 +202,7 @@ class _PublicProfileState extends State<PublicProfile> {
                             const SizedBox(width: 16.0),
                             FloatingActionButton.extended(
                               onPressed: () {
-                                //TODO message user
+                                //TODO: implement message
                               },
                               heroTag: 'mesage',
                               elevation: 0,
