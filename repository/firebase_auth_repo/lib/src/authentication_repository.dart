@@ -50,6 +50,10 @@ class AuthenticationRepository {
         prefAlimentari: const [],
         allergie: const [],
         interessiCulinari: const [],
+        notification: true,
+        follower: const [],
+        following: const [],
+        posts: 0,
       );
       await _firebaseRepo.saveUserInDatabase(user);
     } on FirebaseAuthException catch (e) {

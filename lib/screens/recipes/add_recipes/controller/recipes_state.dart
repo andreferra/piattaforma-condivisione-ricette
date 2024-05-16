@@ -11,6 +11,8 @@ class RecipesState extends Equatable {
   final List<String> allergie;
   final Uint8List? coverImage;
   final String? recipeID;
+  final String? userID;
+  final Timestamp? dataCreazione;
 
   //utili
   final String? ingrediente;
@@ -36,6 +38,7 @@ class RecipesState extends Equatable {
     this.recipeID,
     this.nomePiatto,
     this.descrizione,
+    this.dataCreazione,
     this.tempoPreparazione,
     this.porzioni,
     this.difficolta = "facile",
@@ -56,6 +59,7 @@ class RecipesState extends Equatable {
     this.stepText,
     this.linkCoverImage,
     this.linkStepImages,
+    this.userID,
     this.recipeInteraction,
     this.status = StateRecipes.initial,
     this.fileState = FileState.initial,
@@ -119,11 +123,13 @@ class RecipesState extends Equatable {
   //converti fa snapshot in RecipesState
   factory RecipesState.fromSnapshot(DocumentSnapshot document) {
     List<Comment> commenti =
-        (document["commenti"] as List).map((e) => Comment.fromMap(e )).toList();
+        (document["commenti"] as List).map((e) => Comment.fromMap(e)).toList();
     return RecipesState(
+      userID: document["user_id"],
       recipeID: document["uid"],
       nomePiatto: document["nome_piatto"],
       descrizione: document["descrizione"],
+      dataCreazione: document["data_creazione"],
       tempoPreparazione: document["tempo_preparazione"],
       porzioni: document["porzioni"],
       difficolta: document["difficolta"],

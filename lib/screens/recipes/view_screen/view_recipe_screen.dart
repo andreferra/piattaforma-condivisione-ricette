@@ -1,11 +1,13 @@
+import 'package:condivisionericette/screens/public_profile/public_profile_screen.dart';
 import 'package:condivisionericette/screens/recipes/add_recipes/controller/recipes_controller.dart';
 import 'package:condivisionericette/screens/recipes/view_screen/components/add_comment_component.dart';
 import 'package:condivisionericette/utils/constant.dart';
 import 'package:condivisionericette/utils/recipes/comment_view_components.dart';
 import 'package:condivisionericette/utils/recipes/step_view_components.dart';
+import 'package:firebase_auth_repo/auth_repo.dart';
 import 'package:flutter/material.dart';
 
-class ViewRecipeScreen extends StatelessWidget {
+class ViewRecipeScreen extends StatefulWidget {
   final bool isMine;
   final RecipesState recipesState;
   final int? visualizzazioni;
@@ -17,171 +19,234 @@ class ViewRecipeScreen extends StatelessWidget {
       this.visualizzazioni});
 
   @override
+  State<ViewRecipeScreen> createState() => _ViewRecipeScreenState();
+}
+
+class _ViewRecipeScreenState extends State<ViewRecipeScreen> {
+  FirebaseRepository _firebaseRepository = FirebaseRepository();
+  AuthUser user = AuthUser.empty;
+  bool isLoad = false;
+
+  void _loadUser() async {
+    user = await _firebaseRepository
+        .getUserFromDatabase(widget.recipesState.userID!);
+    setState(() {
+      user = user;
+      isLoad = true;
+    });
+  }
+
+  @override
+  void initState() {
+    _loadUser();
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     const spazio = SizedBox(height: defaultPadding * 2);
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(recipesState.nomePiatto!.toUpperCase() ?? "Ricetta"),
-        centerTitle: true,
-        titleSpacing: 1,
-        titleTextStyle: TextStyle(
-          fontSize: 20,
-          fontWeight: FontWeight.bold,
-          color: Colors.white.withOpacity(0.7),
-        ),
-      ),
-      body: SingleChildScrollView(
-        physics: const BouncingScrollPhysics(),
-        child: Column(
-          children: [
-            spazio,
-            Row(
-              children: [
-                if (recipesState.linkCoverImage != null)
-                  Image.network(
-                    recipesState.linkCoverImage!,
-                    width: MediaQuery.of(context).size.width * 0.4,
-                    height: MediaQuery.of(context).size.height * 0.4,
-                  ),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(recipesState.descrizione ?? "",
-                        style: const TextStyle(
-                            fontSize: 20, fontWeight: FontWeight.bold)),
-                    spazio,
-                    Text(
-                        "Tempo di preparazione: ${recipesState.tempoPreparazione} minuti",
-                        style: const TextStyle(fontSize: 16)),
-                    spazio,
-                    Text("Porzioni: ${recipesState.porzioni}",
-                        style: const TextStyle(fontSize: 16)),
-                    spazio,
-                    Text("Difficoltà: ${recipesState.difficolta}",
-                        style: const TextStyle(fontSize: 16)),
-                  ],
-                ),
-                const SizedBox(width: defaultPadding * 4),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text("Ingredienti",
-                        style: TextStyle(
-                            fontSize: 20, fontWeight: FontWeight.bold)),
-                    for (var i = 0; i < recipesState.ingredienti.length; i++)
-                      Text(recipesState.ingredienti[i],
-                          style: const TextStyle(fontSize: 16)),
-                  ],
-                ),
-                const SizedBox(width: defaultPadding * 4),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text("Allergie",
-                        style: TextStyle(
-                            fontSize: 20, fontWeight: FontWeight.bold)),
-                    for (var i = 0; i < recipesState.allergie.length; i++)
-                      Text(recipesState.allergie[i],
-                          style: const TextStyle(fontSize: 16)),
-                  ],
-                ),
-                const SizedBox(width: defaultPadding * 4),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text("Tag",
-                        style: TextStyle(
-                            fontSize: 20, fontWeight: FontWeight.bold)),
-                    for (var i = 0; i < recipesState.tag.length; i++)
-                      Text(recipesState.tag[i],
-                          style: const TextStyle(fontSize: 16)),
-                  ],
-                ),
-              ],
-            ),
-            const SizedBox(height: defaultPadding * 2),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Text(
-                    "Visualizzazioni: ${visualizzazioni ?? recipesState.recipeInteraction!.visualizzazioni}",
-                    style: const TextStyle(fontSize: 16)),
-                Text("Like: ${recipesState.recipeInteraction!.numeroLike}",
-                    style: const TextStyle(fontSize: 16, color: Colors.green)),
-                Text(
-                    "Commenti: ${recipesState.recipeInteraction!.numeroCommenti}",
-                    style: const TextStyle(fontSize: 16)),
-                Text(
-                  "Condivisioni: ${recipesState.recipeInteraction!.numeroCondivisioni}",
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.blue,
-                  ),
-                ),
-              ],
-            ),
-            spazio,
-            const Text("PASSAGGI DELLA RICETTA",
-                style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
-            spazio,
-            for (var i = 0; i < recipesState.passaggi.length; i++)
-              StepViewComponents(
-                stepIndex: i,
-                testo: recipesState.passaggi[i],
-                immagineUrl: recipesState.linkStepImages![i],
-                key: UniqueKey(),
+    return isLoad
+        ? Scaffold(
+            appBar: AppBar(
+              title: Text(
+                  widget.recipesState.nomePiatto!.toUpperCase() ?? "Ricetta"),
+              centerTitle: true,
+              titleSpacing: 1,
+              titleTextStyle: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: Colors.white.withOpacity(0.7),
               ),
-            spazio,
-            const Text("RECENSIONI",
-                style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
-            spazio,
-            if (!isMine)
-              SizedBox(
-                width: MediaQuery.of(context).size.width * 0.5,
-                child: AddCommentComponent(
-                  subComment: false,
-                  title: "Lascia un commento alla ricetta",
-                  recipesState: recipesState,
-                ),
-              ),
-            SizedBox(
-              height: MediaQuery.of(context).size.height * 0.6,
-              width: MediaQuery.of(context).size.width * 0.8,
-              child: ListView(
-                padding: const EdgeInsets.all(defaultPadding),
-                shrinkWrap: true,
-                physics: const BouncingScrollPhysics(),
+            ),
+            body: SingleChildScrollView(
+              physics: const BouncingScrollPhysics(),
+              child: Column(
                 children: [
-                  for (var i = 0;
-                      i < recipesState.recipeInteraction!.commenti!.length;
-                      i++)
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: defaultPadding * 2,
-                          vertical: defaultPadding),
-                      child: CommentCard(
-                        recipesState.recipeInteraction!.commenti![i],
-                        recipesState,
-                        false,
+                  spazio,
+                  Row(
+                    children: [
+                      if (widget.recipesState.linkCoverImage != null)
+                        Image.network(
+                          widget.recipesState.linkCoverImage!,
+                          width: MediaQuery.of(context).size.width * 0.4,
+                          height: MediaQuery.of(context).size.height * 0.4,
+                        ),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(widget.recipesState.descrizione ?? "",
+                              style: const TextStyle(
+                                  fontSize: 20, fontWeight: FontWeight.bold)),
+                          spazio,
+                          Text(
+                              "Tempo di preparazione: ${widget.recipesState.tempoPreparazione} minuti",
+                              style: const TextStyle(fontSize: 16)),
+                          spazio,
+                          Text("Porzioni: ${widget.recipesState.porzioni}",
+                              style: const TextStyle(fontSize: 16)),
+                          spazio,
+                          Text("Difficoltà: ${widget.recipesState.difficolta}",
+                              style: const TextStyle(fontSize: 16)),
+                          spazio,
+                          //inserisci il profilo
+                          InkWell(
+                              onTap: () {
+                                Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (context) => PublicProfile(
+                                        widget.recipesState.userID!)));
+                              },
+                              child: Row(children: [
+                                CircleAvatar(
+                                  radius: 20,
+                                  backgroundImage: NetworkImage(user.photoURL!),
+                                ),
+                                const SizedBox(width: 8),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Text(user.nickname!),
+                                    Text(widget.recipesState.dataCreazione!
+                                        .toDate()
+                                        .toString()
+                                        .substring(0, 10)),
+                                  ],
+                                )
+                              ])),
+                        ],
+                      ),
+                      const SizedBox(width: defaultPadding * 4),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text("Ingredienti",
+                              style: TextStyle(
+                                  fontSize: 20, fontWeight: FontWeight.bold)),
+                          for (var i = 0;
+                              i < widget.recipesState.ingredienti.length;
+                              i++)
+                            Text(widget.recipesState.ingredienti[i],
+                                style: const TextStyle(fontSize: 16)),
+                        ],
+                      ),
+                      const SizedBox(width: defaultPadding * 4),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text("Allergie",
+                              style: TextStyle(
+                                  fontSize: 20, fontWeight: FontWeight.bold)),
+                          for (var i = 0;
+                              i < widget.recipesState.allergie.length;
+                              i++)
+                            Text(widget.recipesState.allergie[i],
+                                style: const TextStyle(fontSize: 16)),
+                        ],
+                      ),
+                      const SizedBox(width: defaultPadding * 4),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text("Tag",
+                              style: TextStyle(
+                                  fontSize: 20, fontWeight: FontWeight.bold)),
+                          for (var i = 0;
+                              i < widget.recipesState.tag.length;
+                              i++)
+                            Text(widget.recipesState.tag[i],
+                                style: const TextStyle(fontSize: 16)),
+                        ],
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: defaultPadding * 2),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Text(
+                          "Visualizzazioni: ${widget.visualizzazioni ?? widget.recipesState.recipeInteraction!.visualizzazioni}",
+                          style: const TextStyle(fontSize: 16)),
+                      Text(
+                          "Like: ${widget.recipesState.recipeInteraction!.numeroLike}",
+                          style: const TextStyle(
+                              fontSize: 16, color: Colors.green)),
+                      Text(
+                          "Commenti: ${widget.recipesState.recipeInteraction!.numeroCommenti}",
+                          style: const TextStyle(fontSize: 16)),
+                      Text(
+                        "Condivisioni: ${widget.recipesState.recipeInteraction!.numeroCondivisioni}",
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.blue,
+                        ),
+                      ),
+                    ],
+                  ),
+                  spazio,
+                  const Text("PASSAGGI DELLA RICETTA",
+                      style:
+                          TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
+                  spazio,
+                  for (var i = 0; i < widget.recipesState.passaggi.length; i++)
+                    StepViewComponents(
+                      stepIndex: i,
+                      testo: widget.recipesState.passaggi[i],
+                      immagineUrl: widget.recipesState.linkStepImages![i],
+                      key: UniqueKey(),
+                    ),
+                  spazio,
+                  const Text("RECENSIONI",
+                      style:
+                          TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
+                  spazio,
+                  if (!widget.isMine)
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width * 0.5,
+                      child: AddCommentComponent(
+                        subComment: false,
+                        title: "Lascia un commento alla ricetta",
+                        recipesState: widget.recipesState,
                       ),
                     ),
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.6,
+                    width: MediaQuery.of(context).size.width * 0.8,
+                    child: ListView(
+                      padding: const EdgeInsets.all(defaultPadding),
+                      shrinkWrap: true,
+                      physics: const BouncingScrollPhysics(),
+                      children: [
+                        for (var i = 0;
+                            i <
+                                widget.recipesState.recipeInteraction!.commenti!
+                                    .length;
+                            i++)
+                          Padding(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: defaultPadding * 2,
+                                vertical: defaultPadding),
+                            child: CommentCard(
+                              widget
+                                  .recipesState.recipeInteraction!.commenti![i],
+                              widget.recipesState,
+                              false,
+                            ),
+                          ),
+                        const SizedBox(height: defaultPadding * 3),
+                      ],
+                    ),
+                  ),
                   const SizedBox(height: defaultPadding * 3),
-
                 ],
               ),
             ),
-            const SizedBox(height: defaultPadding * 3),
-
-          ],
-
-        ),
-      ),
-    );
+          )
+        : const Center(child: CircularProgressIndicator());
   }
 }
