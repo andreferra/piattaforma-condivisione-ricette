@@ -13,6 +13,7 @@ class PasswordField extends ConsumerWidget {
     final bool showError = signInState.password.invalid;
     final loginController = ref.read(loginProvider.notifier);
     return TextInputField(
+      autofillHints: AutofillHints.password,
       minLines: 1,
       hintText: "Inserisci la Password*",
       obscureText: true,
