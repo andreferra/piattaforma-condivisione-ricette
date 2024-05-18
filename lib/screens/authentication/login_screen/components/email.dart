@@ -14,6 +14,8 @@ class EmailField extends ConsumerWidget {
     final bool showError = loginState.email.invalid;
     final loginController = ref.read(loginProvider.notifier);
     return TextInputField(
+      keyboardType: TextInputType.emailAddress,
+      autofillHints: AutofillHints.email,
       hintText: "Inserisci l'indirizzo email",
       errorText: showError
           ? Email.showEmailErrorMessage(loginState.email.error)

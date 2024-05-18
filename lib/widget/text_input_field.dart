@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 class TextInputField extends StatefulWidget {
   final String hintText;
+  final String? autofillHints;
   final Icon? prefixIcon;
   final TextInputType? keyboardType;
   final void Function(String)? onChanged;
@@ -22,6 +23,7 @@ class TextInputField extends StatefulWidget {
   const TextInputField({
     super.key,
     this.controller,
+    this.autofillHints,
     this.enable = true,
     this.minLines,
     this.borderRadius = const BorderRadius.all(Radius.circular(12)),
@@ -77,6 +79,7 @@ class _TextInputFieldState extends State<TextInputField> {
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 18),
           child: TextFormField(
+            autofillHints: widget.autofillHints != null ? [widget.autofillHints!] : null,
             maxLength: widget.hasMaxLenght? widget.maxLength : null,
             enabled: widget.enable,
             onTap: widget.onTap,
