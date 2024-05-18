@@ -1,0 +1,59 @@
+import 'dart:math';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:condivisionericette/utils/message/chat_card.dart';
+import 'package:flutter/material.dart';
+
+class ChatList extends StatelessWidget {
+  final String mioID;
+
+  const ChatList(this.mioID, {super.key});
+
+  @override
+  Widget build(BuildContext context) {
+
+    List<DocumentSnapshot> chat = [];
+
+    return StreamBuilder(
+        stream: FirebaseFirestore.instance.collection('messaggi').snapshots(),
+        builder: (context, snapshot) {
+          if (snapshot.hasError) {
+            return const Text('Errore');
+          }
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+
+          for (var i = 0; i < snapshot.data!.docs.length; i++) {
+            String id1 = snapshot.data!.docs[i]['id'].toString().split('-')[0];
+            String id2 = snapshot.data!.docs[i]['id'].toString().split('-')[1];
+
+            if (id1 == mioID || id2 == mioID) {
+              chat.add(snapshot.data!.docs[i]);
+            }
+
+          }
+          if (chat.isNotEmpty) {
+            return ListView.builder(
+              padding: const EdgeInsets.all(10),
+              itemCount: chat.length,
+              itemBuilder: (context, index) {
+
+                return ChatCard(
+                    mioID,
+                    chat[index]['id'].toString().split('-')[0] == mioID
+                        ? chat[index]['id'].toString().split('-')[1]
+                        : chat[index]['id'].toString().split('-')[0],
+                    chat[index]['messaggi'][chat[index]['messaggi'].length - 1]['message']);
+              },
+            );
+          } else {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+        });
+  }
+}
