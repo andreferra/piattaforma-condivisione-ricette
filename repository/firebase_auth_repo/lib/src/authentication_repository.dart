@@ -43,7 +43,7 @@ class AuthenticationRepository {
         emailVerified: credential.user!.emailVerified,
         dataRegistrazione: DateTime.now().toIso8601String(),
         dataUltimoAccesso: DateTime.now().toIso8601String(),
-        isLogged: false,
+        isLogged: true,
         photoURL:
             'https://firebasestorage.googleapis.com/v0/b/gestione-rice.appspot.com/o/icon.png?alt=media&token=75323f65-8735-4557-a288-55565a9ce060',
         bio: '',
@@ -71,7 +71,10 @@ class AuthenticationRepository {
       await _firebaseAuth.signInWithEmailAndPassword(
         email: email,
         password: password,
-      );
+      ).then((value) async {
+        await _firebaseRepo.updateUserLogStatus(value.user!.uid, true);
+      });
+
     } on FirebaseAuthException catch (e) {
       throw SignInWithEmailAndPasswordFailure(e.code);
     }
@@ -86,10 +89,10 @@ class AuthenticationRepository {
     }
   }
 
-  /// Deletes the account of the given [user_id].
-  Future<void> deleteAccount(String user_id) async {
+  /// Deletes the account of the given [userId].
+  Future<void> deleteAccount(String userId) async {
     try {
-      await _firebaseRepo.deleteUserFromDatabase(user_id);
+      await _firebaseRepo.deleteUserFromDatabase(userId);
       await _firebaseAuth.currentUser!.delete();
     } on FirebaseAuthException catch (e) {
       throw DeleteAccountFailure(e.code);
@@ -99,6 +102,9 @@ class AuthenticationRepository {
   /// Signs out the current user.
   Future<void> signOut() async {
     try {
+      final user = await _firebaseRepo
+          .getUserFromDatabase(_firebaseAuth.currentUser!.uid);
+      await _firebaseRepo.updateUserLogStatus(user.uid, false);
       await _firebaseAuth.signOut();
     } on FirebaseAuthException catch (_) {
       throw SignOutFailure();

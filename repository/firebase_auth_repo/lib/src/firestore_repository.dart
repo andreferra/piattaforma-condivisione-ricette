@@ -398,4 +398,19 @@ class FirebaseRepository {
       return Future.error(UpdateProfileFailure(e.toString()));
     }
   }
+
+  /// Update user log status and last access
+  Future<void> updateUserLogStatus(String uid, bool isLogged) async {
+    try {
+      await _firestore.collection('users').doc(uid).update({
+        'isLogged': isLogged,
+        'dataUltimoAccesso': DateTime.now().toIso8601String(),
+      });
+    } on FirebaseException catch (e) {
+      return Future.error(UpdateProfileFailure(e.code));
+    } catch (e) {
+      return Future.error(UpdateProfileFailure(e.toString()));
+    }
+  }
+
 }
