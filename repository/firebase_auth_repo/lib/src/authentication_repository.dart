@@ -54,6 +54,7 @@ class AuthenticationRepository {
         follower: const [],
         following: const [],
         posts: 0,
+        listaNotifiche: const [],
       );
       await _firebaseRepo.saveUserInDatabase(user);
     } on FirebaseAuthException catch (e) {

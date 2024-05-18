@@ -1,4 +1,5 @@
 import 'package:condivisionericette/screens/feed_screen/feed_screen.dart';
+import 'package:condivisionericette/screens/message_screen/chatScreen/message_screen.dart';
 import 'package:condivisionericette/screens/notifiche_screen/notifiche_scren.dart';
 import 'package:condivisionericette/screens/profile_screen/profile_screen.dart';
 import 'package:condivisionericette/screens/recipes/add_recipes/add_recipes_screen.dart';
@@ -19,6 +20,7 @@ class PageController extends ChangeNotifier {
     ProfileScreen(),
     SettingScreen(),
     AddRecipesScreen(),
+    MessageScreen(),
   ];
   int _currentIndex = 0;
 

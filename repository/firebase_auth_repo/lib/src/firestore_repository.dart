@@ -249,4 +249,153 @@ class FirebaseRepository {
       return Future.error(DeleteCommentFailure(e.toString()));
     }
   }
+
+  /// Follow a user
+  Future<String> followUser(String user1, String user2) async {
+    try {
+      await _firestore.collection('users').doc(user2).update({
+        'follower': FieldValue.arrayUnion([user1])
+      });
+      await _firestore.collection('users').doc(user1).update({
+        'following': FieldValue.arrayUnion([user2])
+      });
+      return 'ok';
+    } on FirebaseException catch (e) {
+      return Future.error(UpdateProfileFailure(e.code));
+    } catch (e) {
+      return Future.error(UpdateProfileFailure(e.toString()));
+    }
+  }
+
+  /// Unfollow a user
+  Future<String> unfollowUser(String user1, String user2) async {
+    try {
+      await _firestore.collection('users').doc(user2).update({
+        'follower': FieldValue.arrayRemove([user1])
+      });
+      await _firestore.collection('users').doc(user1).update({
+        'following': FieldValue.arrayRemove([user2])
+      });
+      return 'ok';
+    } on FirebaseException catch (e) {
+      return Future.error(UpdateProfileFailure(e.code));
+    } catch (e) {
+      return Future.error(UpdateProfileFailure(e.toString()));
+    }
+  }
+
+  /// Add a notification to the user
+  Future<String> addNotification(String user1, String user2) async {
+    try {
+      await _firestore.collection('users').doc(user2).update({
+        'listaNotifiche': FieldValue.arrayUnion([user1])
+      });
+      return 'ok';
+    } on FirebaseException catch (e) {
+      return Future.error(UpdateProfileFailure(e.code));
+    } catch (e) {
+      return Future.error(UpdateProfileFailure(e.toString()));
+    }
+  }
+
+  /// Delete a notification from the user
+  Future<String> deleteNotification(String user1, String user2) async {
+    try {
+      await _firestore.collection('users').doc(user2).update({
+        'listaNotifiche': FieldValue.arrayRemove([user1])
+      });
+      return 'ok';
+    } on FirebaseException catch (e) {
+      return Future.error(UpdateProfileFailure(e.code));
+    } catch (e) {
+      return Future.error(UpdateProfileFailure(e.toString()));
+    }
+  }
+
+  ///Controlle se la chat esiste se no creala
+  Future<void> checkChat(String id, String mioId) async {
+    bool isEmpty = true;
+    try {
+      final chat =
+          await _firestore.collection('messaggi').where('id', whereIn: [
+        '$id-$mioId',
+        '$mioId-$id',
+      ]).get();
+      if (chat.docs.isNotEmpty) {
+        isEmpty = false;
+      }
+
+      if (isEmpty) {
+        await _firestore.collection('messaggi').add({
+          'id': '$id-$mioId',
+          'messaggi': [],
+        });
+      }
+    } on FirebaseException catch (e) {
+      return Future.error(UpdateProfileFailure(e.code));
+    } catch (e) {
+      return Future.error(UpdateProfileFailure(e.toString()));
+    }
+  }
+
+  /// Send a message
+  Future<String> sendMessage(message, String id, String mioID) async {
+    try {
+      await _firestore
+          .collection('messaggi')
+          .where('id', whereIn: [
+            '$id-$mioID',
+            '$mioID-$id',
+          ])
+          .get()
+          .then((value) {
+            if (value.docs.isNotEmpty) {
+              _firestore.collection('messaggi').doc(value.docs[0].id).update({
+                'messaggi': FieldValue.arrayUnion([message])
+              });
+            }
+          });
+      return 'ok';
+    } on FirebaseException catch (e) {
+      return Future.error(UpdateProfileFailure(e.code));
+    } catch (e) {
+      return Future.error(UpdateProfileFailure(e.toString()));
+    }
+  }
+
+  /// set all messages as read in the chat
+  Future<void> setAllMessagesAsRead(String id, String mioID) async {
+    try {
+      await _firestore
+          .collection('messaggi')
+          .where('id', whereIn: [
+            '$id-$mioID',
+            '$mioID-$id',
+          ])
+          .get()
+          .then((value) async {
+            if (value.docs.isEmpty) {
+              return;
+            }
+
+            List<dynamic> messages = value.docs[0].data()['messaggi'];
+            for (var i = 0; i < messages.length; i++) {
+              if (messages[i]['senderId'] != mioID) {
+                messages[i]['isRead'] = true;
+              }
+            }
+
+            await _firestore
+                .collection('messaggi')
+                .doc(value.docs[0].id)
+                .update({
+              'messaggi': messages,
+            });
+          });
+    } on FirebaseException catch (e) {
+      return Future.error(UpdateProfileFailure(e.code));
+    } catch (e) {
+      return Future.error(UpdateProfileFailure(e.toString()));
+    }
+  }
 }

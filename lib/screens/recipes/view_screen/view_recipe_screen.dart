@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 
 class ViewRecipeScreen extends StatefulWidget {
   final bool isMine;
+  final String mioId;
   final RecipesState recipesState;
   final int? visualizzazioni;
 
@@ -16,6 +17,7 @@ class ViewRecipeScreen extends StatefulWidget {
       {super.key,
       required this.recipesState,
       required this.isMine,
+      required this.mioId,
       this.visualizzazioni});
 
   @override
@@ -95,7 +97,8 @@ class _ViewRecipeScreenState extends State<ViewRecipeScreen> {
                               onTap: () {
                                 Navigator.of(context).push(MaterialPageRoute(
                                     builder: (context) => PublicProfile(
-                                        widget.recipesState.userID!)));
+                                        widget.recipesState.userID!,
+                                        widget.mioId)));
                               },
                               child: Row(children: [
                                 CircleAvatar(

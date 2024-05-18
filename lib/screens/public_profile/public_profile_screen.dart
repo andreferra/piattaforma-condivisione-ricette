@@ -1,24 +1,29 @@
 import 'dart:js_interop';
 
+import 'package:condivisionericette/screens/message_screen/singleChat/single_chat.dart';
 import 'package:condivisionericette/screens/public_profile/components/recipes_list.dart';
 import 'package:condivisionericette/screens/public_profile/components/top_section.dart';
 import 'package:condivisionericette/screens/public_profile/components/user_info.dart';
 import 'package:firebase_auth_repo/auth_repo.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 
 class PublicProfile extends StatefulWidget {
   final String userID;
+  final String mioId;
 
-  const PublicProfile(this.userID, {super.key});
+  const PublicProfile(this.userID, this.mioId, {super.key});
 
   @override
   State<PublicProfile> createState() => _PublicProfileState();
 }
 
 class _PublicProfileState extends State<PublicProfile> {
-  FirebaseRepository _firebaseRepository = FirebaseRepository();
+  final FirebaseRepository _firebaseRepository = FirebaseRepository();
   AuthUser user = AuthUser.empty;
   bool isLoad = false;
+  bool loSeguo = false;
+  bool notifiche = false;
 
   void laodUserData() async {
     await _firebaseRepository.getUserFromDatabase(widget.userID).then((user) {
@@ -26,9 +31,122 @@ class _PublicProfileState extends State<PublicProfile> {
         setState(() {
           isLoad = true;
           this.user = user;
+          user.follower!.contains(widget.mioId)
+              ? loSeguo = true
+              : loSeguo = false;
+          user.listaNotifiche!.contains(widget.mioId)
+              ? notifiche = true
+              : notifiche = false;
         });
       }
     });
+  }
+
+  Future<void> _unfollowUser() async {
+    try {
+      await _firebaseRepository
+          .unfollowUser(widget.mioId, user.uid)
+          .then((value) {
+        switch (value) {
+          case 'ok':
+            if (loSeguo) {
+              _togliNotifiche();
+            }
+            setState(() {
+              loSeguo = false;
+              user.follower!.remove(widget.mioId);
+            });
+            ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text("utente smesso di seguire")));
+            break;
+          default:
+            ScaffoldMessenger.of(context)
+                .showSnackBar(const SnackBar(content: Text("Errore")));
+            break;
+        }
+      });
+    } on UpdateProfileFailure catch (e) {
+      print(e);
+    }
+  }
+
+  Future<void> _followUser() async {
+    try {
+      await _firebaseRepository
+          .followUser(widget.mioId, user.uid)
+          .then((value) {
+        switch (value) {
+          case 'ok':
+            setState(() {
+              loSeguo = true;
+              user.follower!.add(widget.mioId);
+            });
+            ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text("utente seguito con successo")));
+            break;
+          default:
+            ScaffoldMessenger.of(context)
+                .showSnackBar(const SnackBar(content: Text("Errore")));
+            break;
+        }
+      });
+    } on UpdateProfileFailure catch (e) {
+      print(e);
+    }
+  }
+
+  Future<void> _notificaUser() async {
+    try {
+      await _firebaseRepository
+          .addNotification(widget.mioId, user.uid)
+          .then((value) {
+        switch (value) {
+          case 'ok':
+            setState(() {
+              notifiche = true;
+              user.listaNotifiche!.add(widget.mioId);
+            });
+            ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text("Notifiche attivate")));
+            break;
+          default:
+            ScaffoldMessenger.of(context)
+                .showSnackBar(const SnackBar(content: Text("Errore")));
+            break;
+        }
+      });
+    } on UpdateProfileFailure catch (e) {
+      print(e);
+    }
+  }
+
+  Future<void> _togliNotifiche() async {
+    try {
+      await _firebaseRepository
+          .deleteNotification(widget.mioId, user.uid)
+          .then((value) {
+        switch (value) {
+          case 'ok':
+            setState(() {
+              notifiche = false;
+              user.listaNotifiche!.remove(widget.mioId);
+            });
+            ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text("Notifiche disattivate")));
+            break;
+          default:
+            ScaffoldMessenger.of(context)
+                .showSnackBar(const SnackBar(content: Text("Errore")));
+            break;
+        }
+      });
+    } on UpdateProfileFailure catch (e) {
+      print(e);
+    }
+  }
+
+  Future<void> _checkChat(String id, String mioId) async {
+    await _firebaseRepository.checkChat(id, mioId).then((value) {});
   }
 
   @override
@@ -68,31 +186,59 @@ class _PublicProfileState extends State<PublicProfile> {
                                   color: Colors.white),
                         ),
                         const SizedBox(height: 16),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            FloatingActionButton.extended(
-                              onPressed: () {
-                                //TODO follow user and active notification
-                              },
-                              heroTag: 'follow',
-                              elevation: 0,
-                              label: const Text("Follow"),
-                              icon: const Icon(Icons.person_add_alt_1),
-                            ),
-                            const SizedBox(width: 16.0),
-                            FloatingActionButton.extended(
-                              onPressed: () {
-                                //TODO message user
-                              },
-                              heroTag: 'mesage',
-                              elevation: 0,
-                              backgroundColor: Colors.red,
-                              label: const Text("Message"),
-                              icon: const Icon(Icons.message_rounded),
-                            ),
-                          ],
-                        ),
+                        if (user.uid != widget.mioId)
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              FloatingActionButton.extended(
+                                onPressed: () async {
+                                  loSeguo
+                                      ? await _unfollowUser()
+                                      : await _followUser();
+                                },
+                                heroTag: !loSeguo ? 'follow' : "unfollow",
+                                elevation: 0,
+                                label: !loSeguo
+                                    ? const Text("Follow")
+                                    : const Text("Unfollow"),
+                                icon: !loSeguo
+                                    ? const Icon(Icons.person_add_alt_1)
+                                    : const Icon(Icons.person_remove_alt_1),
+                              ),
+                              const SizedBox(width: 16.0),
+                              FloatingActionButton.extended(
+                                onPressed: () async {
+                                  await _checkChat(user.uid, widget.mioId);
+                                  Navigator.of(context).push(MaterialPageRoute(
+                                      builder: (context) => SingleChatScreen(
+                                          user.uid, widget.mioId)));
+                                },
+                                heroTag: 'mesage',
+                                elevation: 0,
+                                backgroundColor: Colors.red,
+                                label: const Text("Message"),
+                                icon: const Icon(Icons.message_rounded),
+                              ),
+                              const SizedBox(width: 16.0),
+                              if (loSeguo)
+                                FloatingActionButton.extended(
+                                  onPressed: () {
+                                    !notifiche
+                                        ? _notificaUser()
+                                        : _togliNotifiche();
+                                  },
+                                  heroTag: "Notifiche",
+                                  elevation: 0,
+                                  backgroundColor: Colors.blue,
+                                  label: notifiche
+                                      ? const Text("Notifiche attive")
+                                      : const Text("Notifiche disattive"),
+                                  icon: notifiche
+                                      ? const Icon(Icons.notifications_active)
+                                      : const Icon(Icons.notifications_off),
+                                ),
+                            ],
+                          ),
                         const SizedBox(height: 16),
                         ProfileInfoRow(items)
                       ],

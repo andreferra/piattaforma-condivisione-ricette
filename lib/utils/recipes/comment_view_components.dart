@@ -23,6 +23,8 @@ class CommentCard extends ConsumerWidget {
     final recipeInteractionController =
         ref.read(recipeInteractionProvider.notifier);
 
+    final userID = ref.watch(authProvider).user.uid;
+
     final commentoId =
         ref.watch(recipeInteractionProvider).idCommentoReply ?? "";
 
@@ -40,7 +42,8 @@ class CommentCard extends ConsumerWidget {
                 InkWell(
                   onTap: () {
                     Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => PublicProfile(commento.userId!)));
+                        builder: (context) =>
+                            PublicProfile(commento.userId!, userID)));
                   },
                   child: Row(children: [
                     CircleAvatar(
