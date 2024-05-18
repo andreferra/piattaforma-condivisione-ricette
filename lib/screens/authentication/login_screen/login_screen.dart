@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:condivisionericette/screens/authentication/recuperoPWD/recupero_pwd_screen.dart';
 import 'package:condivisionericette/widget/loading_errors.dart';
 import 'package:flutter/material.dart';
@@ -19,6 +21,12 @@ class LoginScreen extends ConsumerWidget {
     ref.listen<LoginState>(loginProvider, (previus, current) {
       if (current.status.isSubmissionInProgress) {
         LoadingSheet.show(context);
+        if(current.errorMessage != null){
+          Navigator.of(context).pop();
+        }
+        if(Navigator.of(context).canPop()){
+          Navigator.of(context).pop();
+        }
       } else if (current.status.isSubmissionFailure) {
         Navigator.of(context).pop();
         ErrorDialog.show(context, "${current.errorMessage}");

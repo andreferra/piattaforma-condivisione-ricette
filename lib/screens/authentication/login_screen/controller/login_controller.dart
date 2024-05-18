@@ -42,12 +42,12 @@ class LoginController extends StateNotifier<LoginState> {
     state = state.copyWith(status: FormzStatus.submissionInProgress);
 
     try {
-      await _authRepo.signInWithEmailAndPassword(
+      await _authRepo
+          .signInWithEmailAndPassword(
         email: state.email.value,
         password: state.password.value,
-      );
-
-      state = state.copyWith(status: FormzStatus.submissionSuccess);
+      ).then((value) {
+        state = state.copyWith(status: FormzStatus.submissionSuccess);  });
     } on SignInWithEmailAndPasswordFailure catch (e) {
       state = state.copyWith(
           status: FormzStatus.submissionFailure, errorMessage: e.code);
