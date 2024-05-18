@@ -362,4 +362,40 @@ class FirebaseRepository {
       return Future.error(UpdateProfileFailure(e.toString()));
     }
   }
+
+  /// set all messages as read in the chat
+  Future<void> setAllMessagesAsRead(String id, String mioID) async {
+    try {
+      await _firestore
+          .collection('messaggi')
+          .where('id', whereIn: [
+            '$id-$mioID',
+            '$mioID-$id',
+          ])
+          .get()
+          .then((value) async {
+            if (value.docs.isEmpty) {
+              return;
+            }
+
+            List<dynamic> messages = value.docs[0].data()['messaggi'];
+            for (var i = 0; i < messages.length; i++) {
+              if (messages[i]['senderId'] != mioID) {
+                messages[i]['isRead'] = true;
+              }
+            }
+
+            await _firestore
+                .collection('messaggi')
+                .doc(value.docs[0].id)
+                .update({
+              'messaggi': messages,
+            });
+          });
+    } on FirebaseException catch (e) {
+      return Future.error(UpdateProfileFailure(e.code));
+    } catch (e) {
+      return Future.error(UpdateProfileFailure(e.toString()));
+    }
+  }
 }

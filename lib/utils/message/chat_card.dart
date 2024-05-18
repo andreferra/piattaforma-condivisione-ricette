@@ -30,6 +30,8 @@ class ChatCard extends StatelessWidget {
           if (snapshot.hasData) {
             bool isReadAndMyMessage =
                 ultimoMex.isRead == false && ultimoMex.senderId == mioID;
+            bool isUnreadAndNotMyMessage =
+                ultimoMex.isRead == false && ultimoMex.senderId != mioID;
 
             final user = snapshot.data!.docs[0];
             return Container(
@@ -39,7 +41,7 @@ class ChatCard extends StatelessWidget {
                 color: Colors.white.withOpacity(0.8),
                 borderRadius: BorderRadius.circular(20),
                 border: Border.all(
-                  color: !isReadAndMyMessage ? primaryColor : Colors.white,
+                  color: isUnreadAndNotMyMessage ? primaryColor : Colors.white,
                   width: 2,
                 ),
                 boxShadow: const [
@@ -79,15 +81,25 @@ class ChatCard extends StatelessWidget {
                       ),
                     ],
                   ),
-                  if (ultimoMex.isRead == false && ultimoMex.senderId != mioID)
-                    const Spacer(),
-                  if (ultimoMex.isRead == false && ultimoMex.senderId != mioID)
-                    Container(
-                      height: 10,
-                      width: 10,
-                      decoration: const BoxDecoration(
-                        color: primaryColor,
-                        shape: BoxShape.circle,
+                  if (isReadAndMyMessage) const Spacer(),
+                  if (isUnreadAndNotMyMessage)
+                    Expanded(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.all(5),
+                            decoration: BoxDecoration(
+                              color: primaryColor,
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: const Icon(
+                              Icons.circle,
+                              color: primaryColor,
+                              size: 15,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                 ],

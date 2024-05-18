@@ -26,7 +26,6 @@ class _ChatBodyState extends State<ChatBody> {
         ],
       ).snapshots(includeMetadataChanges: true),
       builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-        print(snapshot.data!.docs);
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(
             child: CircularProgressIndicator(),

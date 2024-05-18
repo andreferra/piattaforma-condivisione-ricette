@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:condivisionericette/model/Message.dart';
 import 'package:condivisionericette/widget/text_input_field.dart';
 import 'package:firebase_auth_repo/auth_repo.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
 
