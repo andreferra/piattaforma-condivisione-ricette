@@ -311,4 +311,55 @@ class FirebaseRepository {
       return Future.error(UpdateProfileFailure(e.toString()));
     }
   }
+
+  ///Controlle se la chat esiste se no creala
+  Future<void> checkChat(String id, String mioId) async {
+    bool isEmpty = true;
+    try {
+      final chat =
+          await _firestore.collection('messaggi').where('id', whereIn: [
+        '$id-$mioId',
+        '$mioId-$id',
+      ]).get();
+      if (chat.docs.isNotEmpty) {
+        isEmpty = false;
+      }
+
+      if (isEmpty) {
+        await _firestore.collection('messaggi').add({
+          'id': '$id-$mioId',
+          'messaggi': [],
+        });
+      }
+    } on FirebaseException catch (e) {
+      return Future.error(UpdateProfileFailure(e.code));
+    } catch (e) {
+      return Future.error(UpdateProfileFailure(e.toString()));
+    }
+  }
+
+  /// Send a message
+  Future<String> sendMessage(message, String id, String mioID) async {
+    try {
+      await _firestore
+          .collection('messaggi')
+          .where('id', whereIn: [
+            '$id-$mioID',
+            '$mioID-$id',
+          ])
+          .get()
+          .then((value) {
+            if (value.docs.isNotEmpty) {
+              _firestore.collection('messaggi').doc(value.docs[0].id).update({
+                'messaggi': FieldValue.arrayUnion([message])
+              });
+            }
+          });
+      return 'ok';
+    } on FirebaseException catch (e) {
+      return Future.error(UpdateProfileFailure(e.code));
+    } catch (e) {
+      return Future.error(UpdateProfileFailure(e.toString()));
+    }
+  }
 }

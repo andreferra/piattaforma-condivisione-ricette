@@ -1,5 +1,6 @@
 import 'dart:js_interop';
 
+import 'package:condivisionericette/screens/message_screen/singleChat/single_chat.dart';
 import 'package:condivisionericette/screens/public_profile/components/recipes_list.dart';
 import 'package:condivisionericette/screens/public_profile/components/top_section.dart';
 import 'package:condivisionericette/screens/public_profile/components/user_info.dart';
@@ -144,6 +145,10 @@ class _PublicProfileState extends State<PublicProfile> {
     }
   }
 
+  Future<void> _checkChat(String id, String mioId) async {
+    await _firebaseRepository.checkChat(id, mioId).then((value) {});
+  }
+
   @override
   void initState() {
     laodUserData();
@@ -181,55 +186,59 @@ class _PublicProfileState extends State<PublicProfile> {
                                   color: Colors.white),
                         ),
                         const SizedBox(height: 16),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            FloatingActionButton.extended(
-                              onPressed: () async {
-                                loSeguo
-                                    ? await _unfollowUser()
-                                    : await _followUser();
-                              },
-                              heroTag: !loSeguo ? 'follow' : "unfollow",
-                              elevation: 0,
-                              label: !loSeguo
-                                  ? const Text("Follow")
-                                  : const Text("Unfollow"),
-                              icon: !loSeguo
-                                  ? const Icon(Icons.person_add_alt_1)
-                                  : const Icon(Icons.person_remove_alt_1),
-                            ),
-                            const SizedBox(width: 16.0),
-                            FloatingActionButton.extended(
-                              onPressed: () {
-                                //TODO: implement message
-                              },
-                              heroTag: 'mesage',
-                              elevation: 0,
-                              backgroundColor: Colors.red,
-                              label: const Text("Message"),
-                              icon: const Icon(Icons.message_rounded),
-                            ),
-                            const SizedBox(width: 16.0),
-                            if (loSeguo)
+                        if (user.uid != widget.mioId)
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
                               FloatingActionButton.extended(
-                                onPressed: () {
-                                  !notifiche
-                                      ? _notificaUser()
-                                      : _togliNotifiche();
+                                onPressed: () async {
+                                  loSeguo
+                                      ? await _unfollowUser()
+                                      : await _followUser();
                                 },
-                                heroTag: "Notifiche",
+                                heroTag: !loSeguo ? 'follow' : "unfollow",
                                 elevation: 0,
-                                backgroundColor: Colors.blue,
-                                label: notifiche
-                                    ? const Text("Notifiche attive")
-                                    : const Text("Notifiche disattive"),
-                                icon: notifiche
-                                    ? const Icon(Icons.notifications_active)
-                                    : const Icon(Icons.notifications_off),
+                                label: !loSeguo
+                                    ? const Text("Follow")
+                                    : const Text("Unfollow"),
+                                icon: !loSeguo
+                                    ? const Icon(Icons.person_add_alt_1)
+                                    : const Icon(Icons.person_remove_alt_1),
                               ),
-                          ],
-                        ),
+                              const SizedBox(width: 16.0),
+                              FloatingActionButton.extended(
+                                onPressed: () async {
+                                  await _checkChat(user.uid, widget.mioId);
+                                  Navigator.of(context).push(MaterialPageRoute(
+                                      builder: (context) => SingleChatScreen(
+                                          user.uid, widget.mioId)));
+                                },
+                                heroTag: 'mesage',
+                                elevation: 0,
+                                backgroundColor: Colors.red,
+                                label: const Text("Message"),
+                                icon: const Icon(Icons.message_rounded),
+                              ),
+                              const SizedBox(width: 16.0),
+                              if (loSeguo)
+                                FloatingActionButton.extended(
+                                  onPressed: () {
+                                    !notifiche
+                                        ? _notificaUser()
+                                        : _togliNotifiche();
+                                  },
+                                  heroTag: "Notifiche",
+                                  elevation: 0,
+                                  backgroundColor: Colors.blue,
+                                  label: notifiche
+                                      ? const Text("Notifiche attive")
+                                      : const Text("Notifiche disattive"),
+                                  icon: notifiche
+                                      ? const Icon(Icons.notifications_active)
+                                      : const Icon(Icons.notifications_off),
+                                ),
+                            ],
+                          ),
                         const SizedBox(height: 16),
                         ProfileInfoRow(items)
                       ],
