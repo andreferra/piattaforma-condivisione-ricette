@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:condivisionericette/model/Message.dart';
 import 'package:condivisionericette/utils/message/chat_card.dart';
 import 'package:flutter/material.dart';
 
@@ -46,7 +47,7 @@ class ChatList extends StatelessWidget {
                     chat[index]['id'].toString().split('-')[0] == mioID
                         ? chat[index]['id'].toString().split('-')[1]
                         : chat[index]['id'].toString().split('-')[0],
-                    chat[index]['messaggi'][chat[index]['messaggi'].length - 1]['message']);
+                    Message.fromJson(chat[index]['messaggi'][chat[index]['messaggi'].length - 1]));
               },
             );
           } else {

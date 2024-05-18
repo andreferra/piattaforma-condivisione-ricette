@@ -1,11 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:condivisionericette/model/Message.dart';
 import 'package:condivisionericette/utils/constant.dart';
 import 'package:flutter/material.dart';
 
 class ChatCard extends StatelessWidget {
   final String mioID;
   final String id;
-  final String ultimoMex;
+  final Message ultimoMex;
 
   const ChatCard(this.mioID, this.id, this.ultimoMex, {super.key});
 
@@ -27,6 +28,9 @@ class ChatCard extends StatelessWidget {
           }
 
           if (snapshot.hasData) {
+            bool isReadAndMyMessage =
+                ultimoMex.isRead == false && ultimoMex.senderId == mioID;
+
             final user = snapshot.data!.docs[0];
             return Container(
               margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
@@ -34,6 +38,10 @@ class ChatCard extends StatelessWidget {
               decoration: BoxDecoration(
                 color: Colors.white.withOpacity(0.8),
                 borderRadius: BorderRadius.circular(20),
+                border: Border.all(
+                  color: !isReadAndMyMessage ? primaryColor : Colors.white,
+                  width: 2,
+                ),
                 boxShadow: const [
                   BoxShadow(
                     color: Colors.black12,
@@ -63,7 +71,7 @@ class ChatCard extends StatelessWidget {
                       ),
                       const SizedBox(height: 5),
                       Text(
-                        ultimoMex,
+                        ultimoMex.message,
                         style: const TextStyle(
                           fontSize: 15,
                           color: Colors.grey,
@@ -71,6 +79,17 @@ class ChatCard extends StatelessWidget {
                       ),
                     ],
                   ),
+                  if (ultimoMex.isRead == false && ultimoMex.senderId != mioID)
+                    const Spacer(),
+                  if (ultimoMex.isRead == false && ultimoMex.senderId != mioID)
+                    Container(
+                      height: 10,
+                      width: 10,
+                      decoration: const BoxDecoration(
+                        color: primaryColor,
+                        shape: BoxShape.circle,
+                      ),
+                    ),
                 ],
               ),
             );
