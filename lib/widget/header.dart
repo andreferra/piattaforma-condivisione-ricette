@@ -20,6 +20,9 @@ class Header extends ConsumerWidget {
       'Notifiche',
       'Profilo',
       'Impostazioni',
+      '',
+      'Messaggi',
+
     ];
 
     final page = ref.watch(pageControllerProvider);
