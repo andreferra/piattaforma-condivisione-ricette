@@ -61,7 +61,14 @@ class RecipeInteractionController extends StateNotifier<RecipeInteraction> {
     try {
       String res = "error";
       final comment = state.commento;
+
       if (comment != null) {
+        if (state.numeroStelle == null) {
+          comment.copyWith(
+            numeroStelle: 0,
+          );
+        }
+
         await _firebaseRepo
             .addReply(comment.toMap(), recipeId, state.idCommentoReply!)
             .then((value) {
@@ -101,9 +108,23 @@ class RecipeInteractionController extends StateNotifier<RecipeInteraction> {
   }
 
   onSetStars(int stars) {
+    if(state.commento == null) {
+      state = state.copyWith(
+        commento: Comment(
+          numeroStelle: stars,
+        ),
+        numeroStelle: stars,
+      );
+    }
+
     state = state.copyWith(
+      commento: state.commento!.copyWith(
+        numeroStelle: stars,
+      ),
       numeroStelle: stars,
     );
+
+    print(state.commento!.numeroStelle);
   }
 
   Future<String> onDeleteComment(String idCommento, String idRicetta) async {

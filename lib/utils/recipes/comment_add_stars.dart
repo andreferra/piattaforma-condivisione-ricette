@@ -28,6 +28,7 @@ class AddStars extends ConsumerWidget {
             IconButton(
               icon: i <= nStarSelected ? starSelected : star,
               onPressed: () {
+                print(i);
                 recipeInteractionController.onSetStars(i);
               },
             ),

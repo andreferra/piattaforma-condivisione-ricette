@@ -23,7 +23,7 @@ class RecipeInteraction extends Equatable {
     this.numeroLike,
     this.numeroCondivisioni,
     this.visualizzazioni,
-    this.commento,
+    this.commento ,
     this.numeroStelle,
     this.reply = false,
     this.idCommentoReply,

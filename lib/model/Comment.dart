@@ -17,7 +17,7 @@ class Comment {
     this.dataCreazione,
     this.nicknameUtente,
     this.urlUtente,
-    this.numeroStelle = 1,
+    this.numeroStelle,
     this.risposte,
   });
 
@@ -43,9 +43,12 @@ class Comment {
     );
   }
 
-
-
   factory Comment.fromMap(Map<String, dynamic> map) {
+    List<dynamic> risposte = map['risposte'] ?? [];
+
+    List<Comment> commenti = risposte.map((risposta) {
+      return Comment.fromMap(risposta);
+    }).toList();
     return Comment(
       idCommento: map['idCommento'],
       userId: map['userId'],
@@ -54,7 +57,7 @@ class Comment {
       nicknameUtente: map['nicknameUtente'],
       urlUtente: map['urlUtente'],
       numeroStelle: map['numeroStelle'],
-      risposte: map['risposte'],
+      risposte: commenti,
     );
   }
 
@@ -72,11 +75,11 @@ class Comment {
   }
 
   //empty comment
-  static Comment get empty => Comment(
+  static final Comment empty = Comment(
         idCommento: '',
         userId: '',
         commento: '',
-        dataCreazione: Timestamp.now(),
+        dataCreazione: null,
         nicknameUtente: '',
         urlUtente: '',
         numeroStelle: 0,

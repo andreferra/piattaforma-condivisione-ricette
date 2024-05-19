@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:condivisionericette/model/Comment.dart';
 import 'package:condivisionericette/screens/public_profile/public_profile_screen.dart';
 import 'package:condivisionericette/screens/recipes/add_recipes/controller/recipes_controller.dart';
 import 'package:condivisionericette/screens/recipes/view_screen/components/add_comment_component.dart';
@@ -220,30 +222,44 @@ class _ViewRecipeScreenState extends State<ViewRecipeScreen> {
                   SizedBox(
                     height: MediaQuery.of(context).size.height * 0.6,
                     width: MediaQuery.of(context).size.width * 0.8,
-                    child: ListView(
-                      padding: const EdgeInsets.all(defaultPadding),
-                      shrinkWrap: true,
-                      physics: const BouncingScrollPhysics(),
-                      children: [
-                        for (var i = 0;
-                            i <
-                                widget.recipesState.recipeInteraction!.commenti!
-                                    .length;
-                            i++)
-                          Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: defaultPadding * 2,
-                                vertical: defaultPadding),
-                            child: CommentCard(
-                              widget
-                                  .recipesState.recipeInteraction!.commenti![i],
-                              widget.recipesState,
-                              false,
-                            ),
-                          ),
-                        const SizedBox(height: defaultPadding * 3),
-                      ],
-                    ),
+                    child: StreamBuilder(
+                        stream: FirebaseFirestore.instance
+                            .collection("recipes")
+                            .where("uid",
+                                isEqualTo: widget.recipesState.recipeID)
+                            .snapshots(includeMetadataChanges: true),
+                        builder:
+                            (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+
+                          if (snapshot.hasError) {
+                            print(snapshot.error);
+                            return Text("Errore: ${snapshot.error}");
+                          }
+                          if (snapshot.data!.docs.isEmpty) {
+                            print("Non ci sono commenti");
+                            return const Center(
+                                child: Text("Non ci sono commenti"));
+                          }
+
+                          if (snapshot.hasData) {
+                            List<DocumentSnapshot> docs = snapshot.data!.docs;
+                            return ListView.builder(
+                              itemCount:
+                                  snapshot.data!.docs[0]['commenti'].length,
+                              itemBuilder: (context, index) {
+
+                                return CommentCard(
+                                  Comment.fromMap(docs[0]['commenti'][index]
+                                      as Map<String, dynamic>),
+                                  widget.recipesState,
+                                  false,
+                                );
+                              },
+                            );
+                          }
+                          return const Center(
+                              child: CircularProgressIndicator());
+                        }),
                   ),
                   const SizedBox(height: defaultPadding * 3),
                 ],
