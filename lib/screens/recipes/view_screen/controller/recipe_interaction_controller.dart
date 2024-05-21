@@ -3,7 +3,6 @@ import 'package:condivisionericette/controller/auth_repo_provider.dart';
 import 'package:condivisionericette/model/Comment.dart';
 import 'package:equatable/equatable.dart';
 import 'package:firebase_auth_repo/auth_repo.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:uuid/uuid.dart';
 
@@ -22,31 +21,41 @@ class RecipeInteractionController extends StateNotifier<RecipeInteraction> {
       : super(RecipeInteraction());
 
   void onCommentTextChanged(String value, AuthUser user) {
-    state = state.copyWith(
-      commento: Comment(
-        commento: value,
-        dataCreazione: Timestamp.now(),
-        nicknameUtente: user.nickname,
-        urlUtente: user.photoURL,
-        userId: user.uid,
-        idCommento: const Uuid().v4(),
-      ),
-    );
+    if (state.commento == null) {
+      state = state.copyWith(
+        commento: Comment(
+          commento: value,
+          dataCreazione: Timestamp.now(),
+          nicknameUtente: user.nickname,
+          urlUtente: user.photoURL,
+          userId: user.uid,
+          idCommento: const Uuid().v4(),
+          numeroStelle: state.numeroStelle ?? 1,
+        ),
+      );
+    } else {
+      state = state.copyWith(
+        commento: state.commento!.copyWith(
+          commento: value,
+        ),
+      );
+    }
   }
 
   Future<String> onCommentSubmitted(String recipeId) async {
     try {
       final comment = state.commento;
+
       if (comment != null) {
-        if (comment.numeroStelle != state.numeroStelle) {
-          comment.copyWith(
-            numeroStelle: state.numeroStelle,
-          );
+        if (comment.commento!.isEmpty) {
+          return "error";
         }
+
         await _firebaseRepo.addComment(comment.toMap(), recipeId);
         state = state.copyWith(
           commenti: [...state.commenti!, comment],
-          commento: Comment.empty,
+          commento: null,
+          numeroStelle: 1,
         );
         return "ok";
       }
@@ -63,10 +72,8 @@ class RecipeInteractionController extends StateNotifier<RecipeInteraction> {
       final comment = state.commento;
 
       if (comment != null) {
-        if (state.numeroStelle == null) {
-          comment.copyWith(
-            numeroStelle: 0,
-          );
+        if (state.commento!.idCommento!.isEmpty) {
+          return "error";
         }
 
         await _firebaseRepo
@@ -82,7 +89,8 @@ class RecipeInteractionController extends StateNotifier<RecipeInteraction> {
                           )
                         : e)
                     .toList(),
-                commento: Comment.empty,
+                commento: null,
+                numeroStelle: 1,
                 reply: false,
               );
               res = "ok";
@@ -107,11 +115,17 @@ class RecipeInteractionController extends StateNotifier<RecipeInteraction> {
     );
   }
 
-  onSetStars(int stars) {
-    if(state.commento == null) {
+  onSetStars(int stars, AuthUser user) {
+    if (state.commento == null) {
       state = state.copyWith(
         commento: Comment(
-          numeroStelle: stars,
+          commento: "",
+          dataCreazione: Timestamp.now(),
+          nicknameUtente: user.nickname,
+          urlUtente: user.photoURL,
+          userId: user.uid,
+          idCommento: const Uuid().v4(),
+          numeroStelle: state.numeroStelle ?? 1,
         ),
         numeroStelle: stars,
       );
@@ -123,8 +137,6 @@ class RecipeInteractionController extends StateNotifier<RecipeInteraction> {
       ),
       numeroStelle: stars,
     );
-
-    print(state.commento!.numeroStelle);
   }
 
   Future<String> onDeleteComment(String idCommento, String idRicetta) async {
