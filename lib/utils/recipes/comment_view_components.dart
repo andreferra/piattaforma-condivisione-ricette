@@ -104,7 +104,7 @@ class CommentCard extends ConsumerWidget {
             ),
             const SizedBox(height: 8),
             //TODO: Add recipes photo
-            if (commento.numeroStelle != 0 && risposta)
+            if (commento.numeroStelle != 0 && !risposta)
               Row(
                 children: [
                   for (var i = 0; i < commento.numeroStelle!; i++)
