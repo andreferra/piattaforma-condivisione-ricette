@@ -23,7 +23,6 @@ class Message {
     }
 
     Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
-    print(data);
     if (!data.containsKey('senderId')) {
       throw Exception('Field "senderId" does not exist in the document');
     }

@@ -2,7 +2,6 @@ import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth_repo/auth_repo.dart';
-import 'package:firebase_auth_repo/src/authentication_repository.dart';
 import 'package:firebase_auth_repo/src/storage_respository.dart';
 
 class UpdateProfileFailure implements Exception {
@@ -61,7 +60,8 @@ class FirebaseRepository {
     try {
       late String? url = user.photoURL;
       if (file != null) {
-        url = await _storage.uploadFile('foto_profilo/${user.uid}', file);
+        url = await _storage.uploadFile(
+            'foto_profilo/${user.uid}', file, user.uid);
         user = user.copyWith(photoURL: url);
       }
       return _firestore
@@ -90,7 +90,9 @@ class FirebaseRepository {
   Future<String> addRecipe(AuthUser user, state, String uuidRicetta) async {
     try {
       String coverImageUrl = await _storage.uploadFile(
-          'cover_images/$uuidRicetta', state.coverImage!);
+          'cover_images/$uuidRicetta',
+          state.coverImage!,
+          "${uuidRicetta}cover");
       List<String> stepImagesUrl = await _storage.uploadMultipleFiles(
           'step_images/$uuidRicetta', state.immagini);
       final recipe = {
@@ -247,6 +249,22 @@ class FirebaseRepository {
     } catch (e) {
       print(e);
       return Future.error(DeleteCommentFailure(e.toString()));
+    }
+  }
+
+  /// Upload image comment to storage
+  Future<List<String>> uploadImageComment(
+      String recipesId, String commentID, List<Uint8List> imageFile) async {
+    try {
+      List<String> url = [];
+      url = await _storage.uploadMultipleFiles(
+          'comment_images/$recipesId/$commentID', imageFile);
+
+      return url;
+    } on StorageException catch (e) {
+      return Future.error(AddCommentFailure(e.message));
+    } catch (e) {
+      return Future.error(AddCommentFailure(e.toString()));
     }
   }
 
@@ -412,5 +430,4 @@ class FirebaseRepository {
       return Future.error(UpdateProfileFailure(e.toString()));
     }
   }
-
 }

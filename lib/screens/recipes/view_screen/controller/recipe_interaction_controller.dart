@@ -1,9 +1,10 @@
+import 'dart:typed_data';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:condivisionericette/controller/auth_repo_provider.dart';
 import 'package:condivisionericette/model/Comment.dart';
 import 'package:equatable/equatable.dart';
 import 'package:firebase_auth_repo/auth_repo.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:uuid/uuid.dart';
 
@@ -21,38 +22,75 @@ class RecipeInteractionController extends StateNotifier<RecipeInteraction> {
   RecipeInteractionController(this._firebaseRepo, this._authRepo)
       : super(RecipeInteraction());
 
+  void onImageAdded(Uint8List image) {
+    if (state.imageFile!.length < 4) {
+      state = state.copyWith(
+        imageFile: [...state.imageFile!, image],
+      );
+    }
+  }
+
   void onCommentTextChanged(String value, AuthUser user) {
-    state = state.copyWith(
-      commento: Comment(
-        commento: value,
-        dataCreazione: Timestamp.now(),
-        nicknameUtente: user.nickname,
-        urlUtente: user.photoURL,
-        userId: user.uid,
-        idCommento: const Uuid().v4(),
-      ),
-    );
+    if (state.commento == null) {
+      state = state.copyWith(
+        commento: Comment(
+          commento: value,
+          dataCreazione: Timestamp.now(),
+          nicknameUtente: user.nickname,
+          urlUtente: user.photoURL,
+          userId: user.uid,
+          idCommento: const Uuid().v4(),
+          numeroStelle: state.numeroStelle ?? 1,
+        ),
+      );
+    } else {
+      state = state.copyWith(
+        commento: state.commento!.copyWith(
+          commento: value,
+        ),
+      );
+    }
   }
 
   Future<String> onCommentSubmitted(String recipeId) async {
     try {
-      final comment = state.commento;
+      var comment = state.commento;
+      state = state.copyWith(uploadComment: UploadComment.loading);
+
       if (comment != null) {
-        if (comment.numeroStelle != state.numeroStelle) {
-          comment.copyWith(
-            numeroStelle: state.numeroStelle,
-          );
+        if (comment.commento!.isEmpty) {
+          return "error";
         }
+
+        if (state.imageFile!.isNotEmpty) {
+          List<String> imageUrl = [];
+          imageUrl = await _firebaseRepo.uploadImageComment(
+              recipeId, comment.idCommento!, state.imageFile!);
+
+          comment = comment.addImageLink(imageUrl);
+        }
+
         await _firebaseRepo.addComment(comment.toMap(), recipeId);
         state = state.copyWith(
           commenti: [...state.commenti!, comment],
-          commento: Comment.empty,
+          commento: null,
+          reply: false,
+          numeroStelle: 1,
+          imageFile: [],
+          uploadComment: UploadComment.loaded,
         );
         return "ok";
       }
+      state = state.copyWith(
+        uploadComment: UploadComment.error,
+        errorMex: "Errore",
+      );
       return "error";
     } catch (e) {
-      print(e);
+      state = state.copyWith(
+        uploadComment: UploadComment.error,
+        errorMex: e.toString(),
+      );
       return "error";
     }
   }
@@ -61,7 +99,13 @@ class RecipeInteractionController extends StateNotifier<RecipeInteraction> {
     try {
       String res = "error";
       final comment = state.commento;
+      state = state.copyWith(uploadComment: UploadComment.loading);
+
       if (comment != null) {
+        if (state.commento!.idCommento!.isEmpty) {
+          return "error";
+        }
+
         await _firebaseRepo
             .addReply(comment.toMap(), recipeId, state.idCommentoReply!)
             .then((value) {
@@ -75,12 +119,19 @@ class RecipeInteractionController extends StateNotifier<RecipeInteraction> {
                           )
                         : e)
                     .toList(),
-                commento: Comment.empty,
+                commento: null,
+                numeroStelle: 1,
                 reply: false,
+                imageFile: [],
+                uploadComment: UploadComment.loaded,
               );
               res = "ok";
               break;
             default:
+              state = state.copyWith(
+                uploadComment: UploadComment.error,
+                errorMex: value,
+              );
               res = "error";
               break;
           }
@@ -88,7 +139,8 @@ class RecipeInteractionController extends StateNotifier<RecipeInteraction> {
       }
       return res;
     } catch (e) {
-      print(e);
+      state = state.copyWith(
+          uploadComment: UploadComment.error, errorMex: e.toString());
       return "error";
     }
   }
@@ -100,8 +152,26 @@ class RecipeInteractionController extends StateNotifier<RecipeInteraction> {
     );
   }
 
-  onSetStars(int stars) {
+  onSetStars(int stars, AuthUser user) {
+    if (state.commento == null) {
+      state = state.copyWith(
+        commento: Comment(
+          commento: "",
+          dataCreazione: Timestamp.now(),
+          nicknameUtente: user.nickname,
+          urlUtente: user.photoURL,
+          userId: user.uid,
+          idCommento: const Uuid().v4(),
+          numeroStelle: state.numeroStelle ?? 1,
+        ),
+        numeroStelle: stars,
+      );
+    }
+
     state = state.copyWith(
+      commento: state.commento!.copyWith(
+        numeroStelle: stars,
+      ),
       numeroStelle: stars,
     );
   }

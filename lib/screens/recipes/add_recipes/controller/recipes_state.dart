@@ -122,8 +122,20 @@ class RecipesState extends Equatable {
 
   //converti fa snapshot in RecipesState
   factory RecipesState.fromSnapshot(DocumentSnapshot document) {
-    List<Comment> commenti =
-        (document["commenti"] as List).map((e) => Comment.fromMap(e)).toList();
+    List<Comment> commenti = [];
+    if (document['commenti'] != null && document['commenti'].isNotEmpty) {
+      try {
+        List<dynamic> risposte = document['commenti'][0]['risposte'];
+
+        if (risposte.isNotEmpty) {
+          commenti = risposte.map((risposta) {
+            return Comment.fromMap(risposta);
+          }).toList();
+        }
+      } catch (e) {
+        print(e);
+      }
+    }
     return RecipesState(
       userID: document["user_id"],
       recipeID: document["uid"],

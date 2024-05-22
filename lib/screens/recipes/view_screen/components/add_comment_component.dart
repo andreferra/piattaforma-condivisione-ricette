@@ -2,9 +2,11 @@ import 'package:condivisionericette/controller/auth_controller/auth_controller.d
 import 'package:condivisionericette/screens/recipes/add_recipes/controller/recipes_controller.dart';
 import 'package:condivisionericette/screens/recipes/view_screen/controller/recipe_interaction_controller.dart';
 import 'package:condivisionericette/utils/constant.dart';
+import 'package:condivisionericette/utils/recipes/comment_add_image.dart';
 import 'package:condivisionericette/utils/recipes/comment_add_stars.dart';
 import 'package:condivisionericette/widget/button/animated_button.dart';
 import 'package:condivisionericette/widget/button/rounded_button_style.dart';
+import 'package:condivisionericette/widget/loading_errors.dart';
 import 'package:condivisionericette/widget/text_input_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -22,6 +24,21 @@ class AddCommentComponent extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    ref.listen<RecipeInteraction>(recipeInteractionProvider,
+        (previus, current) {
+      if (current.uploadComment == UploadComment.loading) {
+        LoadingSheet.show(context);
+        if (current.errorMex != null && current.errorMex!.isNotEmpty) {
+          Navigator.of(context).pop();
+        }
+      } else if (current.uploadComment == UploadComment.error) {
+        Navigator.of(context).pop();
+        ErrorDialog.show(context, "${current.errorMex}");
+      } else if (current.uploadComment == UploadComment.loaded) {
+        Navigator.of(context).pop();
+      }
+    });
+
     final user = ref.watch(authProvider).user;
     final recipeInteractionController =
         ref.watch(recipeInteractionProvider.notifier);
@@ -41,6 +58,8 @@ class AddCommentComponent extends ConsumerWidget {
           const SizedBox(height: defaultPadding),
           if (!subComment) ...[const AddStars()],
           const SizedBox(height: defaultPadding),
+          if (!subComment) ...[const AddImage()],
+          const SizedBox(height: defaultPadding),
           AnimatedButton(
               onTap: () async {
                 String res = "error";
@@ -58,7 +77,7 @@ class AddCommentComponent extends ConsumerWidget {
                   case "ok":
                     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                         content: Text(
-                            "Commento aggiunto, ricarica la pagina per visualizzarlo")));
+                            "Il tuo commento è stato pubblicato con successo!")));
                     break;
                   case "error":
                     ScaffoldMessenger.of(context)

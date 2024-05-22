@@ -2,6 +2,8 @@ import 'package:condivisionericette/screens/recipes/view_screen/controller/recip
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../controller/auth_controller/auth_controller.dart';
+
 class AddStars extends ConsumerWidget {
   const AddStars({super.key});
 
@@ -10,7 +12,10 @@ class AddStars extends ConsumerWidget {
     final recipeInteractionController =
         ref.watch(recipeInteractionProvider.notifier);
 
-    final nStarSelected = ref.watch(recipeInteractionProvider).numeroStelle ?? 1;
+    final user = ref.watch(authProvider).user;
+
+    final nStarSelected =
+        ref.watch(recipeInteractionProvider).numeroStelle ?? 1;
 
     const Icon star = Icon(
       Icons.star,
@@ -28,7 +33,7 @@ class AddStars extends ConsumerWidget {
             IconButton(
               icon: i <= nStarSelected ? starSelected : star,
               onPressed: () {
-                recipeInteractionController.onSetStars(i);
+                recipeInteractionController.onSetStars(i, user);
               },
             ),
         ],

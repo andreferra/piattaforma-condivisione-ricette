@@ -1,17 +1,14 @@
-import 'dart:io';
-
+import 'package:condivisionericette/screens/authentication/login_screen/components/button.dart';
+import 'package:condivisionericette/screens/authentication/login_screen/components/email.dart';
+import 'package:condivisionericette/screens/authentication/login_screen/components/password.dart';
+import 'package:condivisionericette/screens/authentication/login_screen/controller/login_controller.dart';
 import 'package:condivisionericette/screens/authentication/recuperoPWD/recupero_pwd_screen.dart';
+import 'package:condivisionericette/screens/authentication/signup_screen/signup_screen.dart';
+import 'package:condivisionericette/utils/utils.dart';
 import 'package:condivisionericette/widget/loading_errors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:form_validation/form_validator.dart';
-
-import 'package:condivisionericette/screens/authentication/login_screen/controller/login_controller.dart';
-import 'package:condivisionericette/screens/authentication/login_screen/components/button.dart';
-import 'package:condivisionericette/screens/authentication/login_screen/components/email.dart';
-import 'package:condivisionericette/screens/authentication/login_screen/components/password.dart';
-import 'package:condivisionericette/screens/authentication/signup_screen/signup_screen.dart';
-import 'package:condivisionericette/utils/utils.dart';
 
 class LoginScreen extends ConsumerWidget {
   const LoginScreen({super.key});
@@ -21,10 +18,7 @@ class LoginScreen extends ConsumerWidget {
     ref.listen<LoginState>(loginProvider, (previus, current) {
       if (current.status.isSubmissionInProgress) {
         LoadingSheet.show(context);
-        if(current.errorMessage != null){
-          Navigator.of(context).pop();
-        }
-        if(Navigator.of(context).canPop()){
+        if (current.errorMessage != null) {
           Navigator.of(context).pop();
         }
       } else if (current.status.isSubmissionFailure) {
