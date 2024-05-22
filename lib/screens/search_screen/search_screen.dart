@@ -1,3 +1,4 @@
+import 'package:condivisionericette/screens/search_screen/components/user_card.dart';
 import 'package:condivisionericette/widget/text_input_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -10,6 +11,9 @@ class SearchScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final searchController = ref.watch(searchControllerProvider.notifier);
+
+    final searchResult = ref.watch(searchControllerProvider).users;
+    final isSearching = ref.watch(searchControllerProvider).isSearching;
     return Scaffold(
         appBar: AppBar(
           title: const Text('Search'),
@@ -22,7 +26,7 @@ class SearchScreen extends ConsumerWidget {
                 Expanded(
                   flex: 5,
                   child: TextInputField(
-                    hintText: 'Search',
+                    hintText: 'Search user or recipe name',
                     onChanged: (value) {
                       searchController.setSearchValue(value);
                     },
@@ -35,16 +39,44 @@ class SearchScreen extends ConsumerWidget {
                         backgroundColor: WidgetStateProperty.all(Colors.blue),
                         padding:
                             WidgetStateProperty.all(const EdgeInsets.all(10))),
-                    icon: const Icon(Icons.search),
+                    icon: isSearching
+                        ? const Icon(Icons.remove_circle_outline)
+                        : const Icon(Icons.search),
                     onPressed: () async {
-                      await searchController.search();
+                      isSearching
+                          ? searchController.resetSearch()
+                          : await searchController.search();
                     },
                   ),
                 ),
               ],
             ),
             const SizedBox(height: 20),
-            Text('Search result'),
+            // TODO: add search with tag and
+
+            if (ref.watch(searchControllerProvider).users != null)
+              SingleChildScrollView(
+                padding: const EdgeInsets.all(10),
+                physics: const BouncingScrollPhysics(),
+                child: SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.8,
+                  height: MediaQuery.of(context).size.height * 0.75,
+                  child: ListView.builder(
+                    itemCount:
+                        ref.watch(searchControllerProvider).users!.length,
+                    itemBuilder: (context, index) {
+                      return InkWell(
+                        onTap: () {},
+                        child: UserCard(
+                          nickname: searchResult![index]['nickname'],
+                          photoURL: searchResult[index]['photoURL'],
+                          userID: searchResult[index].id,
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ),
           ],
         ));
   }
