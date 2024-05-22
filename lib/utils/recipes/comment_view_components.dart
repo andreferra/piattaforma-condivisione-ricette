@@ -103,7 +103,25 @@ class CommentCard extends ConsumerWidget {
               softWrap: true,
             ),
             const SizedBox(height: 8),
-            //TODO: Add recipes photo
+            if (commento.imageUrl != null)
+              Row(
+                children: [
+                  for (var i = 0; i < commento.imageUrl!.length; i++)
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Container(
+                        width: 100,
+                        height: 100,
+                        decoration: BoxDecoration(
+                          color: Colors.grey[200],
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Image.network(commento.imageUrl![i],
+                            fit: BoxFit.cover),
+                      ),
+                    ),
+                ],
+              ),
             if (commento.numeroStelle != 0 && !risposta)
               Row(
                 children: [

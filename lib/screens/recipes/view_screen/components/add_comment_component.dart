@@ -2,6 +2,7 @@ import 'package:condivisionericette/controller/auth_controller/auth_controller.d
 import 'package:condivisionericette/screens/recipes/add_recipes/controller/recipes_controller.dart';
 import 'package:condivisionericette/screens/recipes/view_screen/controller/recipe_interaction_controller.dart';
 import 'package:condivisionericette/utils/constant.dart';
+import 'package:condivisionericette/utils/recipes/comment_add_image.dart';
 import 'package:condivisionericette/utils/recipes/comment_add_stars.dart';
 import 'package:condivisionericette/widget/button/animated_button.dart';
 import 'package:condivisionericette/widget/button/rounded_button_style.dart';
@@ -40,6 +41,8 @@ class AddCommentComponent extends ConsumerWidget {
           ),
           const SizedBox(height: defaultPadding),
           if (!subComment) ...[const AddStars()],
+          const SizedBox(height: defaultPadding),
+          if (!subComment) ...[const AddImage()],
           const SizedBox(height: defaultPadding),
           AnimatedButton(
               onTap: () async {

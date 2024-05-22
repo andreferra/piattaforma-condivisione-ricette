@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:condivisionericette/controller/auth_repo_provider.dart';
 import 'package:condivisionericette/model/Comment.dart';
@@ -19,6 +21,14 @@ class RecipeInteractionController extends StateNotifier<RecipeInteraction> {
 
   RecipeInteractionController(this._firebaseRepo, this._authRepo)
       : super(RecipeInteraction());
+
+  void onImageAdded(Uint8List image) {
+    if (state.imageFile!.length < 4) {
+      state = state.copyWith(
+        imageFile: [...state.imageFile!, image],
+      );
+    }
+  }
 
   void onCommentTextChanged(String value, AuthUser user) {
     if (state.commento == null) {
@@ -44,18 +54,30 @@ class RecipeInteractionController extends StateNotifier<RecipeInteraction> {
 
   Future<String> onCommentSubmitted(String recipeId) async {
     try {
-      final comment = state.commento;
+      var comment = state.commento;
 
       if (comment != null) {
         if (comment.commento!.isEmpty) {
           return "error";
         }
 
+        if (state.imageFile!.isNotEmpty) {
+          List<String> imageUrl = [];
+          imageUrl = await _firebaseRepo.uploadImageComment(
+              recipeId, comment.idCommento!, state.imageFile!);
+
+          comment = comment.addImageLink(imageUrl);
+
+          print("image url ${comment.imageUrl}");
+        }
+
         await _firebaseRepo.addComment(comment.toMap(), recipeId);
         state = state.copyWith(
           commenti: [...state.commenti!, comment],
           commento: null,
+          reply: false,
           numeroStelle: 1,
+          imageFile: [],
         );
         return "ok";
       }

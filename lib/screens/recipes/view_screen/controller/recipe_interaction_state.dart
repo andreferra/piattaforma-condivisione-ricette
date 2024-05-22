@@ -11,9 +11,10 @@ class RecipeInteraction extends Equatable {
 
   final Comment? commento;
   final int? numeroStelle;
+  final List<Uint8List>? imageFile;
 
   bool? reply;
-  String? idCommentoReply;
+  final String? idCommentoReply;
 
   RecipeInteraction({
     this.commenti = const [],
@@ -23,10 +24,11 @@ class RecipeInteraction extends Equatable {
     this.numeroLike,
     this.numeroCondivisioni,
     this.visualizzazioni,
-    this.commento ,
+    this.commento,
     this.numeroStelle,
     this.reply = false,
     this.idCommentoReply,
+    this.imageFile = const [],
   });
 
   RecipeInteraction copyWith({
@@ -41,6 +43,7 @@ class RecipeInteraction extends Equatable {
     int? numeroStelle,
     bool? reply,
     String? idCommentoReply,
+    List<Uint8List>? imageFile,
   }) {
     return RecipeInteraction(
       commenti: commenti ?? this.commenti,
@@ -54,6 +57,7 @@ class RecipeInteraction extends Equatable {
       numeroStelle: numeroStelle ?? this.numeroStelle,
       reply: reply ?? this.reply,
       idCommentoReply: idCommentoReply ?? this.idCommentoReply,
+      imageFile: imageFile ?? this.imageFile,
     );
   }
 
@@ -70,5 +74,6 @@ class RecipeInteraction extends Equatable {
         commento,
         numeroStelle,
         idCommentoReply,
+        imageFile,
       ];
 }
