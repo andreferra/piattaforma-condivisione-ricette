@@ -49,7 +49,24 @@ class Header extends ConsumerWidget {
           ),
         if (!Responsive.isMobile(context))
           Spacer(flex: Responsive.isDesktop(context) ? 2 : 1),
-        const Expanded(child: SearchField()),
+        InkWell(
+          onTap: () {
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => const SearchScreen(),
+              ),
+            );
+          },
+          child: Container(
+            padding: const EdgeInsets.all(defaultPadding * 0.75),
+            margin: const EdgeInsets.symmetric(horizontal: defaultPadding / 2),
+            decoration: const BoxDecoration(
+              color: primaryColor,
+              borderRadius: BorderRadius.all(Radius.circular(10)),
+            ),
+            child: SvgPicture.asset("assets/icons/Search.svg"),
+          ),
+        ),
         InkWell(
           onTap: () {
             page.setPage(3);

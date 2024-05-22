@@ -9,7 +9,6 @@ class SearchState extends Equatable {
 
   SearchState copyWith({
     String? searchValue,
-    TextEditingController? searchController,
   }) {
     return SearchState(
       searchValue: searchValue ?? this.searchValue,

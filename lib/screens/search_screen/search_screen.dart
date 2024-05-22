@@ -1,5 +1,4 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:condivisionericette/screens/search_screen/components/user_card.dart';
+import 'package:condivisionericette/widget/text_input_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -10,40 +9,43 @@ class SearchScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    String searchValue = ref.watch(searchControllerProvider).searchValue!;
-
+    final searchController = ref.watch(searchControllerProvider.notifier);
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Search'),
-      ),
-      body: StreamBuilder(
-        stream: FirebaseFirestore.instance.collection('users').snapshots(),
-        builder: (context, snapshot) {
-          if (snapshot.hasError) {
-            return const Text('Something went wrong');
-          }
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const CircularProgressIndicator();
-          }
-
-          if (snapshot.hasData) {
-            for (var user in snapshot.data!.docs) {
-              if (user['nickname']
-                  .toString()
-                  .toLowerCase()
-                  .contains(searchValue.toLowerCase())) {
-                return UserCard(
-                  nickname: user['nickname'],
-                  userID: user['uid'],
-                  photoURL: user['photoURL'],
-                );
-              }
-            }
-          }
-
-          return const CircularProgressIndicator();
-        },
-      ),
-    );
+        appBar: AppBar(
+          title: const Text('Search'),
+        ),
+        body: Column(
+          children: [
+            const SizedBox(height: 20),
+            Row(
+              children: [
+                Expanded(
+                  flex: 5,
+                  child: TextInputField(
+                    hintText: 'Search',
+                    onChanged: (value) {
+                      searchController.setSearchValue(value);
+                    },
+                  ),
+                ),
+                Expanded(
+                  flex: 1,
+                  child: IconButton(
+                    style: ButtonStyle(
+                        backgroundColor: WidgetStateProperty.all(Colors.blue),
+                        padding:
+                            WidgetStateProperty.all(const EdgeInsets.all(10))),
+                    icon: const Icon(Icons.search),
+                    onPressed: () async {
+                      await searchController.search();
+                    },
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 20),
+            Text('Search result'),
+          ],
+        ));
   }
 }
