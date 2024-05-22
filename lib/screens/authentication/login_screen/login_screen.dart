@@ -21,9 +21,6 @@ class LoginScreen extends ConsumerWidget {
         if (current.errorMessage != null) {
           Navigator.of(context).pop();
         }
-        if (Navigator.of(context).canPop()) {
-          Navigator.of(context).pop();
-        }
       } else if (current.status.isSubmissionFailure) {
         Navigator.of(context).pop();
         ErrorDialog.show(context, "${current.errorMessage}");

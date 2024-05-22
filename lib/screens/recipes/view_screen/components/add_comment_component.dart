@@ -6,6 +6,7 @@ import 'package:condivisionericette/utils/recipes/comment_add_image.dart';
 import 'package:condivisionericette/utils/recipes/comment_add_stars.dart';
 import 'package:condivisionericette/widget/button/animated_button.dart';
 import 'package:condivisionericette/widget/button/rounded_button_style.dart';
+import 'package:condivisionericette/widget/loading_errors.dart';
 import 'package:condivisionericette/widget/text_input_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -23,6 +24,21 @@ class AddCommentComponent extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    ref.listen<RecipeInteraction>(recipeInteractionProvider,
+        (previus, current) {
+      if (current.uploadComment == UploadComment.loading) {
+        LoadingSheet.show(context);
+        if (current.errorMex != null && current.errorMex!.isNotEmpty) {
+          Navigator.of(context).pop();
+        }
+      } else if (current.uploadComment == UploadComment.error) {
+        Navigator.of(context).pop();
+        ErrorDialog.show(context, "${current.errorMex}");
+      } else if (current.uploadComment == UploadComment.loaded) {
+        Navigator.of(context).pop();
+      }
+    });
+
     final user = ref.watch(authProvider).user;
     final recipeInteractionController =
         ref.watch(recipeInteractionProvider.notifier);

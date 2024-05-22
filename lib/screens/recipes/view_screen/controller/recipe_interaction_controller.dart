@@ -55,6 +55,7 @@ class RecipeInteractionController extends StateNotifier<RecipeInteraction> {
   Future<String> onCommentSubmitted(String recipeId) async {
     try {
       var comment = state.commento;
+      state = state.copyWith(uploadComment: UploadComment.loading);
 
       if (comment != null) {
         if (comment.commento!.isEmpty) {
@@ -67,8 +68,6 @@ class RecipeInteractionController extends StateNotifier<RecipeInteraction> {
               recipeId, comment.idCommento!, state.imageFile!);
 
           comment = comment.addImageLink(imageUrl);
-
-          print("image url ${comment.imageUrl}");
         }
 
         await _firebaseRepo.addComment(comment.toMap(), recipeId);
@@ -78,12 +77,20 @@ class RecipeInteractionController extends StateNotifier<RecipeInteraction> {
           reply: false,
           numeroStelle: 1,
           imageFile: [],
+          uploadComment: UploadComment.loaded,
         );
         return "ok";
       }
+      state = state.copyWith(
+        uploadComment: UploadComment.error,
+        errorMex: "Errore",
+      );
       return "error";
     } catch (e) {
-      print(e);
+      state = state.copyWith(
+        uploadComment: UploadComment.error,
+        errorMex: e.toString(),
+      );
       return "error";
     }
   }
@@ -92,6 +99,7 @@ class RecipeInteractionController extends StateNotifier<RecipeInteraction> {
     try {
       String res = "error";
       final comment = state.commento;
+      state = state.copyWith(uploadComment: UploadComment.loading);
 
       if (comment != null) {
         if (state.commento!.idCommento!.isEmpty) {
@@ -114,10 +122,16 @@ class RecipeInteractionController extends StateNotifier<RecipeInteraction> {
                 commento: null,
                 numeroStelle: 1,
                 reply: false,
+                imageFile: [],
+                uploadComment: UploadComment.loaded,
               );
               res = "ok";
               break;
             default:
+              state = state.copyWith(
+                uploadComment: UploadComment.error,
+                errorMex: value,
+              );
               res = "error";
               break;
           }
@@ -125,7 +139,8 @@ class RecipeInteractionController extends StateNotifier<RecipeInteraction> {
       }
       return res;
     } catch (e) {
-      print(e);
+      state = state.copyWith(
+          uploadComment: UploadComment.error, errorMex: e.toString());
       return "error";
     }
   }

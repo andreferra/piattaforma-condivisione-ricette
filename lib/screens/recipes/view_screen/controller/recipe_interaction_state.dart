@@ -1,5 +1,7 @@
 part of 'recipe_interaction_controller.dart';
 
+enum UploadComment { initial, loading, loaded, error }
+
 class RecipeInteraction extends Equatable {
   final List<Comment>? commenti;
   final Timestamp? dataCreazione;
@@ -12,6 +14,8 @@ class RecipeInteraction extends Equatable {
   final Comment? commento;
   final int? numeroStelle;
   final List<Uint8List>? imageFile;
+  final UploadComment? uploadComment;
+  final String? errorMex;
 
   bool? reply;
   final String? idCommentoReply;
@@ -29,6 +33,8 @@ class RecipeInteraction extends Equatable {
     this.reply = false,
     this.idCommentoReply,
     this.imageFile = const [],
+    this.uploadComment = UploadComment.initial,
+    this.errorMex,
   });
 
   RecipeInteraction copyWith({
@@ -44,6 +50,8 @@ class RecipeInteraction extends Equatable {
     bool? reply,
     String? idCommentoReply,
     List<Uint8List>? imageFile,
+    UploadComment? uploadComment,
+    String? errorMex,
   }) {
     return RecipeInteraction(
       commenti: commenti ?? this.commenti,
@@ -58,6 +66,8 @@ class RecipeInteraction extends Equatable {
       reply: reply ?? this.reply,
       idCommentoReply: idCommentoReply ?? this.idCommentoReply,
       imageFile: imageFile ?? this.imageFile,
+      uploadComment: uploadComment ?? this.uploadComment,
+      errorMex: errorMex ?? this.errorMex,
     );
   }
 
@@ -75,5 +85,7 @@ class RecipeInteraction extends Equatable {
         numeroStelle,
         idCommentoReply,
         imageFile,
+        uploadComment,
+        errorMex,
       ];
 }
