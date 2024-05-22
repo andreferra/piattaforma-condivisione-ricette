@@ -1,6 +1,7 @@
-import 'package:firebase_auth_repo/src/firestore_repository.dart';
-import 'auth_user.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_auth_repo/src/firestore_repository.dart';
+
+import 'auth_user.dart';
 
 /// Repository responsible for handling authentication related operations.
 class AuthenticationRepository {
@@ -63,18 +64,18 @@ class AuthenticationRepository {
   }
 
   /// Signs in a user with the given [email] and [password].
-  Future<void> signInWithEmailAndPassword({
+  Future<String> signInWithEmailAndPassword({
     required String email,
     required String password,
   }) async {
     try {
-      await _firebaseAuth.signInWithEmailAndPassword(
+      UserCredential userCredential =
+          await _firebaseAuth.signInWithEmailAndPassword(
         email: email,
         password: password,
-      ).then((value) async {
-        await _firebaseRepo.updateUserLogStatus(value.user!.uid, true);
-      });
+      );
 
+      return userCredential.user!.uid;
     } on FirebaseAuthException catch (e) {
       throw SignInWithEmailAndPasswordFailure(e.code);
     }

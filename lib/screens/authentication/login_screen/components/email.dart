@@ -1,9 +1,8 @@
+import 'package:condivisionericette/screens/authentication/login_screen/controller/login_controller.dart';
 import 'package:condivisionericette/widget/text_input_field.dart';
 import "package:flutter/material.dart";
-import 'package:condivisionericette/screens/authentication/login_screen/controller/login_controller.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:form_validation/form_validator.dart';
 
 class EmailField extends ConsumerWidget {
   const EmailField({super.key});
@@ -17,9 +16,7 @@ class EmailField extends ConsumerWidget {
       keyboardType: TextInputType.emailAddress,
       autofillHints: AutofillHints.email,
       hintText: "Inserisci l'indirizzo email",
-      errorText: showError
-          ? Email.showEmailErrorMessage(loginState.email.error)
-          : null,
+      errorText: null,
       onChanged: (email) => loginController.onEmailChanged(email),
     );
   }
