@@ -1,6 +1,8 @@
 import 'package:condivisionericette/controller/MenuAppController.dart';
 import 'package:condivisionericette/controller/PageController.dart';
 import 'package:condivisionericette/controller/auth_controller/auth_controller.dart';
+import 'package:condivisionericette/screens/search_screen/controller/search_controller.dart';
+import 'package:condivisionericette/screens/search_screen/search_screen.dart';
 import 'package:condivisionericette/utils/constant.dart';
 import 'package:condivisionericette/utils/responsive.dart';
 import 'package:flutter/material.dart';
@@ -22,7 +24,6 @@ class Header extends ConsumerWidget {
       'Impostazioni',
       '',
       'Messaggi',
-
     ];
 
     final page = ref.watch(pageControllerProvider);
@@ -112,7 +113,13 @@ class SearchField extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final searchValue = ref.watch(searchControllerProvider).searchValue;
+    final serachController = ref.read(searchControllerProvider.notifier);
+
+    final TextEditingController controller = TextEditingController();
+
     return TextField(
+      controller: controller,
       decoration: InputDecoration(
         hintText: "Cerca",
         fillColor: secondaryColor,
@@ -123,7 +130,16 @@ class SearchField extends ConsumerWidget {
         ),
         suffixIcon: InkWell(
           onTap: () {
-            // TODO: Implement search
+            serachController.setSearchValue(controller.text);
+
+            if (searchValue!.isNotEmpty && controller.text.isNotEmpty) {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const SearchScreen(),
+                ),
+              );
+            }
           },
           child: Container(
             padding: const EdgeInsets.all(defaultPadding * 0.75),
