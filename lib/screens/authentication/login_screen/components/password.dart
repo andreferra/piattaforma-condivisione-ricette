@@ -2,7 +2,6 @@ import 'package:condivisionericette/screens/authentication/login_screen/controll
 import 'package:condivisionericette/widget/text_input_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:form_validation/form_validator.dart';
 
 class PasswordField extends ConsumerWidget {
   const PasswordField({super.key});
@@ -17,9 +16,7 @@ class PasswordField extends ConsumerWidget {
       minLines: 1,
       hintText: "Inserisci la Password*",
       obscureText: true,
-      errorText: showError
-          ? Password.showPasswordErrorMessage(signInState.password.error)
-          : null,
+      errorText: null,
       onChanged: (password) => loginController.onPasswordChanged(password),
     );
   }

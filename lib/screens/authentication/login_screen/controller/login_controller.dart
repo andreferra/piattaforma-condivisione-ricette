@@ -12,6 +12,7 @@ final loginProvider =
 
 class LoginController extends StateNotifier<LoginState> {
   final AuthenticationRepository _authRepo;
+  final FirebaseRepository _firebaseRepo = FirebaseRepository();
 
   LoginController(this._authRepo) : super(const LoginState());
 
@@ -46,8 +47,11 @@ class LoginController extends StateNotifier<LoginState> {
           .signInWithEmailAndPassword(
         email: state.email.value,
         password: state.password.value,
-      ).then((value) {
-        state = state.copyWith(status: FormzStatus.submissionSuccess);  });
+      )
+          .then((value) async {
+        state = state.copyWith(status: FormzStatus.submissionSuccess);
+        await _firebaseRepo.updateUserLogStatus(value, true);
+      });
     } on SignInWithEmailAndPasswordFailure catch (e) {
       state = state.copyWith(
           status: FormzStatus.submissionFailure, errorMessage: e.code);
