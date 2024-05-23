@@ -79,61 +79,90 @@ class SearchController extends StateNotifier<SearchState> {
     if (state.users == null) state = state.copyWith(users: []);
     if (state.recipes == null) state = state.copyWith(recipes: []);
     if (state.results == null) state = state.copyWith(results: []);
+    if (state.filter == null) {
+      state = state.copyWith(filter: FiltroRicerca.empty());
+    }
 
     List<DocumentSnapshot> users = [];
     List<DocumentSnapshot> recipes = [];
+    try {
+      if (state.searchValue!.isNotEmpty) {
+        users = await FirebaseFirestore.instance
+            .collection('users')
+            .get()
+            .then((value) => value.docs);
 
-    if (state.searchValue!.isNotEmpty) {
-      users = await FirebaseFirestore.instance
-          .collection('users')
-          .get()
-          .then((value) => value.docs);
+        for (var user in users) {
+          if (user['nickname']
+                  .toString()
+                  .toLowerCase()
+                  .contains(state.searchValue!.toLowerCase()) ||
+              user['name']
+                  .toString()
+                  .toLowerCase()
+                  .contains(state.searchValue!.toLowerCase())) {
+            state = state.copyWith(
+              users: [...state.users!, user],
+            );
+          }
+        }
 
-      for (var user in users) {
-        if (user['nickname']
-                .toString()
-                .toLowerCase()
-                .contains(state.searchValue!.toLowerCase()) ||
-            user['name']
-                .toString()
-                .toLowerCase()
-                .contains(state.searchValue!.toLowerCase())) {
-          state = state.copyWith(
-            users: [...state.users!, user],
-          );
+        recipes = await FirebaseFirestore.instance
+            .collection('recipes')
+            .get()
+            .then((value) => value.docs);
+
+        for (var recipe in recipes) {
+          if (recipe['tag'] != null && recipe['tag'].isNotEmpty) {
+            for (var tag in recipe['tag']) {
+              if (!state.filter!.tag.contains(tag)) {
+                state.filter!.tag.add(tag);
+              }
+            }
+          }
+          if (recipe['ingredienti'] != null &&
+              recipe['ingredienti'].isNotEmpty) {
+            for (var ingrediente in recipe['ingredienti']) {
+              if (!state.filter!.ingredienti.contains(ingrediente)) {
+                state.filter!.ingredienti.add(ingrediente);
+              }
+            }
+          }
+          if (recipe['allergie'] != null && recipe['allergie'].isNotEmpty) {
+            for (var allergene in recipe['allergie']) {
+              if (!state.filter!.allergeni.contains(allergene)) {
+                state.filter!.allergeni.add(allergene);
+              }
+            }
+          }
+
+          if (recipe['nome_piatto']
+                  .toString()
+                  .toLowerCase()
+                  .contains(state.searchValue!.toLowerCase()) ||
+              recipe['descrizione']
+                  .toString()
+                  .toLowerCase()
+                  .contains(state.searchValue!.toLowerCase())) {
+            state = state.copyWith(
+              recipes: [...state.recipes!, recipe],
+            );
+          }
+        }
+
+        if (state.users!.isNotEmpty || state.recipes!.isNotEmpty) {
+          state = state.copyWith(isSearching: true, isEmpty: false, results: [
+            ...state.users!,
+            ...state.recipes!,
+          ]);
+        }
+
+        if (state.users!.isEmpty && state.recipes!.isEmpty) {
+          state = state.copyWith(isSearching: false, isEmpty: true);
         }
       }
-
-      recipes = await FirebaseFirestore.instance
-          .collection('recipes')
-          .get()
-          .then((value) => value.docs);
-
-      for (var recipe in recipes) {
-        if (recipe['nome_piatto']
-                .toString()
-                .toLowerCase()
-                .contains(state.searchValue!.toLowerCase()) ||
-            recipe['descrizione']
-                .toString()
-                .toLowerCase()
-                .contains(state.searchValue!.toLowerCase())) {
-          state = state.copyWith(
-            recipes: [...state.recipes!, recipe],
-          );
-        }
-      }
-
-      if (state.users!.isNotEmpty || state.recipes!.isNotEmpty) {
-        state = state.copyWith(isSearching: true, isEmpty: false, results: [
-          ...state.users!,
-          ...state.recipes!,
-        ]);
-      }
-
-      if (state.users!.isEmpty && state.recipes!.isEmpty) {
-        state = state.copyWith(isSearching: false, isEmpty: true);
-      }
+    } catch (e) {
+      print(e.toString());
     }
   }
 }

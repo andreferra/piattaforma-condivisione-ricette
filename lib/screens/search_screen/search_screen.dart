@@ -1,5 +1,4 @@
 import 'package:condivisionericette/controller/auth_controller/auth_controller.dart';
-import 'package:condivisionericette/model/Filter.dart';
 import 'package:condivisionericette/screens/public_profile/public_profile_screen.dart';
 import 'package:condivisionericette/screens/recipes/add_recipes/controller/recipes_controller.dart';
 import 'package:condivisionericette/screens/recipes/view_screen/view_recipe_screen.dart';
@@ -30,12 +29,7 @@ class SearchScreen extends ConsumerWidget {
     final selectedType = ref.watch(searchControllerProvider).dropDownValue;
     final selectedDifficolta = ref.watch(searchControllerProvider).difficolta;
 
-    final FiltroRicerca filter = FiltroRicerca(
-      tag: [],
-      ingredienti: [],
-      allergeni: [],
-      tipoCucina: [],
-    );
+    final filter = ref.watch(searchControllerProvider).filter;
 
     return Scaffold(
         appBar: AppBar(
@@ -155,50 +149,6 @@ class SearchScreen extends ConsumerWidget {
                               }
                               Map<String, dynamic> data =
                                   result[index].data() as Map<String, dynamic>;
-
-                              if (data.containsKey('nome_piatto')) {
-                                if (data.containsKey('tag')) {
-                                  var newTags = data['tag']
-                                      .map((e) => e.toString())
-                                      .toList();
-                                  newTags.removeWhere(
-                                      (item) => filter.tag.contains(item));
-                                  filter.tag = [...filter.tag, ...newTags];
-                                }
-                                if (data.containsKey('ingredienti')) {
-                                  var newIngredients = data['ingredienti']
-                                      .map((e) => e.toString())
-                                      .toList();
-                                  newIngredients.removeWhere((item) =>
-                                      filter.ingredienti.contains(item));
-                                  filter.ingredienti = [
-                                    ...filter.ingredienti,
-                                    ...newIngredients
-                                  ];
-                                }
-                                if (data.containsKey('allergeni')) {
-                                  var newAllergens = data['allergeni']
-                                      .map((e) => e.toString())
-                                      .toList();
-                                  newAllergens.removeWhere((item) =>
-                                      filter.allergeni.contains(item));
-                                  filter.allergeni = [
-                                    ...filter.allergeni,
-                                    ...newAllergens
-                                  ];
-                                }
-                                if (data.containsKey('tipoCucina')) {
-                                  var newCuisineTypes = data['tipoCucina']
-                                      .map((e) => e.toString())
-                                      .toList();
-                                  newCuisineTypes.removeWhere((item) =>
-                                      filter.tipoCucina.contains(item));
-                                  filter.tipoCucina = [
-                                    ...filter.tipoCucina,
-                                    ...newCuisineTypes
-                                  ];
-                                }
-                              }
 
                               return InkWell(
                                 onTap: () {
