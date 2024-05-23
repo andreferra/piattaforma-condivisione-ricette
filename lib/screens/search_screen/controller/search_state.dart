@@ -11,6 +11,7 @@ class SearchState extends Equatable {
   final List<DocumentSnapshot>? results;
   final bool isSearching;
   final bool isEmpty;
+  final int? tagSelected;
   final SearchType dropDownValue;
   final FiltroRicerca? filter;
   final Difficolta? difficolta;
@@ -19,6 +20,7 @@ class SearchState extends Equatable {
     this.searchValue,
     this.users,
     this.recipes,
+    this.tagSelected,
     this.isSearching = false,
     this.isEmpty = true,
     this.results,
@@ -34,6 +36,7 @@ class SearchState extends Equatable {
     List<DocumentSnapshot>? results,
     bool? isSearching,
     bool? isEmpty,
+    int? tagSelected,
     SearchType? dropDownValue,
     FiltroRicerca? filter,
     Difficolta? difficolta,
@@ -48,6 +51,7 @@ class SearchState extends Equatable {
       dropDownValue: dropDownValue ?? this.dropDownValue,
       filter: filter ?? this.filter,
       difficolta: difficolta ?? this.difficolta,
+      tagSelected: tagSelected ?? this.tagSelected,
     );
   }
 
@@ -60,6 +64,7 @@ class SearchState extends Equatable {
         isEmpty,
         results,
         dropDownValue,
+        tagSelected,
         filter,
         difficolta,
       ];

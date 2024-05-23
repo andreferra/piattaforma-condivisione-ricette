@@ -17,6 +17,14 @@ class SearchController extends StateNotifier<SearchState> {
     state = state.copyWith(searchValue: value);
   }
 
+  void setTagSelected(int value) {
+    state = state.copyWith(tagSelected: value);
+
+    if (state.dropDownValue == SearchType.recipes) {
+      _handlerTag();
+    }
+  }
+
   void setFilter(FiltroRicerca filter) {
     state = state.copyWith(filter: filter);
   }
@@ -33,6 +41,24 @@ class SearchController extends StateNotifier<SearchState> {
     }
   }
 
+  ///funzione per filtrare le ricette in base ai tag
+  void _handlerTag() {
+    if (state.filter!.tag.isNotEmpty) {
+      List<DocumentSnapshot> filtered = [];
+      for (var recipe in state.recipes!) {
+        recipe['tag'].forEach((element) {
+          if (element == state.filter!.tag[state.tagSelected!]) {
+            filtered.add(recipe);
+          }
+        });
+      }
+      state = state.copyWith(
+          results: filtered.isNotEmpty ? filtered : state.recipes);
+    } else {
+      state = state.copyWith(results: state.recipes);
+    }
+  }
+
   ///funzione per filtrare le ricette in base alla difficoltà
   void _handlerDifficolta() {
     if (state.difficolta != Difficolta.tutte) {
@@ -41,6 +67,7 @@ class SearchController extends StateNotifier<SearchState> {
         if (recipe['difficolta'] ==
             state.difficolta.toString().split('.').last) {
           filtered.add(recipe);
+          print(filtered.length);
         }
       }
       state = state.copyWith(
@@ -67,11 +94,16 @@ class SearchController extends StateNotifier<SearchState> {
 
   void resetSearch() {
     state = state.copyWith(
-        users: [],
-        isSearching: false,
-        searchValue: null,
-        recipes: [],
-        results: []);
+      users: [],
+      isSearching: false,
+      searchValue: null,
+      recipes: [],
+      results: [],
+      isEmpty: true,
+      filter: null,
+      difficolta: Difficolta.tutte,
+      dropDownValue: SearchType.all,
+    );
   }
 
   Future<void> search() async {

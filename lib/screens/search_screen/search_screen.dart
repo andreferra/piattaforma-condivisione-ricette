@@ -3,7 +3,8 @@ import 'package:condivisionericette/screens/public_profile/public_profile_screen
 import 'package:condivisionericette/screens/recipes/add_recipes/controller/recipes_controller.dart';
 import 'package:condivisionericette/screens/recipes/view_screen/view_recipe_screen.dart';
 import 'package:condivisionericette/screens/search_screen/components/user_card.dart';
-import 'package:condivisionericette/widget/DropDownMenu.dart';
+import 'package:condivisionericette/widget/dropDown/DropDownFilter.dart';
+import 'package:condivisionericette/widget/dropDown/DropDownMenu.dart';
 import 'package:condivisionericette/widget/recipe_card.dart';
 import 'package:condivisionericette/widget/text_input_field.dart';
 import 'package:flutter/material.dart';
@@ -18,6 +19,7 @@ class SearchScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final user = ref.watch(authProvider).user;
     final searchController = ref.watch(searchControllerProvider.notifier);
+    final serachState = ref.watch(searchControllerProvider);
 
     final result = ref.watch(searchControllerProvider).results;
     final userResult = ref.watch(searchControllerProvider).users;
@@ -124,6 +126,23 @@ class SearchScreen extends ConsumerWidget {
                             } else if (value == 'Tutte') {
                               searchController.setDifficolta(Difficolta.tutte);
                             }
+                          },
+                        )),
+                  if (selectedType == SearchType.recipes &&
+                      filter!.tag.isNotEmpty)
+                    Container(
+                        padding: const EdgeInsets.all(5),
+                        margin: const EdgeInsets.only(left: 10),
+                        decoration: BoxDecoration(
+                            border: Border.all(color: Colors.grey),
+                            borderRadius: BorderRadius.circular(8.0)),
+                        child: DropDownFilter(
+                          underline: Container(),
+                          itemList: filter.tag,
+                          selectOption: serachState.tagSelected ?? 0,
+                          onChange: (value) {
+                            searchController.setTagSelected(
+                                filter.tag.indexOf(value.toString()));
                           },
                         )),
                 ],
