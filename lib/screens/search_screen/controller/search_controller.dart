@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:condivisionericette/model/Filter.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -16,11 +17,40 @@ class SearchController extends StateNotifier<SearchState> {
     state = state.copyWith(searchValue: value);
   }
 
+  void setFilter(FiltroRicerca filter) {
+    state = state.copyWith(filter: filter);
+  }
+
   void setResults(List<DocumentSnapshot> results) {
     state = state.copyWith(results: results);
   }
 
-  void setDropDownValue(SearchType value) {
+  void setDifficolta(Difficolta difficolta) {
+    state = state.copyWith(difficolta: difficolta);
+
+    if (state.dropDownValue == SearchType.recipes) {
+      _handlerDifficolta();
+    }
+  }
+
+  ///funzione per filtrare le ricette in base alla difficoltà
+  void _handlerDifficolta() {
+    if (state.difficolta != Difficolta.tutte) {
+      List<DocumentSnapshot> filtered = [];
+      for (var recipe in state.recipes!) {
+        if (recipe['difficolta'] ==
+            state.difficolta.toString().split('.').last) {
+          filtered.add(recipe);
+        }
+      }
+      state = state.copyWith(
+          results: filtered.isNotEmpty ? filtered : state.recipes);
+    } else {
+      state = state.copyWith(results: state.recipes);
+    }
+  }
+
+  void setSearchType(SearchType value) {
     state = state.copyWith(dropDownValue: value);
 
     if (value == SearchType.all) {
@@ -31,7 +61,7 @@ class SearchController extends StateNotifier<SearchState> {
     } else if (value == SearchType.users) {
       state = state.copyWith(results: state.users);
     } else if (value == SearchType.recipes) {
-      state = state.copyWith(results: state.recipes);
+      _handlerDifficolta();
     }
   }
 
