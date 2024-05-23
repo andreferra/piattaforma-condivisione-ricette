@@ -145,6 +145,23 @@ class SearchScreen extends ConsumerWidget {
                                 filter.tag.indexOf(value.toString()));
                           },
                         )),
+                  if (selectedType == SearchType.recipes &&
+                      filter!.ingredienti.isNotEmpty)
+                    Container(
+                        padding: const EdgeInsets.all(5),
+                        margin: const EdgeInsets.only(left: 10),
+                        decoration: BoxDecoration(
+                            border: Border.all(color: Colors.grey),
+                            borderRadius: BorderRadius.circular(8.0)),
+                        child: DropDownFilter(
+                          underline: Container(),
+                          itemList: filter.ingredienti,
+                          selectOption: serachState.alimentiSelected ?? 0,
+                          onChange: (value) {
+                            searchController.setAlimentiSelected(
+                                filter.ingredienti.indexOf(value.toString()));
+                          },
+                        )),
                 ],
               ),
             SingleChildScrollView(

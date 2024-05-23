@@ -25,6 +25,14 @@ class SearchController extends StateNotifier<SearchState> {
     }
   }
 
+  void setAlimentiSelected(int value) {
+    state = state.copyWith(alimentiSelected: value);
+
+    if (state.dropDownValue == SearchType.recipes) {
+      _handlerAlimenti();
+    }
+  }
+
   void setFilter(FiltroRicerca filter) {
     state = state.copyWith(filter: filter);
   }
@@ -38,6 +46,25 @@ class SearchController extends StateNotifier<SearchState> {
 
     if (state.dropDownValue == SearchType.recipes) {
       _handlerDifficolta();
+    }
+  }
+
+  ///funzione per filtrare le ricette in base agli ingredienti
+  void _handlerAlimenti() {
+    if (state.filter!.ingredienti.isNotEmpty) {
+      List<DocumentSnapshot> filtered = [];
+      for (var recipe in state.recipes!) {
+        recipe['ingredienti'].forEach((element) {
+          if (element.toString().split(" ").first ==
+              state.filter!.ingredienti[state.alimentiSelected!]) {
+            filtered.add(recipe);
+          }
+        });
+      }
+      state = state.copyWith(
+          results: filtered.isNotEmpty ? filtered : state.recipes);
+    } else {
+      state = state.copyWith(results: state.recipes);
     }
   }
 
@@ -67,7 +94,6 @@ class SearchController extends StateNotifier<SearchState> {
         if (recipe['difficolta'] ==
             state.difficolta.toString().split('.').last) {
           filtered.add(recipe);
-          print(filtered.length);
         }
       }
       state = state.copyWith(
@@ -146,6 +172,9 @@ class SearchController extends StateNotifier<SearchState> {
 
         for (var recipe in recipes) {
           if (recipe['tag'] != null && recipe['tag'].isNotEmpty) {
+            if (!state.filter!.tag.contains('Tutte')) {
+              state.filter!.tag.add('Tutte');
+            }
             for (var tag in recipe['tag']) {
               if (!state.filter!.tag.contains(tag)) {
                 state.filter!.tag.add(tag);
@@ -154,13 +183,20 @@ class SearchController extends StateNotifier<SearchState> {
           }
           if (recipe['ingredienti'] != null &&
               recipe['ingredienti'].isNotEmpty) {
+            if (!state.filter!.ingredienti.contains('Tutte')) {
+              state.filter!.ingredienti.add('Tutte');
+            }
             for (var ingrediente in recipe['ingredienti']) {
               if (!state.filter!.ingredienti.contains(ingrediente)) {
-                state.filter!.ingredienti.add(ingrediente);
+                state.filter!.ingredienti
+                    .add(ingrediente.toString().split(" ").first);
               }
             }
           }
           if (recipe['allergie'] != null && recipe['allergie'].isNotEmpty) {
+            if (!state.filter!.allergeni.contains('Tutte')) {
+              state.filter!.allergeni.add('Tutte');
+            }
             for (var allergene in recipe['allergie']) {
               if (!state.filter!.allergeni.contains(allergene)) {
                 state.filter!.allergeni.add(allergene);

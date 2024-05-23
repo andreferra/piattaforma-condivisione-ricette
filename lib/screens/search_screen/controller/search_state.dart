@@ -12,6 +12,7 @@ class SearchState extends Equatable {
   final bool isSearching;
   final bool isEmpty;
   final int? tagSelected;
+  final int? alimentiSelected;
   final SearchType dropDownValue;
   final FiltroRicerca? filter;
   final Difficolta? difficolta;
@@ -27,6 +28,7 @@ class SearchState extends Equatable {
     this.dropDownValue = SearchType.all,
     this.difficolta = Difficolta.tutte,
     this.filter,
+    this.alimentiSelected,
   });
 
   SearchState copyWith({
@@ -40,6 +42,7 @@ class SearchState extends Equatable {
     SearchType? dropDownValue,
     FiltroRicerca? filter,
     Difficolta? difficolta,
+    int? alimentiSelected,
   }) {
     return SearchState(
       searchValue: searchValue ?? this.searchValue,
@@ -52,6 +55,7 @@ class SearchState extends Equatable {
       filter: filter ?? this.filter,
       difficolta: difficolta ?? this.difficolta,
       tagSelected: tagSelected ?? this.tagSelected,
+      alimentiSelected: alimentiSelected ?? this.alimentiSelected,
     );
   }
 
@@ -65,6 +69,7 @@ class SearchState extends Equatable {
         results,
         dropDownValue,
         tagSelected,
+        alimentiSelected,
         filter,
         difficolta,
       ];
