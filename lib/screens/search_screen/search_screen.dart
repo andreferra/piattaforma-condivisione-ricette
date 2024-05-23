@@ -3,6 +3,7 @@ import 'package:condivisionericette/screens/public_profile/public_profile_screen
 import 'package:condivisionericette/screens/recipes/add_recipes/controller/recipes_controller.dart';
 import 'package:condivisionericette/screens/recipes/view_screen/view_recipe_screen.dart';
 import 'package:condivisionericette/screens/search_screen/components/user_card.dart';
+import 'package:condivisionericette/widget/DropDownMenu.dart';
 import 'package:condivisionericette/widget/recipe_card.dart';
 import 'package:condivisionericette/widget/text_input_field.dart';
 import 'package:flutter/material.dart';
@@ -24,6 +25,9 @@ class SearchScreen extends ConsumerWidget {
 
     final isSearching = ref.watch(searchControllerProvider).isSearching;
     final isEmpty = ref.watch(searchControllerProvider).isEmpty;
+
+    final dropDownValue = ref.watch(searchControllerProvider).dropDownValue;
+
     return Scaffold(
         appBar: AppBar(
           title: const Text('Search'),
@@ -62,13 +66,30 @@ class SearchScreen extends ConsumerWidget {
               ],
             ),
             const SizedBox(height: 20),
-            // TODO: add search with tag and
-
+            if (result != null && result.isNotEmpty)
+              Row(
+                children: [
+                  if (userResult != null &&
+                      userResult.isNotEmpty &&
+                      recipeResult != null &&
+                      recipeResult.isNotEmpty)
+                    Container(
+                        padding: const EdgeInsets.all(5),
+                        margin: const EdgeInsets.only(left: 10),
+                        decoration: BoxDecoration(
+                            border: Border.all(color: Colors.grey),
+                            borderRadius: BorderRadius.circular(8.0)),
+                        child: DropDown(
+                          underline: Container(),
+                          itemList: const ['All', 'Users', 'Recipes'],
+                        )),
+                ],
+              ),
             SingleChildScrollView(
                 padding: const EdgeInsets.all(10),
                 physics: const BouncingScrollPhysics(),
                 child: SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.75,
+                  height: MediaQuery.of(context).size.height * 0.7,
                   width: MediaQuery.of(context).size.width,
                   child: Column(
                     children: [
@@ -144,7 +165,6 @@ class SearchScreen extends ConsumerWidget {
                     ],
                   ),
                 )),
-
             if (isEmpty) const Center(child: Text('No results found')),
           ],
         ));

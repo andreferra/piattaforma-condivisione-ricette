@@ -16,6 +16,25 @@ class SearchController extends StateNotifier<SearchState> {
     state = state.copyWith(searchValue: value);
   }
 
+  void setResults(List<DocumentSnapshot> results) {
+    state = state.copyWith(results: results);
+  }
+
+  void setDropDownValue(SearchType value) {
+    state = state.copyWith(dropDownValue: value);
+
+    if (value == SearchType.all) {
+      state = state.copyWith(results: [
+        ...state.users!,
+        ...state.recipes!,
+      ]);
+    } else if (value == SearchType.users) {
+      state = state.copyWith(results: state.users);
+    } else if (value == SearchType.recipes) {
+      state = state.copyWith(results: state.recipes);
+    }
+  }
+
   void resetSearch() {
     state = state.copyWith(
         users: [],

@@ -1,5 +1,7 @@
 part of 'search_controller.dart';
 
+enum SearchType { all, users, recipes }
+
 class SearchState extends Equatable {
   final String? searchValue;
   final List<DocumentSnapshot>? users;
@@ -7,6 +9,7 @@ class SearchState extends Equatable {
   final List<DocumentSnapshot>? results;
   final bool isSearching;
   final bool isEmpty;
+  final SearchType dropDownValue;
 
   const SearchState({
     this.searchValue,
@@ -15,6 +18,7 @@ class SearchState extends Equatable {
     this.isSearching = false,
     this.isEmpty = true,
     this.results,
+    this.dropDownValue = SearchType.all,
   });
 
   SearchState copyWith({
@@ -24,6 +28,7 @@ class SearchState extends Equatable {
     List<DocumentSnapshot>? results,
     bool? isSearching,
     bool? isEmpty,
+    SearchType? dropDownValue,
   }) {
     return SearchState(
       searchValue: searchValue ?? this.searchValue,
@@ -32,6 +37,7 @@ class SearchState extends Equatable {
       recipes: recipes ?? this.recipes,
       isEmpty: isEmpty ?? this.isEmpty,
       results: results ?? this.results,
+      dropDownValue: dropDownValue ?? this.dropDownValue,
     );
   }
 
@@ -43,5 +49,6 @@ class SearchState extends Equatable {
         recipes,
         isEmpty,
         results,
+        dropDownValue,
       ];
 }
