@@ -1,4 +1,9 @@
+import 'package:condivisionericette/controller/auth_controller/auth_controller.dart';
+import 'package:condivisionericette/screens/public_profile/public_profile_screen.dart';
+import 'package:condivisionericette/screens/recipes/add_recipes/controller/recipes_controller.dart';
+import 'package:condivisionericette/screens/recipes/view_screen/view_recipe_screen.dart';
 import 'package:condivisionericette/screens/search_screen/components/user_card.dart';
+import 'package:condivisionericette/widget/recipe_card.dart';
 import 'package:condivisionericette/widget/text_input_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -10,10 +15,15 @@ class SearchScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final user = ref.watch(authProvider).user;
     final searchController = ref.watch(searchControllerProvider.notifier);
 
-    final searchResult = ref.watch(searchControllerProvider).users;
+    final result = ref.watch(searchControllerProvider).results;
+    final userResult = ref.watch(searchControllerProvider).users;
+    final recipeResult = ref.watch(searchControllerProvider).recipes;
+
     final isSearching = ref.watch(searchControllerProvider).isSearching;
+    final isEmpty = ref.watch(searchControllerProvider).isEmpty;
     return Scaffold(
         appBar: AppBar(
           title: const Text('Search'),
@@ -54,29 +64,88 @@ class SearchScreen extends ConsumerWidget {
             const SizedBox(height: 20),
             // TODO: add search with tag and
 
-            if (ref.watch(searchControllerProvider).users != null)
-              SingleChildScrollView(
+            SingleChildScrollView(
                 padding: const EdgeInsets.all(10),
                 physics: const BouncingScrollPhysics(),
                 child: SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.8,
                   height: MediaQuery.of(context).size.height * 0.75,
-                  child: ListView.builder(
-                    itemCount:
-                        ref.watch(searchControllerProvider).users!.length,
-                    itemBuilder: (context, index) {
-                      return InkWell(
-                        onTap: () {},
-                        child: UserCard(
-                          nickname: searchResult![index]['nickname'],
-                          photoURL: searchResult[index]['photoURL'],
-                          userID: searchResult[index].id,
+                  width: MediaQuery.of(context).size.width,
+                  child: Column(
+                    children: [
+                      if (result != null && result.isNotEmpty)
+                        Expanded(
+                          child: ListView.builder(
+                            physics: const BouncingScrollPhysics(),
+                            padding: const EdgeInsets.all(20),
+                            shrinkWrap: true,
+                            itemCount: result.length,
+                            itemBuilder: (context, index) {
+                              if (result[index].data() == null) {
+                                return const SizedBox();
+                              }
+                              Map<String, dynamic> data =
+                                  result[index].data() as Map<String, dynamic>;
+                              return InkWell(
+                                onTap: () {
+                                  if (data.containsKey('email')) {
+                                    Navigator.push(context,
+                                        MaterialPageRoute(builder: (context) {
+                                      return PublicProfile(
+                                          result[index].id, user.uid);
+                                    }));
+                                  } else {
+                                    Navigator.push(context,
+                                        MaterialPageRoute(builder: (context) {
+                                      return ViewRecipeScreen(
+                                        recipesState: RecipesState.fromSnapshot(
+                                            result[index]),
+                                        isMine: result[index].id == user.uid,
+                                        mioId: user.uid,
+                                      );
+                                    }));
+                                  }
+                                },
+                                child: data.containsKey('email')
+                                    ? Padding(
+                                        padding: const EdgeInsets.all(5),
+                                        child: UserCard(
+                                          nickname: result[index]['nickname'],
+                                          photoURL: result[index]['photoURL'],
+                                          userID: result[index].id,
+                                        ),
+                                      )
+                                    : Padding(
+                                        padding: const EdgeInsets.all(5),
+                                        child: RecipeListItem(
+                                          imageUrl: result[index]
+                                              ['cover_image'],
+                                          title: result[index]['nome_piatto'],
+                                          description: result[index]
+                                                  ['descrizione']
+                                              .toString(),
+                                          numeroCommenti: result[index]
+                                                  ['numero_commenti']
+                                              .toString(),
+                                          numeroLike: result[index]
+                                                  ['numero_like']
+                                              .toString(),
+                                          numeroCondivisioni: result[index]
+                                                  ['numero_condivisioni']
+                                              .toString(),
+                                          visualizzazioni: result[index]
+                                                  ['numero_visualizzazioni']
+                                              .toString(),
+                                        ),
+                                      ),
+                              );
+                            },
+                          ),
                         ),
-                      );
-                    },
+                    ],
                   ),
-                ),
-              ),
+                )),
+
+            if (isEmpty) const Center(child: Text('No results found')),
           ],
         ));
   }

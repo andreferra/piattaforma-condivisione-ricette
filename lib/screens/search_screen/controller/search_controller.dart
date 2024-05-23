@@ -17,14 +17,22 @@ class SearchController extends StateNotifier<SearchState> {
   }
 
   void resetSearch() {
-    state = state.copyWith(users: [], isSearching: false, searchValue: null);
+    state = state.copyWith(
+        users: [],
+        isSearching: false,
+        searchValue: null,
+        recipes: [],
+        results: []);
   }
 
   Future<void> search() async {
     if (state.searchValue == null) return;
     if (state.users == null) state = state.copyWith(users: []);
+    if (state.recipes == null) state = state.copyWith(recipes: []);
+    if (state.results == null) state = state.copyWith(results: []);
 
     List<DocumentSnapshot> users = [];
+    List<DocumentSnapshot> recipes = [];
 
     if (state.searchValue!.isNotEmpty) {
       users = await FirebaseFirestore.instance
@@ -47,8 +55,35 @@ class SearchController extends StateNotifier<SearchState> {
         }
       }
 
-      if (state.users!.isNotEmpty) {
-        state = state.copyWith(isSearching: true);
+      recipes = await FirebaseFirestore.instance
+          .collection('recipes')
+          .get()
+          .then((value) => value.docs);
+
+      for (var recipe in recipes) {
+        if (recipe['nome_piatto']
+                .toString()
+                .toLowerCase()
+                .contains(state.searchValue!.toLowerCase()) ||
+            recipe['descrizione']
+                .toString()
+                .toLowerCase()
+                .contains(state.searchValue!.toLowerCase())) {
+          state = state.copyWith(
+            recipes: [...state.recipes!, recipe],
+          );
+        }
+      }
+
+      if (state.users!.isNotEmpty || state.recipes!.isNotEmpty) {
+        state = state.copyWith(isSearching: true, isEmpty: false, results: [
+          ...state.users!,
+          ...state.recipes!,
+        ]);
+      }
+
+      if (state.users!.isEmpty && state.recipes!.isEmpty) {
+        state = state.copyWith(isSearching: false, isEmpty: true);
       }
     }
   }
