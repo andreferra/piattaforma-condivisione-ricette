@@ -302,12 +302,49 @@ class _ViewRecipeScreenState extends State<ViewRecipeScreen> {
                       Text(
                           "Commenti: ${widget.recipesState.recipeInteraction!.numeroCommenti}",
                           style: const TextStyle(fontSize: 16)),
-                      Text(
-                        "Condivisioni: ${widget.recipesState.recipeInteraction!.numeroCondivisioni}",
-                        style: const TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.blue,
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.blue.shade500,
+                        ),
+                        onPressed: () {
+                          showDialog(
+                            context: context,
+                            builder: (context) => AlertDialog(
+                              title: const Text("Condividi"),
+                              content: const Text(
+                                  "Condividi il link della ricetta con i tuoi amici"),
+                              actions: [
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: const Text("Annulla"),
+                                ),
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: const Text("Condividi"),
+                                ),
+                              ],
+                            ),
+                          );
+                        },
+                        child: const Row(
+                          children: [
+                            Icon(
+                              Icons.share,
+                              color: Colors.white,
+                            ),
+                            SizedBox(width: 8),
+                            Text(
+                              "Condividi",
+                              style: TextStyle(
+                                fontSize: 16,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     ],
