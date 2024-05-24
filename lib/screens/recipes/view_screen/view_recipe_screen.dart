@@ -27,22 +27,82 @@ class ViewRecipeScreen extends StatefulWidget {
 }
 
 class _ViewRecipeScreenState extends State<ViewRecipeScreen> {
-  FirebaseRepository _firebaseRepository = FirebaseRepository();
+  final FirebaseRepository _firebaseRepository = FirebaseRepository();
   AuthUser user = AuthUser.empty;
+  int numeroLike = 0;
   bool isLoad = false;
+  bool isLike = false;
+
+  Future<void> _handlerLike() async {
+    await _firebaseRepository
+        .updateLike(widget.recipesState.recipeID!, widget.mioId, isLike)
+        .then((value) {
+      if (value == 'unlike') {
+        setState(() {
+          numeroLike = numeroLike - 1;
+          isLike = false;
+        });
+        return;
+      } else if (value == 'like') {
+        setState(() {
+          numeroLike = numeroLike + 1;
+          isLike = true;
+        });
+        return;
+      } else {
+        print(value);
+      }
+    });
+  }
+
+  void _loadLike() async {
+    try {
+      await _firebaseRepository
+          .getLikeList(widget.recipesState.recipeID!)
+          .then((value) {
+        if (value.isEmpty) {
+          setState(() {
+            isLike = false;
+          });
+        }
+        for (var element in value) {
+          print(element);
+          print(widget.mioId);
+          if (element == widget.mioId) {
+            setState(() {
+              isLike = true;
+            });
+          }
+        }
+
+        setState(() {
+          numeroLike = value.length;
+        });
+      });
+    } catch (e) {
+      print(e);
+    }
+  }
 
   void _loadUser() async {
-    user = await _firebaseRepository
-        .getUserFromDatabase(widget.recipesState.userID!);
-    setState(() {
-      user = user;
-      isLoad = true;
-    });
+    try {
+      await _firebaseRepository
+          .getUserFromDatabase(widget.recipesState.userID!)
+          .then((value) {
+        setState(() {
+          user = value;
+          isLoad = true;
+        });
+      });
+    } catch (e) {
+      print(e);
+    }
   }
 
   @override
   void initState() {
     _loadUser();
+    _loadLike();
     super.initState();
   }
 
@@ -94,7 +154,6 @@ class _ViewRecipeScreenState extends State<ViewRecipeScreen> {
                           Text("Difficoltà: ${widget.recipesState.difficolta}",
                               style: const TextStyle(fontSize: 16)),
                           spazio,
-                          //inserisci il profilo
                           InkWell(
                               onTap: () {
                                 Navigator.of(context).push(MaterialPageRoute(
@@ -176,10 +235,35 @@ class _ViewRecipeScreenState extends State<ViewRecipeScreen> {
                       Text(
                           "Visualizzazioni: ${widget.visualizzazioni ?? widget.recipesState.recipeInteraction!.visualizzazioni}",
                           style: const TextStyle(fontSize: 16)),
-                      Text(
-                          "Like: ${widget.recipesState.recipeInteraction!.numeroLike}",
-                          style: const TextStyle(
-                              fontSize: 16, color: Colors.green)),
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.blue.shade500,
+                        ),
+                        onPressed: () async {
+                          await _handlerLike();
+                        },
+                        child: Row(
+                          children: [
+                            isLike
+                                ? const Icon(
+                                    Icons.favorite,
+                                    color: Colors.red,
+                                  )
+                                : const Icon(
+                                    Icons.favorite_border,
+                                    color: Colors.red,
+                                  ),
+                            const SizedBox(width: 8),
+                            Text(
+                              numeroLike.toString(),
+                              style: const TextStyle(
+                                fontSize: 20,
+                                color: Colors.black54,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
                       Text(
                           "Commenti: ${widget.recipesState.recipeInteraction!.numeroCommenti}",
                           style: const TextStyle(fontSize: 16)),

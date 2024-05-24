@@ -430,4 +430,41 @@ class FirebaseRepository {
       return Future.error(UpdateProfileFailure(e.toString()));
     }
   }
+
+  /// Update like number and add user id to like list
+  /// [isLike] = true if the user liked the recipe, false if the user unliked the recipe
+  Future<String> updateLike(String recipeId, String userId, bool isLike) async {
+    try {
+      String res = 'error';
+      await _firestore.collection('recipes').doc(recipeId).update({
+        'numero_like':
+            !isLike ? FieldValue.increment(1) : FieldValue.increment(-1),
+        'like': !isLike
+            ? FieldValue.arrayUnion([userId])
+            : FieldValue.arrayRemove([userId]),
+      }).then((value) {
+        res = isLike ? 'unlike' : 'like';
+      });
+      return res;
+    } on FirebaseException catch (e) {
+      return Future.error(UpdateProfileFailure(e.code));
+    } catch (e) {
+      return Future.error(UpdateProfileFailure(e.toString()));
+    }
+  }
+
+  /// Get like list
+  Future<List<String>> getLikeList(String recipeId) async {
+    try {
+      List<String> likeList = [];
+      await _firestore.collection('recipes').doc(recipeId).get().then((value) {
+        likeList = List<String>.from(value.data()!['like']);
+      });
+      return likeList;
+    } on FirebaseException catch (e) {
+      return Future.error(UpdateProfileFailure(e.code));
+    } catch (e) {
+      return Future.error(UpdateProfileFailure(e.toString()));
+    }
+  }
 }
