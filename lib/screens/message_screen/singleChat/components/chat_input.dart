@@ -1,8 +1,11 @@
+import 'dart:typed_data';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:condivisionericette/model/Message.dart';
 import 'package:condivisionericette/widget/text_input_field.dart';
 import 'package:firebase_auth_repo/auth_repo.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:uuid/uuid.dart';
 
 class ChatInput extends StatefulWidget {
@@ -18,6 +21,7 @@ class ChatInput extends StatefulWidget {
 class _ChatInputState extends State<ChatInput> {
   final TextEditingController _controller = TextEditingController();
   final FirebaseRepository _firebaseRepository = FirebaseRepository();
+  late Uint8List imageFile = Uint8List(0);
 
   @override
   void dispose() {
@@ -27,7 +31,7 @@ class _ChatInputState extends State<ChatInput> {
 
   Future<String> _sendMessage() async {
     try {
-      if (_controller.text.isEmpty) {
+      if (_controller.text.isEmpty && imageFile.isEmpty) {
         return "";
       }
       Message message = Message(
@@ -37,13 +41,25 @@ class _ChatInputState extends State<ChatInput> {
         timestamp: Timestamp.now(),
         isRead: false,
         id: const Uuid().v4(),
+        type: imageFile.isEmpty ? MessageType.text : MessageType.image,
       );
-      await _firebaseRepository.sendMessage(
+      await _firebaseRepository
+          .sendMessage(
         message.toJson(),
         widget.userId,
         widget.mioId,
-      );
-      return "ok";
+        imageFile.isEmpty ? "text" : "image",
+        imageFile,
+      )
+          .then((value) {
+        if (imageFile.isNotEmpty) {
+          setState(() {
+            imageFile = Uint8List(0);
+          });
+        }
+        return "ok";
+      });
+      return "error";
     } catch (e) {
       print(e.toString());
       return 'error';
@@ -60,12 +76,62 @@ class _ChatInputState extends State<ChatInput> {
       ),
       child: Row(
         children: [
-          Expanded(
-            child: TextInputField(
-                hintText: "Scrivi un messaggio...",
-                controller: _controller,
-                onChanged: (value) {}),
-          ),
+          imageFile.isEmpty
+              ? Expanded(
+                  child: TextInputField(
+                      hintText: "Scrivi un messaggio...",
+                      controller: _controller,
+                      onChanged: (value) {}),
+                )
+              : Expanded(
+                  child: Stack(
+                    children: [
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(10),
+                        child: AspectRatio(
+                          aspectRatio: 1,
+                          child: Image.memory(
+                            width: 200,
+                            imageFile,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
+                      Positioned(
+                        right: 0,
+                        child: IconButton(
+                          icon: const Icon(Icons.close, color: Colors.red),
+                          onPressed: () {
+                            setState(() {
+                              imageFile = Uint8List(0);
+                            });
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+          IconButton(
+              onPressed: () async {
+                try {
+                  final XFile? image = await ImagePicker()
+                      .pickImage(source: ImageSource.gallery);
+
+                  if (image != null) {
+                    Uint8List file = await image.readAsBytes();
+                    setState(() {
+                      imageFile = file;
+                    });
+                  }
+                } catch (e) {
+                  print(e);
+                }
+              },
+              icon: const Icon(
+                Icons.image,
+                size: 30,
+                color: Colors.white,
+              )),
           IconButton(
             onPressed: () async {
               await _sendMessage().then((value) {

@@ -357,22 +357,65 @@ class FirebaseRepository {
   }
 
   /// Send a message
-  Future<String> sendMessage(message, String id, String mioID) async {
+  Future<String> sendMessage(
+      message, String id, String mioID, String type, Uint8List file) async {
     try {
-      await _firestore
-          .collection('messaggi')
-          .where('id', whereIn: [
-            '$id-$mioID',
-            '$mioID-$id',
-          ])
-          .get()
-          .then((value) {
-            if (value.docs.isNotEmpty) {
-              _firestore.collection('messaggi').doc(value.docs[0].id).update({
-                'messaggi': FieldValue.arrayUnion([message])
+      switch (type) {
+        case 'text':
+          await _firestore
+              .collection('messaggi')
+              .where('id', whereIn: [
+                '$id-$mioID',
+                '$mioID-$id',
+              ])
+              .get()
+              .then((value) {
+                if (value.docs.isNotEmpty) {
+                  _firestore
+                      .collection('messaggi')
+                      .doc(value.docs[0].id)
+                      .update({
+                    'messaggi': FieldValue.arrayUnion([message])
+                  });
+                } else {
+                  _firestore.collection('messaggi').add({
+                    'id': '$id-$mioID',
+                    'messaggi': [message],
+                  });
+                }
               });
-            }
-          });
+          break;
+        case 'image':
+          String url = await _storage.uploadFile(
+              'chat_images/$id-$mioID', file, message['id']);
+          message['message'] = url;
+          await _firestore
+              .collection('messaggi')
+              .where('id', whereIn: [
+                '$id-$mioID',
+                '$mioID-$id',
+              ])
+              .get()
+              .then((value) {
+                if (value.docs.isNotEmpty) {
+                  _firestore
+                      .collection('messaggi')
+                      .doc(value.docs[0].id)
+                      .update({
+                    'messaggi': FieldValue.arrayUnion([message])
+                  });
+                } else {
+                  _firestore.collection('messaggi').add({
+                    'id': '$id-$mioID',
+                    'messaggi': [message],
+                  });
+                }
+              });
+          break;
+        default:
+          return 'error';
+      }
+
       return 'ok';
     } on FirebaseException catch (e) {
       return Future.error(UpdateProfileFailure(e.code));

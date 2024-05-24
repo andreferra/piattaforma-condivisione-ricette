@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:condivisionericette/model/Message.dart';
 import 'package:condivisionericette/screens/message_screen/singleChat/single_chat.dart';
@@ -44,41 +42,40 @@ class ChatList extends StatelessWidget {
               itemCount: chat.length,
               itemBuilder: (context, index) {
                 return InkWell(
-                    onTap: () async {
-                      // imposta tutti i messaggi letti
-
-                      await firebaseRepository
-                          .setAllMessagesAsRead(
-                              chat[index]['id'].toString().split('-')[0] ==
-                                      mioID
-                                  ? chat[index]['id'].toString().split('-')[1]
-                                  : chat[index]['id'].toString().split('-')[0],
-                              mioID)
-                          .then((value) => Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => SingleChatScreen(
-                                      chat[index]['id']
-                                                  .toString()
-                                                  .split('-')[0] ==
-                                              mioID
-                                          ? chat[index]['id']
-                                              .toString()
-                                              .split('-')[1]
-                                          : chat[index]['id']
-                                              .toString()
-                                              .split('-')[0],
-                                      mioID),
-                                ),
-                              ));
-                    },
-                    child: ChatCard(
-                        mioID,
-                        chat[index]['id'].toString().split('-')[0] == mioID
-                            ? chat[index]['id'].toString().split('-')[1]
-                            : chat[index]['id'].toString().split('-')[0],
-                        Message.fromJson(chat[index]['messaggi']
-                            [chat[index]['messaggi'].length - 1])));
+                  onTap: () async {
+                    await firebaseRepository
+                        .setAllMessagesAsRead(
+                            chat[index]['id'].toString().split('-')[0] == mioID
+                                ? chat[index]['id'].toString().split('-')[1]
+                                : chat[index]['id'].toString().split('-')[0],
+                            mioID)
+                        .then((value) => Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => SingleChatScreen(
+                                    chat[index]['id']
+                                                .toString()
+                                                .split('-')[0] ==
+                                            mioID
+                                        ? chat[index]['id']
+                                            .toString()
+                                            .split('-')[1]
+                                        : chat[index]['id']
+                                            .toString()
+                                            .split('-')[0],
+                                    mioID),
+                              ),
+                            ));
+                  },
+                  child: ChatCard(
+                    mioID,
+                    chat[index]['id'].toString().split('-')[0] == mioID
+                        ? chat[index]['id'].toString().split('-')[1]
+                        : chat[index]['id'].toString().split('-')[0],
+                    Message.fromJson(chat[index]['messaggi']
+                        [chat[index]['messaggi'].length - 1]),
+                  ),
+                );
               },
             );
             chat = [];

@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:condivisionericette/model/Message.dart';
 import 'package:condivisionericette/utils/message/message_card.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class ChatBody extends StatefulWidget {
@@ -21,8 +20,8 @@ class _ChatBodyState extends State<ChatBody> {
       stream: FirebaseFirestore.instance.collection("messaggi").where(
         "id",
         whereIn: [
-          widget.user1 + "-" + widget.user2,
-          widget.user2 + "-" + widget.user1
+          "${widget.user1}-${widget.user2}",
+          "${widget.user2}-${widget.user1}"
         ],
       ).snapshots(includeMetadataChanges: true),
       builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {

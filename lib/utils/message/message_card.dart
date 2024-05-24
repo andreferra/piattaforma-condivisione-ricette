@@ -20,15 +20,26 @@ class MessageCard extends StatelessWidget {
         children: [
           Container(
             margin: const EdgeInsets.all(10),
-            padding: const EdgeInsets.all(10),
+            padding: message.type == MessageType.text
+                ? const EdgeInsets.all(10)
+                : null,
             decoration: BoxDecoration(
               color: message.senderId == mioId ? Colors.blue : Colors.grey,
-              borderRadius: BorderRadius.circular(30),
+              borderRadius: message.type == MessageType.text
+                  ? BorderRadius.circular(30)
+                  : BorderRadius.circular(0),
             ),
-            child: Text(
-              message.message,
-              style: const TextStyle(color: Colors.white),
-            ),
+            child: message.type == MessageType.text
+                ? Text(
+                    message.message,
+                    style: const TextStyle(color: Colors.white),
+                  )
+                : Image.network(
+                    message.message,
+                    width: 150,
+                    height: 150,
+                    fit: BoxFit.fill,
+                  ),
           ),
           Row(
             mainAxisSize: MainAxisSize.max,

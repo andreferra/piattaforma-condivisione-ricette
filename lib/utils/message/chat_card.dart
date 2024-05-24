@@ -73,7 +73,9 @@ class ChatCard extends StatelessWidget {
                       ),
                       const SizedBox(height: 5),
                       Text(
-                        ultimoMex.message,
+                        ultimoMex.type == MessageType.text
+                            ? ultimoMex.message
+                            : 'Foto',
                         style: const TextStyle(
                           fontSize: 15,
                           color: Colors.grey,

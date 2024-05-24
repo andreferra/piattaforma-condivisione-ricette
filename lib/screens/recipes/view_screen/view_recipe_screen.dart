@@ -66,8 +66,6 @@ class _ViewRecipeScreenState extends State<ViewRecipeScreen> {
           });
         }
         for (var element in value) {
-          print(element);
-          print(widget.mioId);
           if (element == widget.mioId) {
             setState(() {
               isLike = true;
