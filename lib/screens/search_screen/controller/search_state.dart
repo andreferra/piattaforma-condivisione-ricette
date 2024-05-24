@@ -13,6 +13,7 @@ class SearchState extends Equatable {
   final bool isEmpty;
   final int? tagSelected;
   final int? alimentiSelected;
+  final int? allergeniSelected;
   final SearchType dropDownValue;
   final FiltroRicerca? filter;
   final Difficolta? difficolta;
@@ -25,6 +26,7 @@ class SearchState extends Equatable {
     this.isSearching = false,
     this.isEmpty = true,
     this.results,
+    this.allergeniSelected,
     this.dropDownValue = SearchType.all,
     this.difficolta = Difficolta.tutte,
     this.filter,
@@ -39,6 +41,7 @@ class SearchState extends Equatable {
     bool? isSearching,
     bool? isEmpty,
     int? tagSelected,
+    int? allergeniSelected,
     SearchType? dropDownValue,
     FiltroRicerca? filter,
     Difficolta? difficolta,
@@ -53,6 +56,7 @@ class SearchState extends Equatable {
       results: results ?? this.results,
       dropDownValue: dropDownValue ?? this.dropDownValue,
       filter: filter ?? this.filter,
+      allergeniSelected: allergeniSelected ?? this.allergeniSelected,
       difficolta: difficolta ?? this.difficolta,
       tagSelected: tagSelected ?? this.tagSelected,
       alimentiSelected: alimentiSelected ?? this.alimentiSelected,
@@ -69,6 +73,7 @@ class SearchState extends Equatable {
         results,
         dropDownValue,
         tagSelected,
+        allergeniSelected,
         alimentiSelected,
         filter,
         difficolta,

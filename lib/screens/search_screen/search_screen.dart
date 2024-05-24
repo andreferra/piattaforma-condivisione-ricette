@@ -162,6 +162,23 @@ class SearchScreen extends ConsumerWidget {
                                 filter.ingredienti.indexOf(value.toString()));
                           },
                         )),
+                  if (selectedType == SearchType.recipes &&
+                      filter!.allergeni.isNotEmpty)
+                    Container(
+                        padding: const EdgeInsets.all(5),
+                        margin: const EdgeInsets.only(left: 10),
+                        decoration: BoxDecoration(
+                            border: Border.all(color: Colors.grey),
+                            borderRadius: BorderRadius.circular(8.0)),
+                        child: DropDownFilter(
+                          underline: Container(),
+                          itemList: filter.allergeni,
+                          selectOption: serachState.allergeniSelected ?? 0,
+                          onChange: (value) {
+                            searchController.setAllergeniSelected(
+                                filter.allergeni.indexOf(value.toString()));
+                          },
+                        )),
                 ],
               ),
             SingleChildScrollView(

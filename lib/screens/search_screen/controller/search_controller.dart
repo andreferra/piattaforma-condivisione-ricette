@@ -25,6 +25,14 @@ class SearchController extends StateNotifier<SearchState> {
     }
   }
 
+  void setAllergeniSelected(int value) {
+    state = state.copyWith(allergeniSelected: value);
+
+    if (state.dropDownValue == SearchType.recipes) {
+      _handlerAllergeni();
+    }
+  }
+
   void setAlimentiSelected(int value) {
     state = state.copyWith(alimentiSelected: value);
 
@@ -49,14 +57,34 @@ class SearchController extends StateNotifier<SearchState> {
     }
   }
 
+  ///funzione per filtrare le ricette in base agli allergeni
+  void _handlerAllergeni() {
+    if (state.filter!.allergeni.isNotEmpty) {
+      List<DocumentSnapshot> filtered = [];
+      for (var recipe in state.recipes!) {
+        recipe['allergie'].forEach((element) {
+          if (element == state.filter!.allergeni[state.allergeniSelected!] &&
+              !filtered.contains(recipe)) {
+            filtered.add(recipe);
+          }
+        });
+      }
+      state = state.copyWith(
+          results: filtered.isNotEmpty ? filtered : state.recipes);
+    } else {
+      state = state.copyWith(results: state.recipes);
+    }
+  }
+
   ///funzione per filtrare le ricette in base agli ingredienti
   void _handlerAlimenti() {
     if (state.filter!.ingredienti.isNotEmpty) {
       List<DocumentSnapshot> filtered = [];
       for (var recipe in state.recipes!) {
-        recipe['ingredienti'].forEach((element) {
+        recipe['allergie'].forEach((element) {
           if (element.toString().split(" ").first ==
-              state.filter!.ingredienti[state.alimentiSelected!]) {
+                  state.filter!.ingredienti[state.alimentiSelected!] &&
+              !filtered.contains(recipe)) {
             filtered.add(recipe);
           }
         });
@@ -74,7 +102,8 @@ class SearchController extends StateNotifier<SearchState> {
       List<DocumentSnapshot> filtered = [];
       for (var recipe in state.recipes!) {
         recipe['tag'].forEach((element) {
-          if (element == state.filter!.tag[state.tagSelected!]) {
+          if (element == state.filter!.tag[state.tagSelected!] &&
+              !filtered.contains(recipe)) {
             filtered.add(recipe);
           }
         });
