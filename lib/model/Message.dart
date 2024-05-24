@@ -1,5 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+enum MessageType {
+  text,
+  image,
+  recipe,
+  user,
+}
+
 class Message {
   final String id;
   final String senderId;
@@ -7,6 +14,7 @@ class Message {
   final String message;
   final Timestamp timestamp;
   final bool isRead;
+  final MessageType type;
 
   Message({
     required this.id,
@@ -15,6 +23,7 @@ class Message {
     required this.message,
     required this.timestamp,
     required this.isRead,
+    this.type = MessageType.text,
   });
 
   factory Message.fromSnapshot(DocumentSnapshot snapshot) {
@@ -34,6 +43,7 @@ class Message {
       message: data['message'],
       timestamp: data['timestamp'],
       isRead: data['isRead'],
+      type: MessageType.values[data['type']],
     );
   }
 
@@ -45,6 +55,7 @@ class Message {
       message: json['message'],
       timestamp: json['timestamp'],
       isRead: json['isRead'],
+      type: MessageType.values[json['type']],
     );
   }
 
@@ -56,6 +67,7 @@ class Message {
       'message': message,
       'timestamp': timestamp,
       'isRead': isRead,
+      'type': type.index,
     };
   }
 }
