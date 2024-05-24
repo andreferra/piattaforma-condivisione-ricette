@@ -467,4 +467,15 @@ class FirebaseRepository {
       return Future.error(UpdateProfileFailure(e.toString()));
     }
   }
+
+  /// Delete a recipe
+  Future<void> deleteRecipe(String recipeId) async {
+    try {
+      await _firestore.collection('recipes').doc(recipeId).delete();
+    } on FirebaseException catch (e) {
+      return Future.error(UpdateProfileFailure(e.code));
+    } catch (e) {
+      return Future.error(UpdateProfileFailure(e.toString()));
+    }
+  }
 }

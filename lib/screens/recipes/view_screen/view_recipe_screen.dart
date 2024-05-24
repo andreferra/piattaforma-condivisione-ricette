@@ -122,6 +122,41 @@ class _ViewRecipeScreenState extends State<ViewRecipeScreen> {
                 fontWeight: FontWeight.bold,
                 color: Colors.white.withOpacity(0.7),
               ),
+              actions: [
+                if (widget.isMine)
+                  IconButton(
+                    icon: const Icon(Icons.delete),
+                    onPressed: () {
+                      showDialog(
+                        context: context,
+                        builder: (context) => AlertDialog(
+                          title: const Text("Elimina ricetta"),
+                          content: const Text(
+                              "Sei sicuro di voler eliminare la ricetta?"),
+                          actions: [
+                            TextButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                              child: const Text("Annulla"),
+                            ),
+                            TextButton(
+                              onPressed: () async {
+                                await _firebaseRepository
+                                    .deleteRecipe(widget.recipesState.recipeID!)
+                                    .then((_) {
+                                  Navigator.of(context).pop();
+                                  Navigator.of(context).pop();
+                                });
+                              },
+                              child: const Text("Elimina"),
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                  ),
+              ],
             ),
             body: SingleChildScrollView(
               physics: const BouncingScrollPhysics(),
