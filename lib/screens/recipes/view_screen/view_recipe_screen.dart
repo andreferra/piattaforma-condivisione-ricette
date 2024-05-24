@@ -312,7 +312,7 @@ class _ViewRecipeScreenState extends State<ViewRecipeScreen> {
                             builder: (context) => AlertDialog(
                               title: const Text("Condividi"),
                               content: const Text(
-                                  "Condividi il link della ricetta con i tuoi amici"),
+                                  "Condividi la ricetta con i tuoi amici in chat"),
                               actions: [
                                 TextButton(
                                   onPressed: () {
@@ -322,7 +322,7 @@ class _ViewRecipeScreenState extends State<ViewRecipeScreen> {
                                 ),
                                 TextButton(
                                   onPressed: () {
-                                    Navigator.of(context).pop();
+                                    //TODO: implement condivisione
                                   },
                                   child: const Text("Condividi"),
                                 ),
