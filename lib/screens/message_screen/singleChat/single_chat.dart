@@ -50,7 +50,10 @@ class _SingleChatScreenState extends State<SingleChatScreen> {
               children: [
                 Expanded(
                   flex: 1,
-                  child: ChatHeader(user),
+                  child: ChatHeader(
+                    widget.mioId,
+                    user,
+                  ),
                 ),
                 Expanded(
                   flex: 3,

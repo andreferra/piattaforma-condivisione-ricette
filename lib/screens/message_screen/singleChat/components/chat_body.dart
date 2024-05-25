@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:condivisionericette/model/Message.dart';
 import 'package:condivisionericette/utils/message/message_card.dart';
 import 'package:condivisionericette/utils/message/recipe_card.dart';
+import 'package:condivisionericette/utils/message/user_card.dart';
 import 'package:flutter/material.dart';
 
 class ChatBody extends StatefulWidget {
@@ -69,9 +70,14 @@ class _ChatBodyState extends State<ChatBody> {
                       widget.user1);
                 case MessageType.recipe:
                   return RecipeCard(
-                    widget.user1,
+                    widget.user2,
                     Message.fromJson(snapshot.data!.docs[0]['messaggi'][index]),
                   );
+                case MessageType.user:
+                  return UserCardChat(
+                      Message.fromJson(
+                          snapshot.data!.docs[0]['messaggi'][index]),
+                      widget.user1);
                 default:
                   return const SizedBox();
               }

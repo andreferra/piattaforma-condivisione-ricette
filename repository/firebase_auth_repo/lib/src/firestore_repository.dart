@@ -442,6 +442,30 @@ class FirebaseRepository {
                 }
               });
           break;
+        case 'user':
+          await _firestore
+              .collection('messaggi')
+              .where('id', whereIn: [
+                '$id-$mioID',
+                '$mioID-$id',
+              ])
+              .get()
+              .then((value) {
+                if (value.docs.isNotEmpty) {
+                  _firestore
+                      .collection('messaggi')
+                      .doc(value.docs[0].id)
+                      .update({
+                    'messaggi': FieldValue.arrayUnion([message])
+                  });
+                } else {
+                  _firestore.collection('messaggi').add({
+                    'id': '$id-$mioID',
+                    'messaggi': [message],
+                  });
+                }
+              });
+          break;
         default:
           return 'error';
       }
@@ -616,5 +640,9 @@ class FirebaseRepository {
 
   Stream<DocumentSnapshot<Object?>>? streamRecipe(String message) {
     return _firestore.collection('recipes').doc(message).snapshots();
+  }
+
+  Stream<DocumentSnapshot<Object?>>? streamUser(String message) {
+    return _firestore.collection('users').doc(message).snapshots();
   }
 }
