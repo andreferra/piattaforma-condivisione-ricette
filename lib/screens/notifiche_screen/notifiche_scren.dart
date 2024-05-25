@@ -1,14 +1,20 @@
+// Dart imports:
 import 'dart:async';
 
+// Flutter imports:
+import 'package:flutter/material.dart';
+
+// Package imports:
+import 'package:firebase_auth_repo/auth_repo.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+// Project imports:
 import 'package:condivisionericette/controller/auth_controller/auth_controller.dart';
 import 'package:condivisionericette/model/Notification.dart';
 import 'package:condivisionericette/screens/notifiche_screen/componentes/notification_card.dart';
 import 'package:condivisionericette/screens/notifiche_screen/componentes/notification_header.dart';
 import 'package:condivisionericette/utils/constant.dart';
 import 'package:condivisionericette/widget/header.dart';
-import 'package:firebase_auth_repo/auth_repo.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class NotificheScreen extends ConsumerWidget {
   const NotificheScreen({super.key});

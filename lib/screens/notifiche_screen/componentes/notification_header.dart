@@ -1,7 +1,12 @@
-import 'package:condivisionericette/controller/auth_controller/auth_controller.dart';
-import 'package:firebase_auth_repo/auth_repo.dart';
+// Flutter imports:
 import 'package:flutter/material.dart';
+
+// Package imports:
+import 'package:firebase_auth_repo/auth_repo.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+// Project imports:
+import 'package:condivisionericette/controller/auth_controller/auth_controller.dart';
 
 class NotificationHeader extends ConsumerWidget {
   const NotificationHeader({super.key});

@@ -1,7 +1,11 @@
-import 'package:condivisionericette/screens/recipes/view_screen/controller/recipe_interaction_controller.dart';
+// Flutter imports:
 import 'package:flutter/material.dart';
+
+// Package imports:
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+// Project imports:
+import 'package:condivisionericette/screens/recipes/view_screen/controller/recipe_interaction_controller.dart';
 import '../../controller/auth_controller/auth_controller.dart';
 
 class AddStars extends ConsumerWidget {

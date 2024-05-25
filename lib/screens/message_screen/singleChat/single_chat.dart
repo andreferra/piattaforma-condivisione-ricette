@@ -1,8 +1,13 @@
+// Flutter imports:
+import 'package:flutter/material.dart';
+
+// Package imports:
+import 'package:firebase_auth_repo/auth_repo.dart';
+
+// Project imports:
 import 'package:condivisionericette/screens/message_screen/singleChat/components/chat_body.dart';
 import 'package:condivisionericette/screens/message_screen/singleChat/components/chat_header.dart';
 import 'package:condivisionericette/screens/message_screen/singleChat/components/chat_input.dart';
-import 'package:firebase_auth_repo/auth_repo.dart';
-import 'package:flutter/material.dart';
 
 class SingleChatScreen extends StatefulWidget {
   final String userID;

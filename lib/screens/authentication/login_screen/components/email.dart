@@ -1,8 +1,13 @@
-import 'package:condivisionericette/screens/authentication/login_screen/controller/login_controller.dart';
-import 'package:condivisionericette/widget/text_input_field.dart';
+// Flutter imports:
 import "package:flutter/material.dart";
 import 'package:flutter/widgets.dart';
+
+// Package imports:
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+// Project imports:
+import 'package:condivisionericette/screens/authentication/login_screen/controller/login_controller.dart';
+import 'package:condivisionericette/widget/text_input_field.dart';
 
 class EmailField extends ConsumerWidget {
   const EmailField({super.key});

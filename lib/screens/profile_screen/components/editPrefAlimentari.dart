@@ -1,9 +1,14 @@
+// Flutter imports:
+import 'package:flutter/cupertino.dart';
+
+// Package imports:
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+// Project imports:
 import 'package:condivisionericette/controller/auth_controller/auth_controller.dart';
 import 'package:condivisionericette/screens/profile_screen/components/allergeni.dart';
 import 'package:condivisionericette/screens/profile_screen/components/interessiAlimentari.dart';
 import 'package:condivisionericette/screens/profile_screen/components/preferenzeAlimentari.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class EditPrefAlimentari extends ConsumerWidget {
   const EditPrefAlimentari({super.key});

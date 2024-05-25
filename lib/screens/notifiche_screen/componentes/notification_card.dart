@@ -1,9 +1,15 @@
+// Dart imports:
 import 'dart:async';
 
+// Flutter imports:
+import 'package:flutter/material.dart';
+
+// Package imports:
+import 'package:firebase_auth_repo/auth_repo.dart';
+
+// Project imports:
 import 'package:condivisionericette/model/Notification.dart';
 import 'package:condivisionericette/widget/loading_errors.dart';
-import 'package:firebase_auth_repo/auth_repo.dart';
-import 'package:flutter/material.dart';
 
 class NotificationCard extends StatefulWidget {
   final NotificationModel notification;
