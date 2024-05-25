@@ -1,7 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:condivisionericette/model/Message.dart';
 import 'package:condivisionericette/utils/message/message_card.dart';
-import 'package:flutter/foundation.dart';
+import 'package:condivisionericette/utils/message/recipe_card.dart';
+import 'package:condivisionericette/utils/message/user_card.dart';
 import 'package:flutter/material.dart';
 
 class ChatBody extends StatefulWidget {
@@ -21,8 +22,8 @@ class _ChatBodyState extends State<ChatBody> {
       stream: FirebaseFirestore.instance.collection("messaggi").where(
         "id",
         whereIn: [
-          widget.user1 + "-" + widget.user2,
-          widget.user2 + "-" + widget.user1
+          "${widget.user1}-${widget.user2}",
+          "${widget.user2}-${widget.user1}"
         ],
       ).snapshots(includeMetadataChanges: true),
       builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -54,9 +55,32 @@ class _ChatBodyState extends State<ChatBody> {
           child: ListView.builder(
             itemCount: snapshot.data!.docs[0]['messaggi'].length,
             itemBuilder: (context, index) {
-              return MessageCard(
-                  Message.fromJson(snapshot.data!.docs[0]['messaggi'][index]),
-                  widget.user1);
+              MessageType type = MessageType
+                  .values[snapshot.data!.docs[0]['messaggi'][index]['type']];
+              switch (type) {
+                case MessageType.text:
+                  return MessageCard(
+                      Message.fromJson(
+                          snapshot.data!.docs[0]['messaggi'][index]),
+                      widget.user1);
+                case MessageType.image:
+                  return MessageCard(
+                      Message.fromJson(
+                          snapshot.data!.docs[0]['messaggi'][index]),
+                      widget.user1);
+                case MessageType.recipe:
+                  return RecipeCard(
+                    widget.user2,
+                    Message.fromJson(snapshot.data!.docs[0]['messaggi'][index]),
+                  );
+                case MessageType.user:
+                  return UserCardChat(
+                      Message.fromJson(
+                          snapshot.data!.docs[0]['messaggi'][index]),
+                      widget.user1);
+                default:
+                  return const SizedBox();
+              }
             },
           ),
         );

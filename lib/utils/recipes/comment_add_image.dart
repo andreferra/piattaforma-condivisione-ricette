@@ -17,9 +17,6 @@ class AddImage extends ConsumerWidget {
 
     final List<Uint8List> imageFile =
         ref.watch(recipeInteractionProvider).imageFile!;
-
-    print(imageFile.length);
-
     return Column(
       children: [
         const Text("Aggiungi fino a 4 immagini",

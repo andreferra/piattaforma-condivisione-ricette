@@ -1,11 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:condivisionericette/model/Comment.dart';
+import 'package:condivisionericette/model/Message.dart';
 import 'package:condivisionericette/screens/public_profile/public_profile_screen.dart';
 import 'package:condivisionericette/screens/recipes/add_recipes/controller/recipes_controller.dart';
 import 'package:condivisionericette/screens/recipes/view_screen/components/add_comment_component.dart';
 import 'package:condivisionericette/utils/constant.dart';
 import 'package:condivisionericette/utils/recipes/comment_view_components.dart';
 import 'package:condivisionericette/utils/recipes/step_view_components.dart';
+import 'package:condivisionericette/widget/share/share_screen.dart';
 import 'package:firebase_auth_repo/auth_repo.dart';
 import 'package:flutter/material.dart';
 
@@ -66,8 +68,6 @@ class _ViewRecipeScreenState extends State<ViewRecipeScreen> {
           });
         }
         for (var element in value) {
-          print(element);
-          print(widget.mioId);
           if (element == widget.mioId) {
             setState(() {
               isLike = true;
@@ -307,28 +307,13 @@ class _ViewRecipeScreenState extends State<ViewRecipeScreen> {
                           backgroundColor: Colors.blue.shade500,
                         ),
                         onPressed: () {
-                          showDialog(
-                            context: context,
-                            builder: (context) => AlertDialog(
-                              title: const Text("Condividi"),
-                              content: const Text(
-                                  "Condividi la ricetta con i tuoi amici in chat"),
-                              actions: [
-                                TextButton(
-                                  onPressed: () {
-                                    Navigator.of(context).pop();
-                                  },
-                                  child: const Text("Annulla"),
-                                ),
-                                TextButton(
-                                  onPressed: () {
-                                    //TODO: implement condivisione
-                                  },
-                                  child: const Text("Condividi"),
-                                ),
-                              ],
-                            ),
-                          );
+                          Navigator.of(context)
+                              .pushReplacement(MaterialPageRoute(
+                                  builder: (context) => ShareScreen(
+                                        widget.mioId,
+                                        widget.recipesState.recipeID!,
+                                        MessageType.recipe,
+                                      )));
                         },
                         child: const Row(
                           children: [

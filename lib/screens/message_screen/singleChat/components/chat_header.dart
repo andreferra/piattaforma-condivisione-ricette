@@ -1,10 +1,12 @@
+import 'package:condivisionericette/screens/public_profile/public_profile_screen.dart';
 import 'package:firebase_auth_repo/auth_repo.dart';
 import 'package:flutter/material.dart';
 
 class ChatHeader extends StatefulWidget {
   final AuthUser user;
+  final String mioId;
 
-  const ChatHeader(this.user, {super.key});
+  const ChatHeader(this.mioId, this.user, {super.key});
 
   @override
   State<ChatHeader> createState() => _ChatHeaderState();
@@ -36,13 +38,24 @@ class _ChatHeaderState extends State<ChatHeader> {
             child: Stack(
               fit: StackFit.expand,
               children: [
-                Container(
-                  decoration: BoxDecoration(
-                    color: Colors.black,
-                    shape: BoxShape.circle,
-                    image: DecorationImage(
-                        fit: BoxFit.cover,
-                        image: NetworkImage(widget.user.photoURL!)),
+                InkWell(
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => PublicProfile(
+                                  widget.user.uid,
+                                  widget.mioId,
+                                )));
+                  },
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.black,
+                      shape: BoxShape.circle,
+                      image: DecorationImage(
+                          fit: BoxFit.cover,
+                          image: NetworkImage(widget.user.photoURL!)),
+                    ),
                   ),
                 ),
                 Positioned(

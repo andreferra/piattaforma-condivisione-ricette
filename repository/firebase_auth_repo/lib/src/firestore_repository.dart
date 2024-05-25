@@ -40,6 +40,12 @@ class DeleteCommentFailure implements Exception {
   const DeleteCommentFailure(this.code);
 }
 
+class GetRecipeFailure implements Exception {
+  final String code;
+
+  const GetRecipeFailure(this.code);
+}
+
 class FirebaseRepository {
   final _firestore = FirebaseFirestore.instance;
   final _storage = StorageRepository();
@@ -357,22 +363,113 @@ class FirebaseRepository {
   }
 
   /// Send a message
-  Future<String> sendMessage(message, String id, String mioID) async {
+  Future<String> sendMessage(
+      message, String id, String mioID, String type, Uint8List file) async {
     try {
-      await _firestore
-          .collection('messaggi')
-          .where('id', whereIn: [
-            '$id-$mioID',
-            '$mioID-$id',
-          ])
-          .get()
-          .then((value) {
-            if (value.docs.isNotEmpty) {
-              _firestore.collection('messaggi').doc(value.docs[0].id).update({
-                'messaggi': FieldValue.arrayUnion([message])
+      switch (type) {
+        case 'text':
+          await _firestore
+              .collection('messaggi')
+              .where('id', whereIn: [
+                '$id-$mioID',
+                '$mioID-$id',
+              ])
+              .get()
+              .then((value) {
+                if (value.docs.isNotEmpty) {
+                  _firestore
+                      .collection('messaggi')
+                      .doc(value.docs[0].id)
+                      .update({
+                    'messaggi': FieldValue.arrayUnion([message])
+                  });
+                } else {
+                  _firestore.collection('messaggi').add({
+                    'id': '$id-$mioID',
+                    'messaggi': [message],
+                  });
+                }
               });
-            }
-          });
+          break;
+        case 'image':
+          String url = await _storage.uploadFile(
+              'chat_images/$id-$mioID', file, message['id']);
+          message['message'] = url;
+          await _firestore
+              .collection('messaggi')
+              .where('id', whereIn: [
+                '$id-$mioID',
+                '$mioID-$id',
+              ])
+              .get()
+              .then((value) {
+                if (value.docs.isNotEmpty) {
+                  _firestore
+                      .collection('messaggi')
+                      .doc(value.docs[0].id)
+                      .update({
+                    'messaggi': FieldValue.arrayUnion([message])
+                  });
+                } else {
+                  _firestore.collection('messaggi').add({
+                    'id': '$id-$mioID',
+                    'messaggi': [message],
+                  });
+                }
+              });
+          break;
+        case 'recipe':
+          await _firestore
+              .collection('messaggi')
+              .where('id', whereIn: [
+                '$id-$mioID',
+                '$mioID-$id',
+              ])
+              .get()
+              .then((value) {
+                if (value.docs.isNotEmpty) {
+                  _firestore
+                      .collection('messaggi')
+                      .doc(value.docs[0].id)
+                      .update({
+                    'messaggi': FieldValue.arrayUnion([message])
+                  });
+                } else {
+                  _firestore.collection('messaggi').add({
+                    'id': '$id-$mioID',
+                    'messaggi': [message],
+                  });
+                }
+              });
+          break;
+        case 'user':
+          await _firestore
+              .collection('messaggi')
+              .where('id', whereIn: [
+                '$id-$mioID',
+                '$mioID-$id',
+              ])
+              .get()
+              .then((value) {
+                if (value.docs.isNotEmpty) {
+                  _firestore
+                      .collection('messaggi')
+                      .doc(value.docs[0].id)
+                      .update({
+                    'messaggi': FieldValue.arrayUnion([message])
+                  });
+                } else {
+                  _firestore.collection('messaggi').add({
+                    'id': '$id-$mioID',
+                    'messaggi': [message],
+                  });
+                }
+              });
+          break;
+        default:
+          return 'error';
+      }
+
       return 'ok';
     } on FirebaseException catch (e) {
       return Future.error(UpdateProfileFailure(e.code));
@@ -477,5 +574,75 @@ class FirebaseRepository {
     } catch (e) {
       return Future.error(UpdateProfileFailure(e.toString()));
     }
+  }
+
+  /// Get recipe
+  Future<DocumentSnapshot> getRecipe(String recipeId) async {
+    try {
+      DocumentSnapshot recipe;
+      await _firestore.collection('recipes').doc(recipeId).get().then((value) {
+        if (value.exists) {
+          return value;
+        }
+      });
+      return Future.error(const GetRecipeFailure('Recipe not found'));
+    } on FirebaseException catch (e) {
+      return Future.error(GetRecipeFailure(e.code));
+    } catch (e) {
+      return Future.error(GetRecipeFailure(e.toString()));
+    }
+  }
+
+  /// Get all recipes
+  Future<List<DocumentSnapshot>> getAllRecipes() async {
+    try {
+      List<DocumentSnapshot> recipes = [];
+      await _firestore.collection('recipes').get().then((value) {
+        recipes = value.docs;
+      });
+      return recipes;
+    } on FirebaseException catch (e) {
+      return Future.error(GetRecipeFailure(e.code));
+    } catch (e) {
+      return Future.error(GetRecipeFailure(e.toString()));
+    }
+  }
+
+  /// Get all users
+  Future<List<DocumentSnapshot>> getAllUsers() async {
+    try {
+      List<DocumentSnapshot> users = [];
+      await _firestore.collection('users').get().then((value) {
+        users = value.docs;
+      });
+      return users;
+    } on FirebaseException catch (e) {
+      return Future.error(UpdateProfileFailure(e.code));
+    } catch (e) {
+      return Future.error(UpdateProfileFailure(e.toString()));
+    }
+  }
+
+  /// Get all comments
+  Future<List<Map<String, dynamic>>> getAllComments(String recipeId) async {
+    try {
+      List<Map<String, dynamic>> comments = [];
+      await _firestore.collection('recipes').doc(recipeId).get().then((value) {
+        comments = List<Map<String, dynamic>>.from(value.data()!['commenti']);
+      });
+      return comments;
+    } on FirebaseException catch (e) {
+      return Future.error(GetRecipeFailure(e.code));
+    } catch (e) {
+      return Future.error(GetRecipeFailure(e.toString()));
+    }
+  }
+
+  Stream<DocumentSnapshot<Object?>>? streamRecipe(String message) {
+    return _firestore.collection('recipes').doc(message).snapshots();
+  }
+
+  Stream<DocumentSnapshot<Object?>>? streamUser(String message) {
+    return _firestore.collection('users').doc(message).snapshots();
   }
 }
