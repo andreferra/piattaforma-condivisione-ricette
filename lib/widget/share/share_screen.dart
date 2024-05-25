@@ -75,7 +75,7 @@ class _ShareScreenState extends State<ShareScreen> {
     try {
       Message message = Message(
         senderId: widget.mioId,
-        receiverId: widget.mioId,
+        receiverId: document.id,
         message: widget.shareUid,
         timestamp: Timestamp.now(),
         isRead: false,
@@ -88,7 +88,7 @@ class _ShareScreenState extends State<ShareScreen> {
         body: "Hai ricevuto un nuovo messaggio da ${document['nickname']} 👀",
         date: DateTime.now().toString(),
         userSender: widget.mioId,
-        userReceiver: widget.mioId,
+        userReceiver: document.id,
         type: NotificationType.newMessage,
         extraData: "ricetta o utente condiviso",
         read: false,

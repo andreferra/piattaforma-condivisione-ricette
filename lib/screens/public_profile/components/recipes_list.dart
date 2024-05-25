@@ -8,7 +8,7 @@ import 'package:condivisionericette/widget/recipe_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class RecipesList extends  ConsumerWidget {
+class RecipesList extends ConsumerWidget {
   final String userId;
 
   const RecipesList(this.userId, {super.key});
@@ -18,8 +18,11 @@ class RecipesList extends  ConsumerWidget {
     final user = ref.watch(authProvider).user;
     final firebase = ref.watch(firebaseRepoProvider);
     return SizedBox(
-        width: MediaQuery.of(context).size.width * 0.8,
-        height: MediaQuery.of(context).size.height * 0.5,
+      width: MediaQuery.of(context).size.width * 0.8,
+      height: MediaQuery.of(context).size.height * 0.5,
+      child: SingleChildScrollView(
+        physics: const BouncingScrollPhysics(),
+        padding: const EdgeInsets.all(defaultPadding),
         child: StreamBuilder(
           stream: FirebaseFirestore.instance
               .collection('recipes')
@@ -42,8 +45,7 @@ class RecipesList extends  ConsumerWidget {
               );
             }
             return Column(
-              children:
-              snapshot.data!.docs.map((DocumentSnapshot document) {
+              children: snapshot.data!.docs.map((DocumentSnapshot document) {
                 return Padding(
                     padding: const EdgeInsets.all(defaultPadding),
                     child: InkWell(
@@ -57,12 +59,11 @@ class RecipesList extends  ConsumerWidget {
                           Navigator.of(context).push(MaterialPageRoute(
                               builder: (context) => ViewRecipeScreen(
                                   visualizzazioni:
-                                  document['numero_visualizzazioni'] +
-                                      1,
-                                  mioId:  user.uid,
+                                      document['numero_visualizzazioni'] + 1,
+                                  mioId: user.uid,
                                   isMine: isMine,
-                                  recipesState: RecipesState.fromSnapshot(
-                                      document))));
+                                  recipesState:
+                                      RecipesState.fromSnapshot(document))));
                         },
                         child: RecipeListItem(
                           title: document['nome_piatto'],
@@ -70,16 +71,17 @@ class RecipesList extends  ConsumerWidget {
                           description: document['descrizione'],
                           numeroLike: document['numero_like'].toString(),
                           numeroCommenti:
-                          document['numero_commenti'].toString(),
+                              document['numero_commenti'].toString(),
                           visualizzazioni:
-                          document['numero_visualizzazioni']
-                              .toString(),
+                              document['numero_visualizzazioni'].toString(),
                           numeroCondivisioni:
-                          document['numero_condivisioni'].toString(),
+                              document['numero_condivisioni'].toString(),
                         )));
               }).toList(),
             );
           },
-        ));
+        ),
+      ),
+    );
   }
 }
