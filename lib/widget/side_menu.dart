@@ -1,4 +1,6 @@
 // Flutter imports:
+
+// Flutter imports:
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -52,6 +54,14 @@ class SideMenu extends ConsumerWidget {
               pageController.setPage(6);
             },
             icon: 'assets/icons/messaggi_dashboard.svg',
+            hasNotification: false,
+          ),
+          DrawerListTile(
+            title: "Gaming",
+            onTap: () {
+              pageController.setPage(7);
+            },
+            icon: 'assets/icons/menu_gaming.svg',
             hasNotification: false,
           ),
           user.notification!
