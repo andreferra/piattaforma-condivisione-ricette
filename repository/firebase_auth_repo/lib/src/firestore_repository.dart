@@ -371,8 +371,8 @@ class FirebaseRepository {
   }
 
   /// Send a message
-  Future<String> sendMessage(
-      message, String id, String mioID, String type, Uint8List file) async {
+  Future<String> sendMessage(message, String id, String mioID, String type,
+      Uint8List file, notification) async {
     try {
       switch (type) {
         case 'text':
@@ -477,6 +477,11 @@ class FirebaseRepository {
         default:
           return 'error';
       }
+
+      await _firestore.collection('users').doc(id).update({
+        'listaNotifiche': FieldValue.arrayUnion([notification]),
+        'newNotifiche': true,
+      });
 
       return 'ok';
     } on FirebaseException catch (e) {
