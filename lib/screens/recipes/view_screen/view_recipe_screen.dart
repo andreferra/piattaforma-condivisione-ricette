@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:condivisionericette/model/Comment.dart';
 import 'package:condivisionericette/model/Message.dart';
+import 'package:condivisionericette/model/Notification.dart';
 import 'package:condivisionericette/screens/public_profile/public_profile_screen.dart';
 import 'package:condivisionericette/screens/recipes/add_recipes/controller/recipes_controller.dart';
 import 'package:condivisionericette/screens/recipes/view_screen/components/add_comment_component.dart';
@@ -10,6 +11,7 @@ import 'package:condivisionericette/utils/recipes/step_view_components.dart';
 import 'package:condivisionericette/widget/share/share_screen.dart';
 import 'package:firebase_auth_repo/auth_repo.dart';
 import 'package:flutter/material.dart';
+import 'package:uuid/uuid.dart';
 
 class ViewRecipeScreen extends StatefulWidget {
   final bool isMine;
@@ -36,25 +38,50 @@ class _ViewRecipeScreenState extends State<ViewRecipeScreen> {
   bool isLike = false;
 
   Future<void> _handlerLike() async {
+    NotificationModel notificationModel = NotificationModel(
+      notificationId: const Uuid().v4(),
+      title: "Nuovo Like",
+      body:
+          "Qualcuno ha messo like alla tua ricetta ${widget.recipesState.nomePiatto.toString().toUpperCase()} ❤️",
+      date: DateTime.now().toString(),
+      read: false,
+      type: NotificationType.newLike,
+      userSender: widget.mioId,
+      userReceiver: widget.recipesState.userID,
+      extraData: widget.recipesState.recipeID,
+    );
     await _firebaseRepository
-        .updateLike(widget.recipesState.recipeID!, widget.mioId, isLike)
-        .then((value) {
-      if (value == 'unlike') {
-        setState(() {
-          numeroLike = numeroLike - 1;
-          isLike = false;
-        });
-        return;
-      } else if (value == 'like') {
-        setState(() {
-          numeroLike = numeroLike + 1;
-          isLike = true;
-        });
-        return;
-      } else {
+        .updateLike(
+      widget.recipesState.recipeID!,
+      widget.mioId,
+      isLike,
+      notificationModel.toMap(),
+      widget.recipesState.userID!,
+    )
+        .then(
+      (value) {
         print(value);
-      }
-    });
+        if (value == 'unlike') {
+          setState(
+            () {
+              numeroLike = numeroLike - 1;
+              isLike = false;
+            },
+          );
+          return;
+        } else if (value == 'like') {
+          setState(
+            () {
+              numeroLike = numeroLike + 1;
+              isLike = true;
+            },
+          );
+          return;
+        } else {
+          print(value);
+        }
+      },
+    );
   }
 
   void _loadLike() async {
