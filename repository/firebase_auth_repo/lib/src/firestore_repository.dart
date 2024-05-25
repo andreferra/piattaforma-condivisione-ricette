@@ -726,4 +726,19 @@ class FirebaseRepository {
       return Future.error(NotificationFailure(e.toString()));
     }
   }
+
+  /// add notification to the user
+  Future<void> addNotificationToUser(
+      String userId, Map<String, dynamic> notification) async {
+    try {
+      await _firestore.collection('users').doc(userId).update({
+        'listaNotifiche': FieldValue.arrayUnion([notification]),
+        'newNotifiche': true,
+      });
+    } on FirebaseException catch (e) {
+      return Future.error(NotificationFailure(e.code));
+    } catch (e) {
+      return Future.error(NotificationFailure(e.toString()));
+    }
+  }
 }
