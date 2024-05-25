@@ -1,5 +1,3 @@
-// Flutter imports:
-
 // Project imports:
 import 'package:condivisionericette/screens/feed_screen/feed_screen.dart';
 import 'package:condivisionericette/screens/gaming%20/gaming_screen.dart';
@@ -29,7 +27,7 @@ class PageController extends ChangeNotifier {
     MessageScreen(),
     GamingScreen(),
   ];
-  int _currentIndex = 0;
+  int _currentIndex = 7;
 
   int get currentIndex => _currentIndex;
 

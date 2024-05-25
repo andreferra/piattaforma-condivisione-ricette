@@ -22,6 +22,7 @@ class AuthUser extends Equatable {
   final int? posts;
   final List<String>? listaNotifiche;
   final bool? newNotifiche;
+  final bool? gameActive;
 
   const AuthUser({
     required this.uid,
@@ -45,6 +46,7 @@ class AuthUser extends Equatable {
     this.following,
     this.posts,
     this.newNotifiche,
+    this.gameActive = false,
   });
 
   static const empty = AuthUser(uid: '');
@@ -74,6 +76,7 @@ class AuthUser extends Equatable {
         listaNotifiche,
         posts,
         newNotifiche,
+        gameActive,
       ];
 
   factory AuthUser.fromDocument(Map<String, dynamic> data) {
@@ -87,6 +90,7 @@ class AuthUser extends Equatable {
       phone: data['phone'],
       newNotifiche: data['newNotifiche'],
       photoURL: data['photoURL'],
+      gameActive: data['gameActive'],
       dataRegistrazione: data['dataRegistrazione'],
       dataUltimoAccesso: data['dataUltimoAccesso'],
       isLogged: data['isLogged'],
@@ -128,6 +132,7 @@ class AuthUser extends Equatable {
       'dataRegistrazione': dataRegistrazione,
       'dataUltimoAccesso': dataUltimoAccesso,
       'isLogged': isLogged,
+      'gameActive': gameActive,
       'prefAlimentari': prefAlimentari,
       'allergie': allergie,
       'interessiCulinari': interessiCulinari,
@@ -147,6 +152,7 @@ class AuthUser extends Equatable {
     String? name,
     String? nickname,
     bool? emailVerified,
+    bool? gameActive,
     String? phone,
     String? photoURL,
     String? dataRegistrazione,
@@ -166,6 +172,7 @@ class AuthUser extends Equatable {
     return AuthUser(
       uid: uid ?? this.uid,
       email: email ?? this.email,
+      gameActive: gameActive ?? this.gameActive,
       password: password ?? this.password,
       name: name ?? this.name,
       nickname: nickname ?? this.nickname,

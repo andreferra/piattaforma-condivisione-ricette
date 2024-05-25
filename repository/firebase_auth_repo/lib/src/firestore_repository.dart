@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:condivisionericette/model/Gaming.dart';
 import 'package:firebase_auth_repo/auth_repo.dart';
 import 'package:firebase_auth_repo/src/storage_respository.dart';
 
@@ -785,6 +786,21 @@ class FirebaseRepository {
           });
         },
       );
+    } on FirebaseException catch (e) {
+      return Future.error(UpdateProfileFailure(e.code));
+    } catch (e) {
+      return Future.error(UpdateProfileFailure(e.toString()));
+    }
+  }
+
+  Future<String> addGamingToUser(String userId, Gaming gaming) {
+    try {
+      return _firestore.collection('users').doc(userId).update({
+        'gaming': gaming.toMap(),
+        'gameActive': true,
+      }).then((value) {
+        return 'ok';
+      });
     } on FirebaseException catch (e) {
       return Future.error(UpdateProfileFailure(e.code));
     } catch (e) {
