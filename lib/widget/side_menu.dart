@@ -1,8 +1,8 @@
 import 'package:condivisionericette/controller/PageController.dart';
+import 'package:condivisionericette/controller/auth_controller/auth_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-
 
 class SideMenu extends ConsumerWidget {
   const SideMenu({super.key});
@@ -10,6 +10,8 @@ class SideMenu extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final pageController = ref.watch(pageControllerProvider);
+
+    final user = ref.watch(authProvider).user;
 
     return Drawer(
       child: ListView(
@@ -28,6 +30,7 @@ class SideMenu extends ConsumerWidget {
             onTap: () {
               pageController.setPage(0);
             },
+            hasNotification: false,
             icon: 'assets/icons/menu_dashboard.svg',
           ),
           DrawerListTile(
@@ -35,6 +38,7 @@ class SideMenu extends ConsumerWidget {
             onTap: () {
               pageController.setPage(1);
             },
+            hasNotification: false,
             icon: 'assets/icons/menu_recipes.svg',
           ),
           DrawerListTile(
@@ -43,20 +47,24 @@ class SideMenu extends ConsumerWidget {
               pageController.setPage(6);
             },
             icon: 'assets/icons/messaggi_dashboard.svg',
+            hasNotification: false,
           ),
-
-          DrawerListTile(
-            title: 'Notifiche',
-            onTap: () {
-              pageController.setPage(2);
-            },
-            icon: 'assets/icons/menu_notification.svg',
-          ),
+          user.notification!
+              ? DrawerListTile(
+                  title: 'Notifiche',
+                  onTap: () {
+                    pageController.setPage(2);
+                  },
+                  icon: 'assets/icons/menu_notification.svg',
+                  hasNotification: user.newNotifiche!,
+                )
+              : Container(),
           DrawerListTile(
             title: 'Profilo',
             onTap: () {
               pageController.setPage(3);
             },
+            hasNotification: false,
             icon: 'assets/icons/menu_profile.svg',
           ),
           DrawerListTile(
@@ -64,6 +72,7 @@ class SideMenu extends ConsumerWidget {
             onTap: () {
               pageController.setPage(4);
             },
+            hasNotification: false,
             icon: 'assets/icons/menu_setting.svg',
           ),
         ],
@@ -78,10 +87,12 @@ class DrawerListTile extends StatelessWidget {
     required this.title,
     required this.onTap,
     required this.icon,
+    required this.hasNotification,
   });
 
   final String title, icon;
   final VoidCallback onTap;
+  final bool hasNotification;
 
   @override
   Widget build(BuildContext context) {
@@ -90,12 +101,15 @@ class DrawerListTile extends StatelessWidget {
       horizontalTitleGap: 0.0,
       leading: SvgPicture.asset(
         icon,
-        colorFilter: const ColorFilter.mode(Colors.white54, BlendMode.srcIn),
+        colorFilter: ColorFilter.mode(
+            hasNotification ? Colors.blueAccent : Colors.white54,
+            BlendMode.srcIn),
         height: 16,
       ),
       title: Text(
         title,
-        style: const TextStyle(color: Colors.white54),
+        style: TextStyle(
+            color: hasNotification ? Colors.blueAccent : Colors.white54),
       ),
     );
   }

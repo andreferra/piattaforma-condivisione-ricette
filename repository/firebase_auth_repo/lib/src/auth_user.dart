@@ -21,6 +21,7 @@ class AuthUser extends Equatable {
   final List<String>? following;
   final int? posts;
   final List<String>? listaNotifiche;
+  final bool? newNotifiche;
 
   const AuthUser({
     required this.uid,
@@ -43,6 +44,7 @@ class AuthUser extends Equatable {
     this.follower,
     this.following,
     this.posts,
+    this.newNotifiche,
   });
 
   static const empty = AuthUser(uid: '');
@@ -71,6 +73,7 @@ class AuthUser extends Equatable {
         following,
         listaNotifiche,
         posts,
+        newNotifiche,
       ];
 
   factory AuthUser.fromDocument(Map<String, dynamic> data) {
@@ -82,6 +85,7 @@ class AuthUser extends Equatable {
       nickname: data['nickname'],
       emailVerified: data['emailVerified'],
       phone: data['phone'],
+      newNotifiche: data['newNotifiche'],
       photoURL: data['photoURL'],
       dataRegistrazione: data['dataRegistrazione'],
       dataUltimoAccesso: data['dataUltimoAccesso'],
@@ -115,6 +119,7 @@ class AuthUser extends Equatable {
       'uid': uid,
       'email': email,
       'password': password,
+      'newNotifiche': newNotifiche,
       'name': name,
       'nickname': nickname,
       'emailVerified': emailVerified,
@@ -147,6 +152,7 @@ class AuthUser extends Equatable {
     String? dataRegistrazione,
     String? dataUltimoAccesso,
     bool? isLogged,
+    bool? newNotifiche,
     List<String>? prefAlimentari,
     List<String>? allergie,
     List<String>? interessiCulinari,
@@ -168,6 +174,7 @@ class AuthUser extends Equatable {
       photoURL: photoURL ?? this.photoURL,
       dataRegistrazione: dataRegistrazione ?? this.dataRegistrazione,
       dataUltimoAccesso: dataUltimoAccesso ?? this.dataUltimoAccesso,
+      newNotifiche: newNotifiche ?? this.newNotifiche,
       isLogged: isLogged ?? this.isLogged,
       prefAlimentari: prefAlimentari ?? this.prefAlimentari,
       allergie: allergie ?? this.allergie,

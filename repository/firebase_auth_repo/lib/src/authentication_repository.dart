@@ -53,6 +53,7 @@ class AuthenticationRepository {
         interessiCulinari: const [],
         notification: true,
         follower: const [],
+        newNotifiche: false,
         following: const [],
         posts: 0,
         listaNotifiche: const [],
