@@ -1,10 +1,9 @@
 // Package imports:
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:equatable/equatable.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-
 // Project imports:
 import 'package:condivisionericette/model/Filter.dart';
+import 'package:equatable/equatable.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 part 'search_state.dart';
 
@@ -57,6 +56,22 @@ class SearchController extends StateNotifier<SearchState> {
 
     if (state.dropDownValue == SearchType.recipes) {
       _handlerDifficolta();
+    }
+  }
+
+  ///funzione per filtrare le ricette in base al numero di stelle
+  void _handlerNumeroDiStelle() {
+    if (state.numeroStelle != NumeroStelle.tutte) {
+      List<DocumentSnapshot> filtered = [];
+      for (var recipe in state.recipes!) {
+        if (recipe[''] == state.difficolta.toString().split('.').last) {
+          filtered.add(recipe);
+        }
+      }
+      state = state.copyWith(
+          results: filtered.isNotEmpty ? filtered : state.recipes);
+    } else {
+      state = state.copyWith(results: state.recipes);
     }
   }
 

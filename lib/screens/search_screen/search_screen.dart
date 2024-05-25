@@ -1,9 +1,4 @@
 // Flutter imports:
-import 'package:flutter/material.dart';
-
-// Package imports:
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-
 // Project imports:
 import 'package:condivisionericette/controller/auth_controller/auth_controller.dart';
 import 'package:condivisionericette/screens/public_profile/public_profile_screen.dart';
@@ -14,6 +9,10 @@ import 'package:condivisionericette/widget/dropDown/DropDownFilter.dart';
 import 'package:condivisionericette/widget/dropDown/DropDownMenu.dart';
 import 'package:condivisionericette/widget/recipe_card.dart';
 import 'package:condivisionericette/widget/text_input_field.dart';
+import 'package:flutter/material.dart';
+// Package imports:
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import 'controller/search_controller.dart';
 
 class SearchScreen extends ConsumerWidget {
@@ -223,6 +222,9 @@ class SearchScreen extends ConsumerWidget {
                                             result[index]),
                                         isMine: result[index].id == user.uid,
                                         mioId: user.uid,
+                                        mediaRecensioni: result[index]
+                                                ['media_stelle']
+                                            .toDouble(),
                                       );
                                     }));
                                   }
