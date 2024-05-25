@@ -14,7 +14,11 @@ class NotificationHeader extends ConsumerWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        ElevatedButton(onPressed: () {}, child: const Text('Segna come lette')),
+        ElevatedButton(
+            onPressed: () {
+              firebaseRepository.setAllNotificationRead(user.uid);
+            },
+            child: const Text('Segna come lette')),
         const SizedBox(width: 10),
         ElevatedButton(
           onPressed: () async {

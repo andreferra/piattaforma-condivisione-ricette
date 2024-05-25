@@ -672,7 +672,10 @@ class FirebaseRepository {
   }
 
   Stream<DocumentSnapshot<Object?>>? streamUser(String message) {
-    return _firestore.collection('users').doc(message).snapshots();
+    return _firestore
+        .collection('users')
+        .doc(message)
+        .snapshots(includeMetadataChanges: true);
   }
 
   Future<String> deleteAllNotification(String uid) {
@@ -734,6 +737,25 @@ class FirebaseRepository {
       await _firestore.collection('users').doc(userId).update({
         'listaNotifiche': FieldValue.arrayUnion([notification]),
         'newNotifiche': true,
+      });
+    } on FirebaseException catch (e) {
+      return Future.error(NotificationFailure(e.code));
+    } catch (e) {
+      return Future.error(NotificationFailure(e.toString()));
+    }
+  }
+
+  Future<void> setAllNotificationRead(String userId) async {
+    try {
+      await _firestore.collection('users').doc(userId).get().then((value) {
+        List<dynamic> notifications = value.data()!['listaNotifiche'];
+        for (var i = 0; i < notifications.length; i++) {
+          notifications[i]['isRead'] = true;
+        }
+        _firestore.collection('users').doc(userId).update({
+          'listaNotifiche': notifications,
+          'newNotifiche': false,
+        });
       });
     } on FirebaseException catch (e) {
       return Future.error(NotificationFailure(e.code));

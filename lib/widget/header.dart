@@ -35,7 +35,7 @@ class Header extends ConsumerWidget {
           IconButton(
             icon: const Icon(Icons.menu),
             onPressed: () {
-              ref.read(menuAppControllerProvider.notifier).openDrawer;
+              ref.read(menuAppControllerProvider.notifier).openDrawer();
             },
           ),
         if (!Responsive.isMobile(context))
