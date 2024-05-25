@@ -65,7 +65,7 @@ class RecipesList extends ConsumerWidget {
                                       document['numero_visualizzazioni'] + 1,
                                   mioId: user.uid,
                                   mediaRecensioni:
-                                      document['media_stelle'].toDouble(),
+                                      document['media_recensioni'].toDouble(),
                                   isMine: isMine,
                                   recipesState:
                                       RecipesState.fromSnapshot(document))));

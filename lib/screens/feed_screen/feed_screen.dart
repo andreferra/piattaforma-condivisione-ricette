@@ -72,7 +72,8 @@ class FeedScreen extends ConsumerWidget {
                                 Navigator.of(context).push(MaterialPageRoute(
                                     builder: (context) => ViewRecipeScreen(
                                         mediaRecensioni:
-                                            document['media_stelle'].toDouble(),
+                                            document['media_recensioni']
+                                                .toDouble(),
                                         visualizzazioni:
                                             document['numero_visualizzazioni'] +
                                                 1,

@@ -63,7 +63,8 @@ class RecipesScreen extends ConsumerWidget {
                                         isMine: true,
                                         mioId: userId,
                                         mediaRecensioni:
-                                            document["media_stelle"].toDouble(),
+                                            document["media_recensioni"]
+                                                .toDouble(),
                                         recipesState: RecipesState.fromSnapshot(
                                             document))));
                               },

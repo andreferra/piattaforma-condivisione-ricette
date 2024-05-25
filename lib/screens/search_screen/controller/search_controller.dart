@@ -79,7 +79,7 @@ class SearchController extends StateNotifier<SearchState> {
     if (state.numeroStelle != NumeroStelle.tutte) {
       List<DocumentSnapshot> filtered = [];
       for (var recipe in state.recipes!) {
-        if (recipe['media_stelle'].toString().split('.').first ==
+        if (recipe['media_recensioni'].toString().split('.').first ==
             stelle[state.numeroStelle.toString().split('.').last]!.toString()) {
           filtered.add(recipe);
         }

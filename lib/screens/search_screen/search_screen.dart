@@ -264,7 +264,7 @@ class SearchScreen extends ConsumerWidget {
                                         isMine: result[index].id == user.uid,
                                         mioId: user.uid,
                                         mediaRecensioni: result[index]
-                                                ['media_stelle']
+                                                ['media_recensioni']
                                             .toDouble(),
                                       );
                                     }));

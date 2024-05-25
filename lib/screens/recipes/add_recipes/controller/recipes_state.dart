@@ -21,7 +21,6 @@ class RecipesState extends Equatable {
   final String? allergia;
   final String? misura;
   final String? quantita;
-  final double? mediaStelle;
 
   //step
   final List<Uint8List> immagini;
@@ -48,7 +47,6 @@ class RecipesState extends Equatable {
     this.tag = const [],
     this.passaggi = const [],
     this.allergie = const [],
-    this.mediaStelle = 0.0,
     this.ingrediente,
     this.tagSingolo,
     this.passaggio,
@@ -73,7 +71,6 @@ class RecipesState extends Equatable {
     int? tempoPreparazione,
     int? porzioni,
     String? difficolta,
-    double? mediaStelle,
     List<Uint8List>? immagini,
     List<String>? ingredienti,
     List<String>? tag,
@@ -100,7 +97,6 @@ class RecipesState extends Equatable {
       recipeID: recipeID ?? this.recipeID,
       nomePiatto: nomePiatto ?? this.nomePiatto,
       descrizione: descrizione ?? this.descrizione,
-      mediaStelle: mediaStelle ?? this.mediaStelle,
       tempoPreparazione: tempoPreparazione ?? this.tempoPreparazione,
       porzioni: porzioni ?? this.porzioni,
       difficolta: difficolta ?? this.difficolta,
@@ -144,7 +140,6 @@ class RecipesState extends Equatable {
       userID: document["user_id"],
       recipeID: document["uid"],
       nomePiatto: document["nome_piatto"],
-      mediaStelle: document["media_stelle"] ?? 0.0,
       descrizione: document["descrizione"],
       dataCreazione: document["data_creazione"],
       tempoPreparazione: document["tempo_preparazione"],
@@ -174,7 +169,6 @@ class RecipesState extends Equatable {
         recipeID,
         descrizione,
         tempoPreparazione,
-        mediaStelle,
         porzioni,
         difficolta,
         immagini,
