@@ -1,6 +1,12 @@
 // Flutter imports:
+
+// Flutter imports:
+import 'package:flutter/material.dart';
+
 // Package imports:
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 // Project imports:
 import 'package:condivisionericette/controller/auth_controller/auth_controller.dart';
 import 'package:condivisionericette/controller/auth_repo_provider.dart';
@@ -8,8 +14,6 @@ import 'package:condivisionericette/screens/recipes/add_recipes/controller/recip
 import 'package:condivisionericette/screens/recipes/view_screen/view_recipe_screen.dart';
 import 'package:condivisionericette/utils/constant.dart';
 import 'package:condivisionericette/widget/recipe_card.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class RecipesList extends ConsumerWidget {
   final String userId;

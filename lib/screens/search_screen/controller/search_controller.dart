@@ -1,9 +1,10 @@
 // Package imports:
 import 'package:cloud_firestore/cloud_firestore.dart';
-// Project imports:
-import 'package:condivisionericette/model/Filter.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+// Project imports:
+import 'package:condivisionericette/model/Filter.dart';
 
 part 'search_state.dart';
 

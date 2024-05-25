@@ -1,0 +1,5 @@
+#!/bin/bash -e
+
+# This script is used to sort the files in the project
+
+flutter pub run import_sorter:main
