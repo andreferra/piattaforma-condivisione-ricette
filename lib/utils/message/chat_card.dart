@@ -12,6 +12,8 @@ class ChatCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    List<String> _messaggio = [ultimoMex.message, "Foto", "Ricetta", "Utente"];
+
     return StreamBuilder(
         stream: FirebaseFirestore.instance
             .collection("users")
@@ -73,9 +75,7 @@ class ChatCard extends StatelessWidget {
                       ),
                       const SizedBox(height: 5),
                       Text(
-                        ultimoMex.type == MessageType.text
-                            ? ultimoMex.message
-                            : 'Foto',
+                        _messaggio[ultimoMex.type.index],
                         style: const TextStyle(
                           fontSize: 15,
                           color: Colors.grey,

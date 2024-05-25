@@ -1,12 +1,12 @@
-import 'dart:js_interop';
-
+import 'package:condivisionericette/model/Message.dart';
 import 'package:condivisionericette/screens/message_screen/singleChat/single_chat.dart';
 import 'package:condivisionericette/screens/public_profile/components/recipes_list.dart';
 import 'package:condivisionericette/screens/public_profile/components/top_section.dart';
 import 'package:condivisionericette/screens/public_profile/components/user_info.dart';
 import 'package:firebase_auth_repo/auth_repo.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
+
+import '../../widget/share/share_screen.dart';
 
 class PublicProfile extends StatefulWidget {
   final String userID;
@@ -237,10 +237,26 @@ class _PublicProfileState extends State<PublicProfile> {
                                       ? const Icon(Icons.notifications_active)
                                       : const Icon(Icons.notifications_off),
                                 ),
+                              const SizedBox(width: 16.0),
+                              FloatingActionButton(
+                                onPressed: () {
+                                  Navigator.of(context)
+                                      .pushReplacement(MaterialPageRoute(
+                                          builder: (context) => ShareScreen(
+                                                widget.mioId,
+                                                widget.userID,
+                                                MessageType.user,
+                                              )));
+                                },
+                                backgroundColor: Colors.green,
+                                child: const Icon(Icons.share),
+                              ),
                             ],
                           ),
                         const SizedBox(height: 16),
-                        ProfileInfoRow(items)
+                        Expanded(
+                          child: ProfileInfoRow(items),
+                        )
                       ],
                     ),
                   ),

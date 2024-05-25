@@ -230,6 +230,14 @@ class SearchScreen extends ConsumerWidget {
                                           nickname: result[index]['nickname'],
                                           photoURL: result[index]['photoURL'],
                                           userID: result[index].id,
+                                          function: () {
+                                            Navigator.push(context,
+                                                MaterialPageRoute(
+                                                    builder: (context) {
+                                              return PublicProfile(
+                                                  result[index].id, user.uid);
+                                            }));
+                                          },
                                         ),
                                       )
                                     : Padding(
