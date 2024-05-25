@@ -51,6 +51,14 @@ class SearchController extends StateNotifier<SearchState> {
     state = state.copyWith(results: results);
   }
 
+  void setNumeroStelleSelected(NumeroStelle value) {
+    state = state.copyWith(numeroStelle: value);
+
+    if (state.dropDownValue == SearchType.recipes) {
+      _handlerNumeroDiStelle();
+    }
+  }
+
   void setDifficolta(Difficolta difficolta) {
     state = state.copyWith(difficolta: difficolta);
 
@@ -61,10 +69,18 @@ class SearchController extends StateNotifier<SearchState> {
 
   ///funzione per filtrare le ricette in base al numero di stelle
   void _handlerNumeroDiStelle() {
+    Map<String, int> stelle = {
+      'uno': 1,
+      'due': 2,
+      'tre': 3,
+      'quattro': 4,
+      'cinque': 5,
+    };
     if (state.numeroStelle != NumeroStelle.tutte) {
       List<DocumentSnapshot> filtered = [];
       for (var recipe in state.recipes!) {
-        if (recipe[''] == state.difficolta.toString().split('.').last) {
+        if (recipe['media_stelle'].toString().split('.').first ==
+            stelle[state.numeroStelle.toString().split('.').last]!.toString()) {
           filtered.add(recipe);
         }
       }

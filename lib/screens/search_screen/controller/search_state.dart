@@ -34,7 +34,7 @@ class SearchState extends Equatable {
     this.dropDownValue = SearchType.all,
     this.difficolta = Difficolta.tutte,
     this.filter,
-    this.numeroStelle,
+    this.numeroStelle = NumeroStelle.tutte,
     this.numeroStelleSelected,
     this.alimentiSelected,
   });
