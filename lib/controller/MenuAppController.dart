@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-final menuAppControllerProvider = ChangeNotifierProvider<MenuAppController>((ref) {
+final menuAppControllerProvider =
+    ChangeNotifierProvider<MenuAppController>((ref) {
   return MenuAppController();
 });
 
@@ -15,6 +16,4 @@ class MenuAppController extends ChangeNotifier {
       _scaffoldKey.currentState!.openDrawer();
     }
   }
-
-
 }

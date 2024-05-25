@@ -2,6 +2,7 @@ import 'dart:typed_data';
 
 import 'package:condivisionericette/controller/PageController.dart';
 import 'package:condivisionericette/controller/auth_controller/auth_controller.dart';
+import 'package:condivisionericette/model/Notification.dart';
 import 'package:condivisionericette/screens/recipes/add_recipes/controller/recipes_controller.dart';
 import 'package:condivisionericette/utils/constant.dart';
 import 'package:condivisionericette/widget/button/animated_button.dart';
@@ -10,6 +11,7 @@ import 'package:condivisionericette/widget/text_input_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:uuid/uuid.dart';
 
 class ReceptsStep extends ConsumerWidget {
   const ReceptsStep({super.key});
@@ -32,7 +34,6 @@ class ReceptsStep extends ConsumerWidget {
           padding: const EdgeInsets.all(defaultPadding * 2),
           child: Row(
             children: [
-              //immagine dello step
               InkWell(
                 onTap: () async {
                   final image = await ImagePicker()
@@ -165,6 +166,29 @@ class ReceptsStep extends ConsumerWidget {
             child: AnimatedButton(
                 onTap: () async {
                   try {
+                    List<Map<String, dynamic>> notificheDaInviare = [];
+                    if (user.follower!.isNotEmpty) {
+                      for (var utenti in user.follower!) {
+                        NotificationModel notification = NotificationModel(
+                          notificationId: const Uuid().v4(),
+                          title: "Nuova ricetta",
+                          body:
+                              "${user.nickname} ha pubblicato una nuova ricetta 🍽️",
+                          type: NotificationType.newRecipe,
+                          read: false,
+                          extraData: "",
+                          date: DateTime.now().toString(),
+                          userSender: user.uid,
+                          userReceiver: utenti,
+                        );
+
+                        notificheDaInviare.add(notification.toMap());
+                      }
+                    }
+
+                    await recipesController.addMultiNotification(
+                        notificheDaInviare, user.follower!);
+
                     String res = await recipesController.addRecipes(user);
                     if (res == "ok") {
                       SnackBar snackBar = const SnackBar(
@@ -174,7 +198,7 @@ class ReceptsStep extends ConsumerWidget {
                       );
                       ScaffoldMessenger.of(context).showSnackBar(snackBar);
                       pageController.setPage(1);
-                    } else if(res == "error"){
+                    } else if (res == "error") {
                       SnackBar snackBar = const SnackBar(
                         content: Text(
                             "Errore durante la pubblicazione della ricetta"),

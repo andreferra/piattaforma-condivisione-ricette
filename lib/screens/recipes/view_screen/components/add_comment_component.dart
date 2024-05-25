@@ -1,4 +1,5 @@
 import 'package:condivisionericette/controller/auth_controller/auth_controller.dart';
+import 'package:condivisionericette/model/Notification.dart';
 import 'package:condivisionericette/screens/recipes/add_recipes/controller/recipes_controller.dart';
 import 'package:condivisionericette/screens/recipes/view_screen/controller/recipe_interaction_controller.dart';
 import 'package:condivisionericette/utils/constant.dart';
@@ -8,8 +9,10 @@ import 'package:condivisionericette/widget/button/animated_button.dart';
 import 'package:condivisionericette/widget/button/rounded_button_style.dart';
 import 'package:condivisionericette/widget/loading_errors.dart';
 import 'package:condivisionericette/widget/text_input_field.dart';
+import 'package:firebase_auth_repo/auth_repo.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:uuid/uuid.dart';
 
 class AddCommentComponent extends ConsumerWidget {
   final RecipesState recipesState;
@@ -24,6 +27,7 @@ class AddCommentComponent extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final FirebaseRepository firebaseRepository = FirebaseRepository();
     ref.listen<RecipeInteraction>(recipeInteractionProvider,
         (previus, current) {
       if (current.uploadComment == UploadComment.loading) {
@@ -65,10 +69,47 @@ class AddCommentComponent extends ConsumerWidget {
                 String res = "error";
 
                 if (subComment) {
+                  if (user.uid != recipesState.userID) {
+                    NotificationModel notification = NotificationModel(
+                      notificationId: const Uuid().v4(),
+                      title: "Hai ricevuto una risposta",
+                      body: "Hai ricevuto una risposta al tuo commento",
+                      userSender: user.uid,
+                      userReceiver: recipesState.userID,
+                      extraData: "Risposta al commento",
+                      date: DateTime.now().toString(),
+                      read: false,
+                      type: NotificationType.newComment,
+                    );
+
+                    await firebaseRepository.addNotificationToUser(
+                      recipesState.userID!,
+                      notification.toMap(),
+                    );
+                  }
+
                   res = await recipeInteractionController
                       .addOnReply(recipesState.recipeID!);
                   return;
                 } else if (!subComment) {
+                  if (recipesState.userID != user.uid) {
+                    NotificationModel notification = NotificationModel(
+                      notificationId: const Uuid().v4(),
+                      title: "Hai ricevuto un commento",
+                      body: "Hai ricevuto un commento sulla tua ricetta",
+                      userSender: user.uid,
+                      userReceiver: recipesState.userID,
+                      extraData: "Commento",
+                      date: DateTime.now().toString(),
+                      read: false,
+                      type: NotificationType.newComment,
+                    );
+
+                    await firebaseRepository.addNotificationToUser(
+                      recipesState.userID!,
+                      notification.toMap(),
+                    );
+                  }
                   res = await recipeInteractionController
                       .onCommentSubmitted(recipesState.recipeID!);
                 }

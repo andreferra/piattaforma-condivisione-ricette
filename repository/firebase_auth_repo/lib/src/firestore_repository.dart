@@ -16,6 +16,12 @@ class AddRecipesFailure implements Exception {
   const AddRecipesFailure(this.code);
 }
 
+class NotificationFailure implements Exception {
+  final String code;
+
+  const NotificationFailure(this.code);
+}
+
 class UpdateVisualizationsFailure implements Exception {
   final String code;
 
@@ -275,10 +281,12 @@ class FirebaseRepository {
   }
 
   /// Follow a user
-  Future<String> followUser(String user1, String user2) async {
+  Future<String> followUser(String user1, String user2, notification) async {
     try {
       await _firestore.collection('users').doc(user2).update({
-        'follower': FieldValue.arrayUnion([user1])
+        'follower': FieldValue.arrayUnion([user1]),
+        'listaNotifiche': FieldValue.arrayUnion([notification]),
+        'newNotifiche': true,
       });
       await _firestore.collection('users').doc(user1).update({
         'following': FieldValue.arrayUnion([user2])
@@ -363,8 +371,8 @@ class FirebaseRepository {
   }
 
   /// Send a message
-  Future<String> sendMessage(
-      message, String id, String mioID, String type, Uint8List file) async {
+  Future<String> sendMessage(message, String id, String mioID, String type,
+      Uint8List file, notification) async {
     try {
       switch (type) {
         case 'text':
@@ -470,6 +478,11 @@ class FirebaseRepository {
           return 'error';
       }
 
+      await _firestore.collection('users').doc(id).update({
+        'listaNotifiche': FieldValue.arrayUnion([notification]),
+        'newNotifiche': true,
+      });
+
       return 'ok';
     } on FirebaseException catch (e) {
       return Future.error(UpdateProfileFailure(e.code));
@@ -530,18 +543,34 @@ class FirebaseRepository {
 
   /// Update like number and add user id to like list
   /// [isLike] = true if the user liked the recipe, false if the user unliked the recipe
-  Future<String> updateLike(String recipeId, String userId, bool isLike) async {
+  Future<String> updateLike(String recipeId, String userId, bool isLike,
+      notification, String notificationAddId) async {
     try {
       String res = 'error';
-      await _firestore.collection('recipes').doc(recipeId).update({
-        'numero_like':
-            !isLike ? FieldValue.increment(1) : FieldValue.increment(-1),
-        'like': !isLike
-            ? FieldValue.arrayUnion([userId])
-            : FieldValue.arrayRemove([userId]),
-      }).then((value) {
-        res = isLike ? 'unlike' : 'like';
-      });
+      Map<Object, Object> isLiked = {
+        'numero_like': FieldValue.increment(1),
+        'like': FieldValue.arrayUnion([userId]),
+      };
+
+      Map<Object, Object> isUnliked = {
+        'numero_like': FieldValue.increment(-1),
+        'like': FieldValue.arrayRemove([userId]),
+      };
+      await _firestore
+          .collection('recipes')
+          .doc(recipeId)
+          .update(!isLike ? isLiked : isUnliked)
+          .then(
+        (_) async {
+          if (!isLike) {
+            await _firestore.collection('users').doc(notificationAddId).update({
+              'listaNotifiche': FieldValue.arrayUnion([notification]),
+              'newNotifiche': true,
+            });
+          }
+          res = isLike ? 'unlike' : 'like';
+        },
+      );
       return res;
     } on FirebaseException catch (e) {
       return Future.error(UpdateProfileFailure(e.code));
@@ -643,6 +672,95 @@ class FirebaseRepository {
   }
 
   Stream<DocumentSnapshot<Object?>>? streamUser(String message) {
-    return _firestore.collection('users').doc(message).snapshots();
+    return _firestore
+        .collection('users')
+        .doc(message)
+        .snapshots(includeMetadataChanges: true);
+  }
+
+  Future<String> deleteAllNotification(String uid) {
+    try {
+      return _firestore.collection('users').doc(uid).update({
+        'listaNotifiche': [],
+        'newNotifiche': false,
+      }).then((value) {
+        return 'ok';
+      });
+    } on FirebaseException catch (e) {
+      return Future.error(UpdateProfileFailure(e.code));
+    } catch (e) {
+      return Future.error(UpdateProfileFailure(e.toString()));
+    }
+  }
+
+  Future<void> updateNotificationRead(
+      String notificationId, String userId, newNotification) async {
+    try {
+      await _firestore.collection('users').doc(userId).get().then((value) {
+        List<dynamic> notifications = value.data()!['listaNotifiche'];
+        int index = notifications.indexWhere(
+            (element) => element['notificationId'] == notificationId);
+        notifications[index] = newNotification;
+        _firestore.collection('users').doc(userId).update({
+          'listaNotifiche': notifications,
+        });
+      });
+    } on FirebaseException catch (e) {
+      return Future.error(NotificationFailure(e.code));
+    } catch (e) {
+      return Future.error(NotificationFailure(e.toString()));
+    }
+  }
+
+  Future<void> deleteNotificationById(
+      String notificationId, String userId) async {
+    try {
+      await _firestore.collection('users').doc(userId).get().then((value) {
+        List<dynamic> notifications = value.data()!['listaNotifiche'];
+        notifications.removeWhere(
+            (element) => element['notificationId'] == notificationId);
+        _firestore.collection('users').doc(userId).update({
+          'listaNotifiche': notifications,
+        });
+      });
+    } on FirebaseException catch (e) {
+      return Future.error(NotificationFailure(e.code));
+    } catch (e) {
+      return Future.error(NotificationFailure(e.toString()));
+    }
+  }
+
+  /// add notification to the user
+  Future<void> addNotificationToUser(
+      String userId, Map<String, dynamic> notification) async {
+    try {
+      await _firestore.collection('users').doc(userId).update({
+        'listaNotifiche': FieldValue.arrayUnion([notification]),
+        'newNotifiche': true,
+      });
+    } on FirebaseException catch (e) {
+      return Future.error(NotificationFailure(e.code));
+    } catch (e) {
+      return Future.error(NotificationFailure(e.toString()));
+    }
+  }
+
+  Future<void> setAllNotificationRead(String userId) async {
+    try {
+      await _firestore.collection('users').doc(userId).get().then((value) {
+        List<dynamic> notifications = value.data()!['listaNotifiche'];
+        for (var i = 0; i < notifications.length; i++) {
+          notifications[i]['isRead'] = true;
+        }
+        _firestore.collection('users').doc(userId).update({
+          'listaNotifiche': notifications,
+          'newNotifiche': false,
+        });
+      });
+    } on FirebaseException catch (e) {
+      return Future.error(NotificationFailure(e.code));
+    } catch (e) {
+      return Future.error(NotificationFailure(e.toString()));
+    }
   }
 }

@@ -2,6 +2,7 @@ import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:condivisionericette/model/Message.dart';
+import 'package:condivisionericette/model/Notification.dart';
 import 'package:condivisionericette/widget/text_input_field.dart';
 import 'package:firebase_auth_repo/auth_repo.dart';
 import 'package:flutter/material.dart';
@@ -43,6 +44,17 @@ class _ChatInputState extends State<ChatInput> {
         id: const Uuid().v4(),
         type: imageFile.isEmpty ? MessageType.text : MessageType.image,
       );
+      NotificationModel notificationModel = NotificationModel(
+        notificationId: const Uuid().v4(),
+        title: "Nuovo messaggio",
+        body: "Hai ricevuto un nuovo messaggio  👀",
+        date: DateTime.now().toString(),
+        userSender: widget.mioId,
+        userReceiver: widget.userId,
+        type: NotificationType.newMessage,
+        extraData: _controller.text,
+        read: false,
+      );
       await _firebaseRepository
           .sendMessage(
         message.toJson(),
@@ -50,15 +62,20 @@ class _ChatInputState extends State<ChatInput> {
         widget.mioId,
         imageFile.isEmpty ? "text" : "image",
         imageFile,
+        notificationModel.toMap(),
       )
-          .then((value) {
-        if (imageFile.isNotEmpty) {
-          setState(() {
-            imageFile = Uint8List(0);
-          });
-        }
-        return "ok";
-      });
+          .then(
+        (value) {
+          if (imageFile.isNotEmpty) {
+            setState(
+              () {
+                imageFile = Uint8List(0);
+              },
+            );
+          }
+          return "ok";
+        },
+      );
       return "error";
     } catch (e) {
       print(e.toString());

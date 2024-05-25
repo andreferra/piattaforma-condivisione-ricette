@@ -2,6 +2,7 @@ import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:condivisionericette/model/Message.dart';
+import 'package:condivisionericette/model/Notification.dart';
 import 'package:condivisionericette/screens/search_screen/components/user_card.dart';
 import 'package:condivisionericette/widget/loading_errors.dart';
 import 'package:firebase_auth_repo/auth_repo.dart';
@@ -74,12 +75,23 @@ class _ShareScreenState extends State<ShareScreen> {
     try {
       Message message = Message(
         senderId: widget.mioId,
-        receiverId: widget.mioId,
+        receiverId: document.id,
         message: widget.shareUid,
         timestamp: Timestamp.now(),
         isRead: false,
         id: const Uuid().v4(),
         type: widget.messageType,
+      );
+      NotificationModel notificationModel = NotificationModel(
+        notificationId: const Uuid().v4(),
+        title: "Nuovo messaggio",
+        body: "Hai ricevuto un nuovo messaggio da ${document['nickname']} 👀",
+        date: DateTime.now().toString(),
+        userSender: widget.mioId,
+        userReceiver: document.id,
+        type: NotificationType.newMessage,
+        extraData: "ricetta o utente condiviso",
+        read: false,
       );
       await _firebaseRepository.sendMessage(
         message.toJson(),
@@ -87,6 +99,7 @@ class _ShareScreenState extends State<ShareScreen> {
         widget.mioId,
         widget.messageType.toString().split('.').last,
         Uint8List(0),
+        notificationModel.toMap(),
       );
       return "ok";
     } catch (e) {

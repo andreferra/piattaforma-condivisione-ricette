@@ -70,7 +70,7 @@ class _ChatBodyState extends State<ChatBody> {
                       widget.user1);
                 case MessageType.recipe:
                   return RecipeCard(
-                    widget.user2,
+                    widget.user1,
                     Message.fromJson(snapshot.data!.docs[0]['messaggi'][index]),
                   );
                 case MessageType.user:

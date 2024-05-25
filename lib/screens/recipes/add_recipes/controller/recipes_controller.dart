@@ -7,7 +7,6 @@ import 'package:condivisionericette/screens/recipes/view_screen/controller/recip
 import 'package:condivisionericette/utils/constant.dart';
 import 'package:equatable/equatable.dart';
 import 'package:firebase_auth_repo/auth_repo.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:uuid/uuid.dart';
 
@@ -160,12 +159,24 @@ class AddRecipesController extends StateNotifier<RecipesState> {
         state,
         const Uuid().v4(),
       );
-     state =  state.copyWith(status: StateRecipes.done);
+      state = state.copyWith(status: StateRecipes.done);
 
       return "ok";
     } catch (e) {
       state = state.copyWith(status: StateRecipes.error);
       return "error";
+    }
+  }
+
+  Future<void> addMultiNotification(
+      List<Map<String, dynamic>> notificheDaInviare, List<String> list) async {
+    try {
+      for (var index = 0; index < list.length; index++) {
+        await _firebaseRepo.addNotificationToUser(
+            list[index], notificheDaInviare[index]);
+      }
+    } catch (e) {
+      print(e);
     }
   }
 }

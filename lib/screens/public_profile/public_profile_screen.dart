@@ -1,10 +1,12 @@
 import 'package:condivisionericette/model/Message.dart';
+import 'package:condivisionericette/model/Notification.dart';
 import 'package:condivisionericette/screens/message_screen/singleChat/single_chat.dart';
 import 'package:condivisionericette/screens/public_profile/components/recipes_list.dart';
 import 'package:condivisionericette/screens/public_profile/components/top_section.dart';
 import 'package:condivisionericette/screens/public_profile/components/user_info.dart';
 import 'package:firebase_auth_repo/auth_repo.dart';
 import 'package:flutter/material.dart';
+import 'package:uuid/uuid.dart';
 
 import '../../widget/share/share_screen.dart';
 
@@ -21,6 +23,7 @@ class PublicProfile extends StatefulWidget {
 class _PublicProfileState extends State<PublicProfile> {
   final FirebaseRepository _firebaseRepository = FirebaseRepository();
   AuthUser user = AuthUser.empty;
+  NotificationModel notification = NotificationModel.empty();
   bool isLoad = false;
   bool loSeguo = false;
   bool notifiche = false;
@@ -72,8 +75,17 @@ class _PublicProfileState extends State<PublicProfile> {
 
   Future<void> _followUser() async {
     try {
+      notification = NotificationModel(
+          notificationId: const Uuid().v4(),
+          title: 'Nuovo Follower',
+          body: 'Hai un nuovo follower 🥳',
+          userSender: widget.mioId,
+          userReceiver: user.uid,
+          type: NotificationType.newFollower,
+          date: DateTime.now().toString(),
+          extraData: "");
       await _firebaseRepository
-          .followUser(widget.mioId, user.uid)
+          .followUser(widget.mioId, user.uid, notification.toMap())
           .then((value) {
         switch (value) {
           case 'ok':
