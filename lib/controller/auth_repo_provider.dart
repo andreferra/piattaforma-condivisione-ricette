@@ -1,5 +1,6 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+// Package imports:
 import 'package:firebase_auth_repo/auth_repo.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 // Provider for the AuthenticationRepository
 // This provider is used to provide an instance of AuthenticationRepository

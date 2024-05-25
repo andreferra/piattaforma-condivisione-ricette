@@ -1,12 +1,18 @@
+// Dart imports:
 import 'dart:typed_data';
 
-import 'package:universal_html/html.dart' as html;
-import 'package:condivisionericette/controller/auth_repo_provider.dart';
+// Flutter imports:
+import 'package:flutter/cupertino.dart';
+
+// Package imports:
 import 'package:equatable/equatable.dart';
 import 'package:firebase_auth_repo/auth_repo.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:form_validation/form_validator.dart';
+import 'package:universal_html/html.dart' as html;
+
+// Project imports:
+import 'package:condivisionericette/controller/auth_repo_provider.dart';
 
 part "profile_state.dart";
 

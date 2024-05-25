@@ -1,3 +1,11 @@
+// Flutter imports:
+import 'package:flutter/material.dart';
+
+// Package imports:
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:form_validation/form_validator.dart';
+
+// Project imports:
 import 'package:condivisionericette/controller/auth_controller/auth_controller.dart';
 import 'package:condivisionericette/screens/profile_screen/components/buttonInfo.dart';
 import 'package:condivisionericette/screens/profile_screen/components/editPrefAlimentari.dart';
@@ -6,9 +14,6 @@ import 'package:condivisionericette/screens/profile_screen/controller/profile_co
 import 'package:condivisionericette/utils/constant.dart';
 import 'package:condivisionericette/widget/header.dart';
 import 'package:condivisionericette/widget/loading_errors.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:form_validation/form_validator.dart';
 
 class ProfileScreen extends ConsumerWidget {
   const ProfileScreen({super.key});

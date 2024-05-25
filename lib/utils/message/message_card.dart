@@ -1,5 +1,8 @@
-import 'package:condivisionericette/model/Message.dart';
+// Flutter imports:
 import 'package:flutter/material.dart';
+
+// Project imports:
+import 'package:condivisionericette/model/Message.dart';
 
 class MessageCard extends StatelessWidget {
   final String mioId;

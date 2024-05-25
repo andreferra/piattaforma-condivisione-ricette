@@ -1,6 +1,11 @@
-import 'package:condivisionericette/screens/setting_screen/controller/setting_controller.dart';
+// Flutter imports:
 import 'package:flutter/material.dart';
+
+// Package imports:
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+// Project imports:
+import 'package:condivisionericette/screens/setting_screen/controller/setting_controller.dart';
 
 class NotificationSetting extends ConsumerWidget {
   final bool valoreIniziale;

@@ -1,8 +1,13 @@
-import 'package:condivisionericette/controller/PageController.dart';
-import 'package:condivisionericette/controller/auth_controller/auth_controller.dart';
+// Flutter imports:
 import 'package:flutter/material.dart';
+
+// Package imports:
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+
+// Project imports:
+import 'package:condivisionericette/controller/PageController.dart';
+import 'package:condivisionericette/controller/auth_controller/auth_controller.dart';
 
 class SideMenu extends ConsumerWidget {
   const SideMenu({super.key});

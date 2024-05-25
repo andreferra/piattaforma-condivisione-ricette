@@ -1,7 +1,12 @@
+// Flutter imports:
+import 'package:flutter/material.dart';
+
+// Package imports:
 import 'package:cloud_firestore/cloud_firestore.dart';
+
+// Project imports:
 import 'package:condivisionericette/model/Message.dart';
 import 'package:condivisionericette/utils/constant.dart';
-import 'package:flutter/material.dart';
 
 class ChatCard extends StatelessWidget {
   final String mioID;

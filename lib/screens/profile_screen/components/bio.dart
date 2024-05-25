@@ -1,8 +1,13 @@
-import 'package:condivisionericette/screens/profile_screen/controller/profile_controller.dart';
-import 'package:condivisionericette/widget/text_input_field.dart';
+// Flutter imports:
 import 'package:flutter/material.dart';
+
+// Package imports:
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:form_validation/form_validator.dart';
+
+// Project imports:
+import 'package:condivisionericette/screens/profile_screen/controller/profile_controller.dart';
+import 'package:condivisionericette/widget/text_input_field.dart';
 
 class BioField extends ConsumerWidget {
   const BioField({super.key, required this.valoreIniziale});

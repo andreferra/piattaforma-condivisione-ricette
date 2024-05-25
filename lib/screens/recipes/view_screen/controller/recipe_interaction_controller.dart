@@ -1,12 +1,16 @@
+// Dart imports:
 import 'dart:typed_data';
 
+// Package imports:
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:condivisionericette/controller/auth_repo_provider.dart';
-import 'package:condivisionericette/model/Comment.dart';
 import 'package:equatable/equatable.dart';
 import 'package:firebase_auth_repo/auth_repo.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:uuid/uuid.dart';
+
+// Project imports:
+import 'package:condivisionericette/controller/auth_repo_provider.dart';
+import 'package:condivisionericette/model/Comment.dart';
 
 part 'recipe_interaction_state.dart';
 

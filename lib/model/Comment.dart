@@ -1,5 +1,7 @@
+// Dart imports:
 import 'dart:typed_data';
 
+// Package imports:
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Comment {

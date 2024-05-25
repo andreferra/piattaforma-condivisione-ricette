@@ -1,16 +1,21 @@
-import 'package:condivisionericette/screens/authentication/signup_screen/components/password.dart';
+// Flutter imports:
+import 'package:flutter/material.dart';
+
+// Package imports:
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:form_validation/form_validator.dart';
+
+// Project imports:
 import 'package:condivisionericette/screens/authentication/login_screen/login_screen.dart';
 import 'package:condivisionericette/screens/authentication/signup_screen/components/button.dart';
 import 'package:condivisionericette/screens/authentication/signup_screen/components/email.dart';
 import 'package:condivisionericette/screens/authentication/signup_screen/components/name.dart';
 import 'package:condivisionericette/screens/authentication/signup_screen/components/nickname.dart';
+import 'package:condivisionericette/screens/authentication/signup_screen/components/password.dart';
 import 'package:condivisionericette/screens/authentication/signup_screen/components/phone.dart';
 import 'package:condivisionericette/screens/authentication/signup_screen/controller/signup_controller.dart';
 import 'package:condivisionericette/utils/utils.dart';
 import 'package:condivisionericette/widget/loading_errors.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:form_validation/form_validator.dart';
 
 class SignUpScreen extends ConsumerWidget {
   const SignUpScreen({super.key});

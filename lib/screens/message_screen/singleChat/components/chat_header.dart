@@ -1,6 +1,11 @@
-import 'package:condivisionericette/screens/public_profile/public_profile_screen.dart';
-import 'package:firebase_auth_repo/auth_repo.dart';
+// Flutter imports:
 import 'package:flutter/material.dart';
+
+// Package imports:
+import 'package:firebase_auth_repo/auth_repo.dart';
+
+// Project imports:
+import 'package:condivisionericette/screens/public_profile/public_profile_screen.dart';
 
 class ChatHeader extends StatefulWidget {
   final AuthUser user;

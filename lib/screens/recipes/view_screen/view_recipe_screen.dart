@@ -1,4 +1,12 @@
+// Flutter imports:
+import 'package:flutter/material.dart';
+
+// Package imports:
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth_repo/auth_repo.dart';
+import 'package:uuid/uuid.dart';
+
+// Project imports:
 import 'package:condivisionericette/model/Comment.dart';
 import 'package:condivisionericette/model/Message.dart';
 import 'package:condivisionericette/model/Notification.dart';
@@ -9,9 +17,6 @@ import 'package:condivisionericette/utils/constant.dart';
 import 'package:condivisionericette/utils/recipes/comment_view_components.dart';
 import 'package:condivisionericette/utils/recipes/step_view_components.dart';
 import 'package:condivisionericette/widget/share/share_screen.dart';
-import 'package:firebase_auth_repo/auth_repo.dart';
-import 'package:flutter/material.dart';
-import 'package:uuid/uuid.dart';
 
 class ViewRecipeScreen extends StatefulWidget {
   final bool isMine;
