@@ -16,6 +16,12 @@ class AddRecipesFailure implements Exception {
   const AddRecipesFailure(this.code);
 }
 
+class NotificationFailure implements Exception {
+  final String code;
+
+  const NotificationFailure(this.code);
+}
+
 class UpdateVisualizationsFailure implements Exception {
   final String code;
 
@@ -275,10 +281,12 @@ class FirebaseRepository {
   }
 
   /// Follow a user
-  Future<String> followUser(String user1, String user2) async {
+  Future<String> followUser(String user1, String user2, notification) async {
     try {
       await _firestore.collection('users').doc(user2).update({
-        'follower': FieldValue.arrayUnion([user1])
+        'follower': FieldValue.arrayUnion([user1]),
+        'listaNotifiche': FieldValue.arrayUnion([notification]),
+        'newNotifiche': true,
       });
       await _firestore.collection('users').doc(user1).update({
         'following': FieldValue.arrayUnion([user2])
@@ -644,5 +652,57 @@ class FirebaseRepository {
 
   Stream<DocumentSnapshot<Object?>>? streamUser(String message) {
     return _firestore.collection('users').doc(message).snapshots();
+  }
+
+  Future<String> deleteAllNotification(String uid) {
+    try {
+      return _firestore.collection('users').doc(uid).update({
+        'listaNotifiche': [],
+        'newNotifiche': false,
+      }).then((value) {
+        return 'ok';
+      });
+    } on FirebaseException catch (e) {
+      return Future.error(UpdateProfileFailure(e.code));
+    } catch (e) {
+      return Future.error(UpdateProfileFailure(e.toString()));
+    }
+  }
+
+  Future<void> updateNotificationRead(
+      String notificationId, String userId, newNotification) async {
+    try {
+      await _firestore.collection('users').doc(userId).get().then((value) {
+        List<dynamic> notifications = value.data()!['listaNotifiche'];
+        int index = notifications.indexWhere(
+            (element) => element['notificationId'] == notificationId);
+        notifications[index] = newNotification;
+        _firestore.collection('users').doc(userId).update({
+          'listaNotifiche': notifications,
+        });
+      });
+    } on FirebaseException catch (e) {
+      return Future.error(NotificationFailure(e.code));
+    } catch (e) {
+      return Future.error(NotificationFailure(e.toString()));
+    }
+  }
+
+  Future<void> deleteNotificationById(
+      String notificationId, String userId) async {
+    try {
+      await _firestore.collection('users').doc(userId).get().then((value) {
+        List<dynamic> notifications = value.data()!['listaNotifiche'];
+        notifications.removeWhere(
+            (element) => element['notificationId'] == notificationId);
+        _firestore.collection('users').doc(userId).update({
+          'listaNotifiche': notifications,
+        });
+      });
+    } on FirebaseException catch (e) {
+      return Future.error(NotificationFailure(e.code));
+    } catch (e) {
+      return Future.error(NotificationFailure(e.toString()));
+    }
   }
 }
