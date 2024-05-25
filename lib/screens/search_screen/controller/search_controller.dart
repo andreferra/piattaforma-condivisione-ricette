@@ -1,10 +1,9 @@
 // Package imports:
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:equatable/equatable.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-
 // Project imports:
 import 'package:condivisionericette/model/Filter.dart';
+import 'package:equatable/equatable.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 part 'search_state.dart';
 
@@ -52,11 +51,43 @@ class SearchController extends StateNotifier<SearchState> {
     state = state.copyWith(results: results);
   }
 
+  void setNumeroStelleSelected(NumeroStelle value) {
+    state = state.copyWith(numeroStelle: value);
+
+    if (state.dropDownValue == SearchType.recipes) {
+      _handlerNumeroDiStelle();
+    }
+  }
+
   void setDifficolta(Difficolta difficolta) {
     state = state.copyWith(difficolta: difficolta);
 
     if (state.dropDownValue == SearchType.recipes) {
       _handlerDifficolta();
+    }
+  }
+
+  ///funzione per filtrare le ricette in base al numero di stelle
+  void _handlerNumeroDiStelle() {
+    Map<String, int> stelle = {
+      'uno': 1,
+      'due': 2,
+      'tre': 3,
+      'quattro': 4,
+      'cinque': 5,
+    };
+    if (state.numeroStelle != NumeroStelle.tutte) {
+      List<DocumentSnapshot> filtered = [];
+      for (var recipe in state.recipes!) {
+        if (recipe['media_recensioni'].toString().split('.').first ==
+            stelle[state.numeroStelle.toString().split('.').last]!.toString()) {
+          filtered.add(recipe);
+        }
+      }
+      state = state.copyWith(
+          results: filtered.isNotEmpty ? filtered : state.recipes);
+    } else {
+      state = state.copyWith(results: state.recipes);
     }
   }
 

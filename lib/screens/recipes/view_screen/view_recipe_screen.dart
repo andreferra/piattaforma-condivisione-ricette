@@ -1,11 +1,6 @@
 // Flutter imports:
-import 'package:flutter/material.dart';
-
 // Package imports:
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth_repo/auth_repo.dart';
-import 'package:uuid/uuid.dart';
-
 // Project imports:
 import 'package:condivisionericette/model/Comment.dart';
 import 'package:condivisionericette/model/Message.dart';
@@ -17,19 +12,25 @@ import 'package:condivisionericette/utils/constant.dart';
 import 'package:condivisionericette/utils/recipes/comment_view_components.dart';
 import 'package:condivisionericette/utils/recipes/step_view_components.dart';
 import 'package:condivisionericette/widget/share/share_screen.dart';
+import 'package:firebase_auth_repo/auth_repo.dart';
+import 'package:flutter/material.dart';
+import 'package:uuid/uuid.dart';
 
 class ViewRecipeScreen extends StatefulWidget {
   final bool isMine;
   final String mioId;
   final RecipesState recipesState;
   final int? visualizzazioni;
+  final int? mediaRecensioni;
 
-  const ViewRecipeScreen(
-      {super.key,
-      required this.recipesState,
-      required this.isMine,
-      required this.mioId,
-      this.visualizzazioni});
+  const ViewRecipeScreen({
+    super.key,
+    required this.recipesState,
+    required this.isMine,
+    required this.mioId,
+    this.visualizzazioni,
+    this.mediaRecensioni,
+  });
 
   @override
   State<ViewRecipeScreen> createState() => _ViewRecipeScreenState();
@@ -364,6 +365,8 @@ class _ViewRecipeScreenState extends State<ViewRecipeScreen> {
                           ],
                         ),
                       ),
+                      Text("Media recensioni: ${widget.mediaRecensioni}",
+                          style: const TextStyle(fontSize: 16)),
                     ],
                   ),
                   spazio,

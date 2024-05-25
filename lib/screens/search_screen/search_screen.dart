@@ -1,9 +1,4 @@
 // Flutter imports:
-import 'package:flutter/material.dart';
-
-// Package imports:
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-
 // Project imports:
 import 'package:condivisionericette/controller/auth_controller/auth_controller.dart';
 import 'package:condivisionericette/screens/public_profile/public_profile_screen.dart';
@@ -14,6 +9,10 @@ import 'package:condivisionericette/widget/dropDown/DropDownFilter.dart';
 import 'package:condivisionericette/widget/dropDown/DropDownMenu.dart';
 import 'package:condivisionericette/widget/recipe_card.dart';
 import 'package:condivisionericette/widget/text_input_field.dart';
+import 'package:flutter/material.dart';
+// Package imports:
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import 'controller/search_controller.dart';
 
 class SearchScreen extends ConsumerWidget {
@@ -34,6 +33,7 @@ class SearchScreen extends ConsumerWidget {
 
     final selectedType = ref.watch(searchControllerProvider).dropDownValue;
     final selectedDifficolta = ref.watch(searchControllerProvider).difficolta;
+    final selectedStar = ref.watch(searchControllerProvider).numeroStelle;
 
     final filter = ref.watch(searchControllerProvider).filter;
 
@@ -132,6 +132,46 @@ class SearchScreen extends ConsumerWidget {
                             }
                           },
                         )),
+                  if (selectedType == SearchType.recipes)
+                    Container(
+                        padding: const EdgeInsets.all(5),
+                        margin: const EdgeInsets.only(left: 10),
+                        decoration: BoxDecoration(
+                            border: Border.all(color: Colors.grey),
+                            borderRadius: BorderRadius.circular(8.0)),
+                        child: DropDown(
+                          underline: Container(),
+                          itemList: const [
+                            '1 stella',
+                            '2 stelle',
+                            '3 stelle',
+                            '4 stelle',
+                            '5 stelle',
+                            'Tutte'
+                          ],
+                          selectOption: selectedStar,
+                          onChange: (value) {
+                            if (value == '1 stella') {
+                              searchController
+                                  .setNumeroStelleSelected(NumeroStelle.uno);
+                            } else if (value == '2 stelle') {
+                              searchController
+                                  .setNumeroStelleSelected(NumeroStelle.due);
+                            } else if (value == '3 stelle') {
+                              searchController
+                                  .setNumeroStelleSelected(NumeroStelle.tre);
+                            } else if (value == '4 stelle') {
+                              searchController.setNumeroStelleSelected(
+                                  NumeroStelle.quattro);
+                            } else if (value == '5 stelle') {
+                              searchController
+                                  .setNumeroStelleSelected(NumeroStelle.cinque);
+                            } else if (value == 'Tutte') {
+                              searchController
+                                  .setNumeroStelleSelected(NumeroStelle.tutte);
+                            }
+                          },
+                        )),
                   if (selectedType == SearchType.recipes &&
                       filter!.tag.isNotEmpty)
                     Container(
@@ -223,6 +263,9 @@ class SearchScreen extends ConsumerWidget {
                                             result[index]),
                                         isMine: result[index].id == user.uid,
                                         mioId: user.uid,
+                                        mediaRecensioni: result[index]
+                                                ['media_recensioni']
+                                            .toDouble(),
                                       );
                                     }));
                                   }

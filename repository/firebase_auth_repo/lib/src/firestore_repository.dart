@@ -763,4 +763,32 @@ class FirebaseRepository {
       return Future.error(NotificationFailure(e.toString()));
     }
   }
+
+  /// Calculate the average rating of a recipe
+  Future<void> calculateAverageRating(String recipeId) async {
+    try {
+      num media = 0;
+      await _firestore.collection('recipes').doc(recipeId).get().then(
+        (value) async {
+          if (value.data()!['numero_commenti'] == 0) {
+            return;
+          }
+          for (var commenti in value.data()!['commenti']) {
+            if (commenti['numeroStelle'] != null) {
+              media = media + commenti['numeroStelle'];
+            }
+          }
+          media = media ~/ value.data()!['numero_commenti'];
+          print(media);
+          await _firestore.collection('recipes').doc(recipeId).update({
+            'media_recensioni': media,
+          });
+        },
+      );
+    } on FirebaseException catch (e) {
+      return Future.error(UpdateProfileFailure(e.code));
+    } catch (e) {
+      return Future.error(UpdateProfileFailure(e.toString()));
+    }
+  }
 }

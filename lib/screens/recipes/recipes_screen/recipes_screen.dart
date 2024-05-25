@@ -1,10 +1,6 @@
 // Flutter imports:
-import 'package:flutter/material.dart';
-
 // Package imports:
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-
 // Project imports:
 import 'package:condivisionericette/controller/PageController.dart';
 import 'package:condivisionericette/controller/auth_controller/auth_controller.dart';
@@ -13,6 +9,8 @@ import 'package:condivisionericette/screens/recipes/view_screen/view_recipe_scre
 import 'package:condivisionericette/utils/constant.dart';
 import 'package:condivisionericette/widget/header.dart';
 import 'package:condivisionericette/widget/recipe_card.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class RecipesScreen extends ConsumerWidget {
   const RecipesScreen({super.key});
@@ -64,6 +62,9 @@ class RecipesScreen extends ConsumerWidget {
                                     builder: (context) => ViewRecipeScreen(
                                         isMine: true,
                                         mioId: userId,
+                                        mediaRecensioni:
+                                            document["media_recensioni"]
+                                                .toDouble(),
                                         recipesState: RecipesState.fromSnapshot(
                                             document))));
                               },

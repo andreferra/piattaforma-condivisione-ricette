@@ -4,6 +4,8 @@ enum SearchType { all, users, recipes }
 
 enum Difficolta { facile, media, difficile, tutte }
 
+enum NumeroStelle { uno, due, tre, quattro, cinque, tutte }
+
 class SearchState extends Equatable {
   final String? searchValue;
   final List<DocumentSnapshot>? users;
@@ -14,8 +16,10 @@ class SearchState extends Equatable {
   final int? tagSelected;
   final int? alimentiSelected;
   final int? allergeniSelected;
+  final int? numeroStelleSelected;
   final SearchType dropDownValue;
   final FiltroRicerca? filter;
+  final NumeroStelle? numeroStelle;
   final Difficolta? difficolta;
 
   const SearchState({
@@ -30,6 +34,8 @@ class SearchState extends Equatable {
     this.dropDownValue = SearchType.all,
     this.difficolta = Difficolta.tutte,
     this.filter,
+    this.numeroStelle = NumeroStelle.tutte,
+    this.numeroStelleSelected,
     this.alimentiSelected,
   });
 
@@ -42,6 +48,8 @@ class SearchState extends Equatable {
     bool? isEmpty,
     int? tagSelected,
     int? allergeniSelected,
+    int? numeroStelleSelected,
+    NumeroStelle? numeroStelle,
     SearchType? dropDownValue,
     FiltroRicerca? filter,
     Difficolta? difficolta,
@@ -54,6 +62,8 @@ class SearchState extends Equatable {
       recipes: recipes ?? this.recipes,
       isEmpty: isEmpty ?? this.isEmpty,
       results: results ?? this.results,
+      numeroStelleSelected: numeroStelleSelected ?? this.numeroStelleSelected,
+      numeroStelle: numeroStelle ?? this.numeroStelle,
       dropDownValue: dropDownValue ?? this.dropDownValue,
       filter: filter ?? this.filter,
       allergeniSelected: allergeniSelected ?? this.allergeniSelected,
@@ -67,6 +77,8 @@ class SearchState extends Equatable {
   List<Object?> get props => [
         searchValue,
         users,
+        numeroStelleSelected,
+        numeroStelle,
         isSearching,
         recipes,
         isEmpty,
