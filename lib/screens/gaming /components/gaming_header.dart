@@ -1,9 +1,8 @@
 // Flutter imports:
-import 'package:flutter/material.dart';
-
 // Project imports:
 import 'package:condivisionericette/model/Gaming.dart';
 import 'package:condivisionericette/screens/gaming%20/components/user_level_badge.dart';
+import 'package:flutter/material.dart';
 
 class GamingHeader extends StatelessWidget {
   final Gaming gaming;
@@ -17,7 +16,7 @@ class GamingHeader extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          UserLevelBadge(level: gaming.punti, name: gaming.gameName),
+          UserLevelBadge(point: gaming.punti, name: gaming.gameName),
         ],
       ),
     );

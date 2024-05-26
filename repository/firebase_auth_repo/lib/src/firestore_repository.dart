@@ -808,4 +808,19 @@ class FirebaseRepository {
       return Future.error(UpdateProfileFailure(e.toString()));
     }
   }
+
+  /// Get gaming data from user
+  Future<Gaming> getGamingData(String userId) async {
+    try {
+      Gaming gaming = Gaming.empty();
+      await _firestore.collection('users').doc(userId).get().then((value) {
+        gaming = Gaming.fromMap(value.data()!['gaming']);
+      });
+      return gaming;
+    } on FirebaseException catch (e) {
+      return Future.error(UpdateProfileFailure(e.code));
+    } catch (e) {
+      return Future.error(UpdateProfileFailure(e.toString()));
+    }
+  }
 }
