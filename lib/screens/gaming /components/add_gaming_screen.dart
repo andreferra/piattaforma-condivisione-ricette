@@ -1,7 +1,13 @@
+// Flutter imports:
+import 'package:flutter/material.dart';
+
+// Package imports:
+import 'package:firebase_auth_repo/auth_repo.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+// Project imports:
 import 'package:condivisionericette/controller/auth_controller/auth_controller.dart';
 import 'package:condivisionericette/screens/gaming%20/controller/gaming_controller.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class AddGamingScreen extends ConsumerWidget {
   const AddGamingScreen({super.key});
@@ -9,7 +15,7 @@ class AddGamingScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final gamingController = ref.watch(gamingProvider.notifier);
-
+    final FirebaseRepository firebaseRepository = FirebaseRepository();
     return SizedBox(
       width: MediaQuery.of(context).size.width,
       height: MediaQuery.of(context).size.height,
@@ -41,11 +47,19 @@ class AddGamingScreen extends ConsumerWidget {
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
             ),
             onPressed: () async {
-              gamingController.setGameActive(true);
+              try {
+                gamingController.setGameActive(true);
 
-              final userId = ref.read(authProvider).user.uid;
+                AuthUser user = ref.read(authProvider).user;
 
-              await gamingController.addGamingToUser(userId);
+                ref
+                    .watch(authProvider.notifier)
+                    .onUserChanged(user.copyWith(gameActive: true));
+
+                await gamingController.addGamingToUser(user.uid);
+              } catch (e) {
+                print(e);
+              }
             },
             child: const Text('Inizia a giocare!'),
           ),

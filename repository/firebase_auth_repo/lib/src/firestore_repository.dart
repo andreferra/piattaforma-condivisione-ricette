@@ -609,7 +609,6 @@ class FirebaseRepository {
   /// Get recipe
   Future<DocumentSnapshot> getRecipe(String recipeId) async {
     try {
-      DocumentSnapshot recipe;
       await _firestore.collection('recipes').doc(recipeId).get().then((value) {
         if (value.exists) {
           return value;
@@ -793,14 +792,16 @@ class FirebaseRepository {
     }
   }
 
-  Future<String> addGamingToUser(String userId, Gaming gaming) {
+  Future<String> addGamingToUser(String userId, Gaming gaming) async {
     try {
-      return _firestore.collection('users').doc(userId).update({
+      String res = 'error';
+      await _firestore.collection('users').doc(userId).update({
         'gaming': gaming.toMap(),
         'gameActive': true,
-      }).then((value) {
-        return 'ok';
+      }).then((value) async {
+        res = 'ok';
       });
+      return res;
     } on FirebaseException catch (e) {
       return Future.error(UpdateProfileFailure(e.code));
     } catch (e) {
