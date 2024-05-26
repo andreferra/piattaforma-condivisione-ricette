@@ -25,6 +25,7 @@ class GamingScreen extends ConsumerWidget {
       child: gameActive
           ? Column(
               mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Header(),
                 const SizedBox(height: 20),

@@ -1,6 +1,7 @@
 // Flutter imports:
 // Project imports:
 import 'package:condivisionericette/model/Gaming.dart';
+import 'package:condivisionericette/screens/gaming%20/components/sfide_badge.dart';
 import 'package:condivisionericette/screens/gaming%20/components/user_level_badge.dart';
 import 'package:flutter/material.dart';
 
@@ -12,11 +13,19 @@ class GamingHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       width: MediaQuery.of(context).size.width,
-      height: MediaQuery.of(context).size.height * 0.2,
+      height: MediaQuery.of(context).size.height * 0.4,
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
-          UserLevelBadge(point: gaming.punti, name: gaming.gameName),
+          UserLevelBadge(
+            point: gaming.punti,
+            name: gaming.gameName,
+          ),
+          SfideBadge(
+            sfidePartecipate: gaming.sfidePartecipate,
+            sfideVinte: gaming.sfideVinte,
+          ),
         ],
       ),
     );
