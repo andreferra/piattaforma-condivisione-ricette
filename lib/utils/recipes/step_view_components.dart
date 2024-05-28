@@ -1,11 +1,10 @@
 // Dart imports:
 import 'dart:typed_data';
 
-// Flutter imports:
-import 'package:flutter/material.dart';
-
 // Project imports:
 import 'package:condivisionericette/utils/constant.dart';
+// Flutter imports:
+import 'package:flutter/material.dart';
 
 class StepViewComponents extends StatelessWidget {
   final String testo;
@@ -63,10 +62,15 @@ class StepViewComponents extends StatelessWidget {
                     const SizedBox(
                       width: 10,
                     ),
-                    Text(
-                      testo,
-                      style: const TextStyle(
-                        fontSize: 20,
+                    Expanded(
+                      flex: 2,
+                      child: Text(
+                        testo,
+                        overflow: TextOverflow.clip,
+                        softWrap: true,
+                        style: const TextStyle(
+                          fontSize: 20,
+                        ),
                       ),
                     ),
                   ],
