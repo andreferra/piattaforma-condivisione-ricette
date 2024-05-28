@@ -1,13 +1,7 @@
 // Flutter imports:
 
-// Flutter imports:
-import 'package:flutter/material.dart';
-
 // Package imports:
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth_repo/auth_repo.dart';
-import 'package:uuid/uuid.dart';
-
 // Project imports:
 import 'package:condivisionericette/model/Comment.dart';
 import 'package:condivisionericette/model/Message.dart';
@@ -19,6 +13,10 @@ import 'package:condivisionericette/utils/constant.dart';
 import 'package:condivisionericette/utils/recipes/comment_view_components.dart';
 import 'package:condivisionericette/utils/recipes/step_view_components.dart';
 import 'package:condivisionericette/widget/share/share_screen.dart';
+import 'package:firebase_auth_repo/auth_repo.dart';
+// Flutter imports:
+import 'package:flutter/material.dart';
+import 'package:uuid/uuid.dart';
 
 class ViewRecipeScreen extends StatefulWidget {
   final bool isMine;
@@ -48,50 +46,54 @@ class _ViewRecipeScreenState extends State<ViewRecipeScreen> {
   bool isLike = false;
 
   Future<void> _handlerLike() async {
-    NotificationModel notificationModel = NotificationModel(
-      notificationId: const Uuid().v4(),
-      title: "Nuovo Like",
-      body:
-          "Qualcuno ha messo like alla tua ricetta ${widget.recipesState.nomePiatto.toString().toUpperCase()} ❤️",
-      date: DateTime.now().toString(),
-      read: false,
-      type: NotificationType.newLike,
-      userSender: widget.mioId,
-      userReceiver: widget.recipesState.userID,
-      extraData: widget.recipesState.recipeID,
-    );
-    await _firebaseRepository
-        .updateLike(
-      widget.recipesState.recipeID!,
-      widget.mioId,
-      isLike,
-      notificationModel.toMap(),
-      widget.recipesState.userID!,
-    )
-        .then(
-      (value) {
-        print(value);
-        if (value == 'unlike') {
-          setState(
-            () {
-              numeroLike = numeroLike - 1;
-              isLike = false;
-            },
-          );
-          return;
-        } else if (value == 'like') {
-          setState(
-            () {
-              numeroLike = numeroLike + 1;
-              isLike = true;
-            },
-          );
-          return;
-        } else {
+    try {
+      NotificationModel notificationModel = NotificationModel(
+        notificationId: const Uuid().v4(),
+        title: "Nuovo Like",
+        body:
+            "Qualcuno ha messo like alla tua ricetta ${widget.recipesState.nomePiatto.toString().toUpperCase()} ❤️",
+        date: DateTime.now().toString(),
+        read: false,
+        type: NotificationType.newLike,
+        userSender: widget.mioId,
+        userReceiver: widget.recipesState.userID,
+        extraData: widget.recipesState.recipeID,
+      );
+      await _firebaseRepository
+          .updateLike(
+        widget.recipesState.recipeID!,
+        widget.mioId,
+        isLike,
+        notificationModel.toMap(),
+        widget.recipesState.userID!,
+      )
+          .then(
+        (value) {
           print(value);
-        }
-      },
-    );
+          if (value == 'unlike') {
+            setState(
+              () {
+                numeroLike = numeroLike - 1;
+                isLike = false;
+              },
+            );
+            return;
+          } else if (value == 'like') {
+            setState(
+              () {
+                numeroLike = numeroLike + 1;
+                isLike = true;
+              },
+            );
+            return;
+          } else {
+            print(value);
+          }
+        },
+      );
+    } catch (e) {
+      print(e);
+    }
   }
 
   void _loadLike() async {
@@ -132,7 +134,7 @@ class _ViewRecipeScreenState extends State<ViewRecipeScreen> {
         });
       });
     } catch (e) {
-      print(e);
+      print("Errore caricamento utente : ${e.toString()}");
     }
   }
 
@@ -205,8 +207,8 @@ class _ViewRecipeScreenState extends State<ViewRecipeScreen> {
                       if (widget.recipesState.linkCoverImage != null)
                         Image.network(
                           widget.recipesState.linkCoverImage!,
-                          width: MediaQuery.of(context).size.width * 0.4,
-                          height: MediaQuery.of(context).size.height * 0.4,
+                          width: MediaQuery.of(context).size.width * 0.3,
+                          height: MediaQuery.of(context).size.height * 0.3,
                         ),
                       Column(
                         mainAxisAlignment: MainAxisAlignment.start,

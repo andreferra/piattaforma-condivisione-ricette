@@ -84,45 +84,51 @@ class AuthUser extends Equatable {
       ];
 
   factory AuthUser.fromDocument(Map<String, dynamic> data) {
-    return AuthUser(
-      uid: data['uid'],
-      email: data['email'],
-      password: data['password'],
-      name: data['name'],
-      nickname: data['nickname'],
-      emailVerified: data['emailVerified'],
-      phone: data['phone'],
-      newNotifiche: data['newNotifiche'],
-      photoURL: data['photoURL'],
-      gameActive: data['gameActive'],
-      dataRegistrazione: data['dataRegistrazione'],
-      dataUltimoAccesso: data['dataUltimoAccesso'],
-      isLogged: data['isLogged'],
-      prefAlimentari: (data['prefAlimentari'] as List<dynamic>)
-          .map((item) => item.toString())
-          .toList(),
-      allergie: (data['allergie'] as List<dynamic>)
-          .map((item) => item.toString())
-          .toList(),
-      interessiCulinari: (data['interessiCulinari'] as List<dynamic>)
-          .map((item) => item.toString())
-          .toList(),
-      bio: data['bio'],
-      notification: data['notification'],
-      follower: (data['follower'] as List<dynamic>)
-          .map((item) => item.toString())
-          .toList(),
-      following: (data['following'] as List<dynamic>)
-          .map((e) => e.toString())
-          .toList(),
-      posts: data['posts'],
-      listaNotifiche: (data['listaNotifiche'] as List<dynamic>)
-          .map((e) => e.toString())
-          .toList(),
-      gaming: data['gaming'] != null
-          ? Gaming.fromMap(data['gaming'])
-          : Gaming.empty(),
-    );
+    print(data);
+    try {
+      return AuthUser(
+        uid: data['uid'],
+        email: data['email'],
+        password: data['password'],
+        name: data['name'],
+        nickname: data['nickname'],
+        emailVerified: data['emailVerified'],
+        phone: data['phone'],
+        newNotifiche: data['newNotifiche'],
+        photoURL: data['photoURL'],
+        gameActive: data['gameActive'],
+        dataRegistrazione: data['dataRegistrazione'],
+        dataUltimoAccesso: data['dataUltimoAccesso'],
+        isLogged: data['isLogged'],
+        prefAlimentari: (data['prefAlimentari'] as List<dynamic>)
+            .map((item) => item.toString())
+            .toList(),
+        allergie: (data['allergie'] as List<dynamic>)
+            .map((item) => item.toString())
+            .toList(),
+        interessiCulinari: (data['interessiCulinari'] as List<dynamic>)
+            .map((item) => item.toString())
+            .toList(),
+        bio: data['bio'],
+        notification: data['notification'],
+        follower: (data['follower'] as List<dynamic>)
+            .map((item) => item.toString())
+            .toList(),
+        following: (data['following'] as List<dynamic>)
+            .map((e) => e.toString())
+            .toList(),
+        posts: data['posts'],
+        listaNotifiche: (data['listaNotifiche'] as List<dynamic>)
+            .map((e) => e.toString())
+            .toList(),
+        gaming: data['gaming'] != null
+            ? Gaming.fromMap(data['gaming'])
+            : Gaming.empty(),
+      );
+    } catch (e) {
+      print("Errore AuthUser.fromDocument: ${e.toString()}");
+      return AuthUser.empty;
+    }
   }
 
   Map<String, dynamic> toDocument() {

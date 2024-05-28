@@ -52,12 +52,21 @@ class Gaming {
   }
 
   factory Gaming.fromMap(Map<String, dynamic> map) {
-    return Gaming(
-      gameName:
-          GameName.values.firstWhere((e) => e.toString() == map['gameName']),
-      punti: map['punti'],
-      sfideVinte: map['sfideVinte'],
-      sfidePartecipate: map['sfidePartecipate'],
-    );
+    try {
+      print(map);
+      return Gaming(
+        gameName:
+            GameName.values.firstWhere((e) => e.toString() == map['gameName']),
+        punti: map['punti'],
+        sfideVinte: map['sfideVinte'],
+        sfidePartecipate: map['sfidePartecipate'],
+        sfide: (map['sfide'] as List<dynamic>)
+            .map((e) => Sfidegame.fromMap(e))
+            .toList(),
+      );
+    } catch (e) {
+      print("Errore Gaming.fromMap: ${e.toString()}");
+      return Gaming.empty();
+    }
   }
 }

@@ -74,17 +74,21 @@ class Sfidegame {
   }
 
   factory Sfidegame.fromMap(Map<String, dynamic> map) {
-    return Sfidegame(
-      id: map['id'],
-      name: map['name'],
-      description: map['description'],
-      image: map['image'],
-      partecipanti: map['partecipanti'],
-      utentiPartecipanti: List<String>.from(map['utentiPartecipanti']),
-      classifica: List<String>.from(map['classifica']),
-      punti: map['punti'],
-      ingredienti: List<String>.from(map['ingredienti']),
-      urlImmagini: List<String>.from(map['urlImmagini']),
-    );
+    try {
+      return Sfidegame(
+        id: map['id'],
+        name: map['name'],
+        description: map['description'],
+        image: map['image'],
+        partecipanti: map['partecipanti'],
+        utentiPartecipanti: List<String>.from(map['utentiPartecipanti']),
+        classifica: List<String>.from(map['classifica']),
+        punti: map['punti'],
+        ingredienti: List<String>.from(map['ingredienti']),
+        urlImmagini: List<String>.from(map['urlImmagini']),
+      );
+    } catch (e) {
+      return Sfidegame();
+    }
   }
 }

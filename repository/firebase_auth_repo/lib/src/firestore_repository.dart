@@ -64,8 +64,14 @@ class FirebaseRepository {
 
   /// Fetches the current user from the database.
   Future<AuthUser> getUserFromDatabase(String uid) async {
-    final userDoc = await _firestore.collection('users').doc(uid).get();
-    return AuthUser.fromDocument(userDoc.data()!);
+    try {
+      final userDoc = await _firestore.collection('users').doc(uid).get();
+      return AuthUser.fromDocument(userDoc.data()!);
+    } on FirebaseException catch (e) {
+      return Future.error(UpdateProfileFailure(e.code));
+    } catch (e) {
+      return Future.error(UpdateProfileFailure(e.toString()));
+    }
   }
 
   /// Updates the profile of the current user.
