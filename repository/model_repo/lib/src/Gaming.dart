@@ -1,9 +1,11 @@
+import 'package:model_repo/src/SfideGame.dart';
+
 enum GameName {
-  ReginaDellaPasta,
-  MaestroDiDolci,
-  ReDellaPizza,
-  GrillMaster5000,
-  SushiChef,
+  reginaDellaPasta,
+  maestroDiDolci,
+  reDellaPizza,
+  grillMaster5000,
+  sushiChef,
 }
 
 class Gaming {
@@ -11,12 +13,14 @@ class Gaming {
   int punti;
   int sfideVinte;
   int sfidePartecipate = 0;
+  List<Sfidegame>? sfide = [];
 
   Gaming({
-    this.gameName = GameName.ReginaDellaPasta,
+    this.gameName = GameName.reginaDellaPasta,
     this.punti = 0,
     this.sfideVinte = 0,
     this.sfidePartecipate = 0,
+    this.sfide,
   });
 
   Gaming.empty() : this();
@@ -26,12 +30,14 @@ class Gaming {
     int? punti,
     int? sfideVinte,
     int? sfidePartecipate,
+    List<Sfidegame>? sfide,
   }) {
     return Gaming(
       gameName: gameName ?? this.gameName,
       punti: punti ?? this.punti,
       sfideVinte: sfideVinte ?? this.sfideVinte,
       sfidePartecipate: sfidePartecipate ?? this.sfidePartecipate,
+      sfide: sfide ?? this.sfide,
     );
   }
 
@@ -41,6 +47,7 @@ class Gaming {
       'punti': punti,
       'sfideVinte': sfideVinte,
       'sfidePartecipate': sfidePartecipate,
+      'sfide': sfide!.map((e) => e.toMap()).toList(),
     };
   }
 

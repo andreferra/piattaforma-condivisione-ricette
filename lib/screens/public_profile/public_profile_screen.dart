@@ -1,10 +1,4 @@
 // Flutter imports:
-import 'package:flutter/material.dart';
-
-// Package imports:
-import 'package:firebase_auth_repo/auth_repo.dart';
-import 'package:uuid/uuid.dart';
-
 // Project imports:
 import 'package:condivisionericette/model/Message.dart';
 import 'package:condivisionericette/model/Notification.dart';
@@ -12,6 +6,11 @@ import 'package:condivisionericette/screens/message_screen/singleChat/single_cha
 import 'package:condivisionericette/screens/public_profile/components/recipes_list.dart';
 import 'package:condivisionericette/screens/public_profile/components/top_section.dart';
 import 'package:condivisionericette/screens/public_profile/components/user_info.dart';
+// Package imports:
+import 'package:firebase_auth_repo/auth_repo.dart';
+import 'package:flutter/material.dart';
+import 'package:uuid/uuid.dart';
+
 import '../../widget/share/share_screen.dart';
 
 class PublicProfile extends StatefulWidget {
@@ -33,20 +32,24 @@ class _PublicProfileState extends State<PublicProfile> {
   bool notifiche = false;
 
   void laodUserData() async {
-    await _firebaseRepository.getUserFromDatabase(widget.userID).then((user) {
-      if (mounted) {
-        setState(() {
-          isLoad = true;
-          this.user = user;
-          user.follower!.contains(widget.mioId)
-              ? loSeguo = true
-              : loSeguo = false;
-          user.listaNotifiche!.contains(widget.mioId)
-              ? notifiche = true
-              : notifiche = false;
-        });
-      }
-    });
+    try {
+      await _firebaseRepository.getUserFromDatabase(widget.userID).then((user) {
+        if (mounted) {
+          setState(() {
+            isLoad = true;
+            this.user = user;
+            user.follower!.contains(widget.mioId)
+                ? loSeguo = true
+                : loSeguo = false;
+            user.listaNotifiche!.contains(widget.mioId)
+                ? notifiche = true
+                : notifiche = false;
+          });
+        }
+      });
+    } on Exception catch (e) {
+      print(e);
+    }
   }
 
   Future<void> _unfollowUser() async {

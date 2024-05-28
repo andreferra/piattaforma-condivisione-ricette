@@ -16,6 +16,9 @@ dependencies:
   form_validation: 
     path: repository/form_validator
 
+  model_repo:
+    path: repository/model_repo
+
   cupertino_icons: ^1.0.6
   firebase_core: ^2.29.0
   firebase_auth: ^4.19.1

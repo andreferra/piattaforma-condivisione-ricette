@@ -2,10 +2,10 @@
 // Project imports:
 import 'package:condivisionericette/controller/auth_controller/auth_controller.dart';
 import 'package:condivisionericette/controller/auth_repo_provider.dart';
-import 'package:condivisionericette/model/Gaming.dart';
 import 'package:equatable/equatable.dart';
 import 'package:firebase_auth_repo/auth_repo.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:model_repo/model_repo.dart';
 
 part 'gaming_state.dart';
 

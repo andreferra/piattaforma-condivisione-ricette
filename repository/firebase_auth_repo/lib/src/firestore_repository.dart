@@ -1,9 +1,9 @@
 import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:condivisionericette/model/Gaming.dart';
 import 'package:firebase_auth_repo/auth_repo.dart';
 import 'package:firebase_auth_repo/src/storage_respository.dart';
+import 'package:model_repo/model_repo.dart';
 
 class UpdateProfileFailure implements Exception {
   final String code;

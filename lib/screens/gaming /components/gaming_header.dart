@@ -1,9 +1,9 @@
 // Flutter imports:
 // Project imports:
-import 'package:condivisionericette/model/Gaming.dart';
 import 'package:condivisionericette/screens/gaming%20/components/sfide_badge.dart';
 import 'package:condivisionericette/screens/gaming%20/components/user_level_badge.dart';
 import 'package:flutter/material.dart';
+import 'package:model_repo/model_repo.dart';
 
 class GamingHeader extends StatelessWidget {
   final Gaming gaming;

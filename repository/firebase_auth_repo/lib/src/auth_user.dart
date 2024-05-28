@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:model_repo/model_repo.dart';
 
 class AuthUser extends Equatable {
   final String uid;
@@ -23,6 +24,7 @@ class AuthUser extends Equatable {
   final List<String>? listaNotifiche;
   final bool? newNotifiche;
   final bool? gameActive;
+  final Gaming? gaming;
 
   const AuthUser({
     required this.uid,
@@ -47,6 +49,7 @@ class AuthUser extends Equatable {
     this.posts,
     this.newNotifiche,
     this.gameActive = false,
+    this.gaming,
   });
 
   static const empty = AuthUser(uid: '');
@@ -77,6 +80,7 @@ class AuthUser extends Equatable {
         posts,
         newNotifiche,
         gameActive,
+        gaming,
       ];
 
   factory AuthUser.fromDocument(Map<String, dynamic> data) {
@@ -115,6 +119,9 @@ class AuthUser extends Equatable {
       listaNotifiche: (data['listaNotifiche'] as List<dynamic>)
           .map((e) => e.toString())
           .toList(),
+      gaming: data['gaming'] != null
+          ? Gaming.fromMap(data['gaming'])
+          : Gaming.empty(),
     );
   }
 
@@ -142,6 +149,7 @@ class AuthUser extends Equatable {
       'following': following,
       'posts': posts,
       'listaNotifiche': listaNotifiche,
+      'gaming': gaming?.toMap(),
     };
   }
 
@@ -168,6 +176,7 @@ class AuthUser extends Equatable {
     List<String>? following,
     int? posts,
     List<String>? listaNotifiche,
+    Gaming? gaming,
   }) {
     return AuthUser(
       uid: uid ?? this.uid,
@@ -192,6 +201,7 @@ class AuthUser extends Equatable {
       following: following ?? this.following,
       posts: posts ?? this.posts,
       listaNotifiche: listaNotifiche ?? this.listaNotifiche,
+      gaming: gaming ?? this.gaming,
     );
   }
 }

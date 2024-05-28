@@ -1,6 +1,6 @@
 // Project imports:
-import 'package:condivisionericette/model/Gaming.dart';
 import 'package:flutter/material.dart';
+import 'package:model_repo/model_repo.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 
 class UserLevelBadge extends StatefulWidget {
@@ -16,30 +16,39 @@ class _UserLevelBadgeState extends State<UserLevelBadge> {
   GameName get name => widget.name;
   int get point => widget.point;
   List<int> levelPoint = [0, 0];
+  String nomeLivello = '';
 
   void _handlerLevelPoint() {
     switch (name) {
-      case GameName.ReginaDellaPasta:
+      case GameName.reginaDellaPasta:
         levelPoint = [0, 500];
         break;
-      case GameName.MaestroDiDolci:
+      case GameName.maestroDiDolci:
         levelPoint = [500, 1000];
         break;
-      case GameName.ReDellaPizza:
+      case GameName.reDellaPizza:
         levelPoint = [1000, 2000];
         break;
-      case GameName.GrillMaster5000:
+      case GameName.grillMaster5000:
         levelPoint = [2000, 4000];
         break;
-      case GameName.SushiChef:
+      case GameName.sushiChef:
         levelPoint = [4000, 10000];
         break;
     }
   }
 
+  void _getUserName() {
+    String enumName = name.toString().split('.').last;
+
+    nomeLivello =
+        enumName.substring(0, 1).toUpperCase() + enumName.substring(1);
+  }
+
   @override
   void initState() {
     _handlerLevelPoint();
+    _getUserName();
     super.initState();
   }
 
@@ -56,7 +65,7 @@ class _UserLevelBadgeState extends State<UserLevelBadge> {
       child: Column(
         children: [
           Text(
-            name.toString().split('.').last,
+            nomeLivello,
             style: const TextStyle(
                 color: Color(0xff3A405A),
                 fontSize: 16,
