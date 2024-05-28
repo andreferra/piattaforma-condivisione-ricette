@@ -1,16 +1,14 @@
 // Flutter imports:
 
-// Flutter imports:
-import 'package:flutter/material.dart';
-
 // Package imports:
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth_repo/auth_repo.dart';
-
 // Project imports:
 import 'package:condivisionericette/model/Message.dart';
 import 'package:condivisionericette/screens/message_screen/singleChat/single_chat.dart';
 import 'package:condivisionericette/utils/message/chat_card.dart';
+import 'package:firebase_auth_repo/auth_repo.dart';
+// Flutter imports:
+import 'package:flutter/material.dart';
 
 class ChatList extends StatelessWidget {
   final String mioID;
@@ -28,6 +26,9 @@ class ChatList extends StatelessWidget {
 
           if (snapshot.hasError) {
             return const Text('Errore');
+          }
+          if (snapshot.connectionState == ConnectionState.none) {
+            return const Text('Nessuna connessione');
           }
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(
@@ -87,7 +88,7 @@ class ChatList extends StatelessWidget {
             );
           } else {
             return const Center(
-              child: CircularProgressIndicator(),
+              child: Text("Non ci sono chat"),
             );
           }
         });
