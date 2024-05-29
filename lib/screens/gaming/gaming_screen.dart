@@ -2,6 +2,7 @@
 // Project imports:
 import 'package:condivisionericette/controller/auth_controller/auth_controller.dart';
 import 'package:condivisionericette/screens/gaming/components/add_gaming_screen.dart';
+import 'package:condivisionericette/screens/gaming/components/classifica.dart';
 import 'package:condivisionericette/screens/gaming/components/gaming_header.dart';
 import 'package:condivisionericette/screens/gaming/controller/gaming_controller.dart';
 import 'package:condivisionericette/utils/constant.dart';
@@ -31,7 +32,7 @@ class GamingScreen extends ConsumerWidget {
                 const SizedBox(height: 20),
                 SizedBox(
                   width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.height - 200,
+                  height: MediaQuery.of(context).size.height * 0.12,
                   child: FutureBuilder(
                     future: firebase.getGamingData(user.uid),
                     builder: (context, gaming) {
@@ -48,6 +49,14 @@ class GamingScreen extends ConsumerWidget {
                       return GamingHeader(gaming: gaming.data!);
                     },
                   ),
+                ),
+                const SizedBox(height: 20),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    ClassificaUtenti(mioId: user.uid),
+                  ],
                 ),
               ],
             )
