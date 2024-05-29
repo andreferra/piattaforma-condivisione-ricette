@@ -66,6 +66,8 @@ class _ViewRecipeScreenState extends State<ViewRecipeScreen> {
         isLike,
         notificationModel.toMap(),
         widget.recipesState.userID!,
+        user.gaming!,
+        user.gameActive!,
       )
           .then(
         (value) {
@@ -152,8 +154,7 @@ class _ViewRecipeScreenState extends State<ViewRecipeScreen> {
     return isLoad
         ? Scaffold(
             appBar: AppBar(
-              title: Text(
-                  widget.recipesState.nomePiatto!.toUpperCase() ?? "Ricetta"),
+              title: Text(widget.recipesState.nomePiatto!.toUpperCase()),
               centerTitle: true,
               titleSpacing: 1,
               titleTextStyle: TextStyle(

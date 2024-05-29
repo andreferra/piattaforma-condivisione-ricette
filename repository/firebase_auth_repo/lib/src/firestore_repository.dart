@@ -16,6 +16,17 @@ class UpdateProfileFailure implements Exception {
   }
 }
 
+class GameingFailure implements Exception {
+  final String code;
+
+  const GameingFailure(this.code);
+
+  @override
+  String toString() {
+    return 'GameingFailure: $code';
+  }
+}
+
 class AddRecipesFailure implements Exception {
   final String code;
 
@@ -579,14 +590,27 @@ class FirebaseRepository {
 
   /// Update like number and add user id to like list
   /// [isLike] = true if the user liked the recipe, false if the user unliked the recipe
-  Future<String> updateLike(String recipeId, String userId, bool isLike,
-      notification, String notificationAddId) async {
+  Future<String> updateLike(
+      String recipeId,
+      String userId,
+      bool isLike,
+      notification,
+      String notificationAddId,
+      Gaming gaming,
+      bool gameActive) async {
     try {
       String res = 'error';
       Map<Object, Object> isLiked = {
         'numero_like': FieldValue.increment(1),
         'like': FieldValue.arrayUnion([userId]),
       };
+
+      gaming = gaming.copyWith(
+          punti: gaming.punti + 10, gameName: checkUserName(gaming));
+
+      if (gameActive && !isLike) {
+        await updateGamingData(notificationAddId, gaming);
+      }
 
       Map<Object, Object> isUnliked = {
         'numero_like': FieldValue.increment(-1),
@@ -856,6 +880,19 @@ class FirebaseRepository {
       return Future.error(UpdateProfileFailure(e.code));
     } catch (e) {
       return Future.error(UpdateProfileFailure(e.toString()));
+    }
+  }
+
+  /// Update user gaming data
+  Future<void> updateGamingData(String userId, Gaming gaming) async {
+    try {
+      await _firestore.collection('users').doc(userId).update({
+        'gaming': gaming.toMap(),
+      });
+    } on FirebaseException catch (e) {
+      return Future.error(GameingFailure(e.code));
+    } catch (e) {
+      return Future.error(GameingFailure(e.toString()));
     }
   }
 }
