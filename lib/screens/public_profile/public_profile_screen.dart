@@ -48,7 +48,7 @@ class _PublicProfileState extends State<PublicProfile> {
         }
       });
     } on Exception catch (e) {
-      print(e);
+      print("loadUserData(): ${e.toString()}");
     }
   }
 
@@ -75,8 +75,8 @@ class _PublicProfileState extends State<PublicProfile> {
             break;
         }
       });
-    } on UpdateProfileFailure catch (e) {
-      print(e);
+    } on Exception catch (e) {
+      print("unfollowUser(): ${e.toString()}");
     }
   }
 
@@ -92,7 +92,8 @@ class _PublicProfileState extends State<PublicProfile> {
           date: DateTime.now().toString(),
           extraData: "");
       await _firebaseRepository
-          .followUser(widget.mioId, user.uid, notification.toMap())
+          .followUser(
+              widget.mioId, user.uid, notification.toMap(), user.gaming!)
           .then((value) {
         switch (value) {
           case 'ok':
@@ -109,8 +110,8 @@ class _PublicProfileState extends State<PublicProfile> {
             break;
         }
       });
-    } on UpdateProfileFailure catch (e) {
-      print(e);
+    } on Exception catch (e) {
+      print("followUser(): $e");
     }
   }
 

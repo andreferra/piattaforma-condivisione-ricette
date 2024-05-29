@@ -47,7 +47,7 @@ class Gaming {
       'punti': punti,
       'sfideVinte': sfideVinte,
       'sfidePartecipate': sfidePartecipate,
-      'sfide': sfide!.map((e) => e.toMap()).toList(),
+      'sfide': (sfide ?? []).map((e) => e.toMap()).toList(),
     };
   }
 

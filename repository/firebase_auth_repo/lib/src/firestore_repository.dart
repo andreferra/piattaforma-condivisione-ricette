@@ -9,6 +9,11 @@ class UpdateProfileFailure implements Exception {
   final String code;
 
   const UpdateProfileFailure(this.code);
+
+  @override
+  String toString() {
+    return 'UpdateProfileFailure: $code';
+  }
 }
 
 class AddRecipesFailure implements Exception {
@@ -287,16 +292,40 @@ class FirebaseRepository {
     }
   }
 
+  GameName checkUserName(Gaming game) {
+    if (game.punti >= 0 && game.punti < 500) {
+      return GameName.reginaDellaPasta;
+    } else if (game.punti >= 500 && game.punti < 1000) {
+      return GameName.maestroDiDolci;
+    } else if (game.punti >= 1000 && game.punti < 2000) {
+      return GameName.reDellaPizza;
+    } else if (game.punti >= 2000 && game.punti < 4000) {
+      return GameName.grillMaster5000;
+    } else if (game.punti >= 4000 && game.punti <= 10000) {
+      return GameName.sushiChef;
+    } else {
+      return game.gameName;
+    }
+  }
+
   /// Follow a user
-  Future<String> followUser(String user1, String user2, notification) async {
+  Future<String> followUser(
+      String user1, String user2, notification, Gaming game) async {
     try {
+      game = game.copyWith(
+          punti: game.punti + 10, gameName: checkUserName(game), sfide: []);
+
+      Map<String, dynamic> gameJson = game.toMap();
+
       await _firestore.collection('users').doc(user2).update({
         'follower': FieldValue.arrayUnion([user1]),
         'listaNotifiche': FieldValue.arrayUnion([notification]),
         'newNotifiche': true,
+        'gaming': gameJson,
       });
+
       await _firestore.collection('users').doc(user1).update({
-        'following': FieldValue.arrayUnion([user2])
+        'following': FieldValue.arrayUnion([user2]),
       });
       return 'ok';
     } on FirebaseException catch (e) {
