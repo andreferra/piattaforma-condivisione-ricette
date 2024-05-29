@@ -1,13 +1,5 @@
 // Flutter imports:
 
-// Flutter imports:
-import 'package:flutter/material.dart';
-
-// Package imports:
-import 'package:firebase_auth_repo/auth_repo.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:uuid/uuid.dart';
-
 // Project imports:
 import 'package:condivisionericette/controller/auth_controller/auth_controller.dart';
 import 'package:condivisionericette/model/Notification.dart';
@@ -20,6 +12,12 @@ import 'package:condivisionericette/widget/button/animated_button.dart';
 import 'package:condivisionericette/widget/button/rounded_button_style.dart';
 import 'package:condivisionericette/widget/loading_errors.dart';
 import 'package:condivisionericette/widget/text_input_field.dart';
+// Package imports:
+import 'package:firebase_auth_repo/auth_repo.dart';
+// Flutter imports:
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:uuid/uuid.dart';
 
 class AddCommentComponent extends ConsumerWidget {
   final RecipesState recipesState;
@@ -74,6 +72,14 @@ class AddCommentComponent extends ConsumerWidget {
           AnimatedButton(
               onTap: () async {
                 String res = "error";
+
+                if (user.gameActive! == true) {
+                  await recipeInteractionController.updateGamingProfile(
+                    user.uid,
+                    user.gaming!,
+                    user.uid == recipesState.userID,
+                  );
+                }
 
                 if (subComment) {
                   if (user.uid != recipesState.userID) {
