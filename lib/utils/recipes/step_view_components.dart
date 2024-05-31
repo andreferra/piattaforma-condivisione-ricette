@@ -1,10 +1,11 @@
 // Dart imports:
 import 'dart:typed_data';
 
-// Project imports:
-import 'package:condivisionericette/utils/constant.dart';
 // Flutter imports:
 import 'package:flutter/material.dart';
+
+// Project imports:
+import 'package:condivisionericette/utils/constant.dart';
 
 class StepViewComponents extends StatelessWidget {
   final String testo;

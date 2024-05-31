@@ -16,6 +16,17 @@ class UpdateProfileFailure implements Exception {
   }
 }
 
+class AddChallengeFailure implements Exception {
+  final String code;
+
+  const AddChallengeFailure(this.code);
+
+  @override
+  String toString() {
+    return 'AddChallengeFailure: $code';
+  }
+}
+
 class GameingFailure implements Exception {
   final String code;
 
@@ -893,6 +904,19 @@ class FirebaseRepository {
       return Future.error(GameingFailure(e.code));
     } catch (e) {
       return Future.error(GameingFailure(e.toString()));
+    }
+  }
+
+  /// Add a challenge to the database.
+  Future<String> addSfida(Sfidegame sfida) {
+    try {
+      return _firestore.collection('sfide').add(sfida.toMap()).then((value) {
+        return "ok";
+      });
+    } on FirebaseException catch (e) {
+      return Future.error(AddChallengeFailure(e.code));
+    } catch (e) {
+      return Future.error(AddChallengeFailure(e.toString()));
     }
   }
 }

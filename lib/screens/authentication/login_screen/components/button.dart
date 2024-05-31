@@ -1,14 +1,18 @@
 // Flutter imports:
+
+// Flutter imports:
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+
+// Package imports:
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:form_validation/form_validator.dart';
+
 // Project imports:
 import 'package:condivisionericette/screens/authentication/login_screen/controller/login_controller.dart';
 import 'package:condivisionericette/widget/button/animated_button.dart';
 import 'package:condivisionericette/widget/button/rounded_button_style.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-// Package imports:
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:form_validation/form_validator.dart';
 
 class LoginButton extends ConsumerWidget {
   const LoginButton({super.key});

@@ -1,4 +1,12 @@
 // Flutter imports:
+
+// Flutter imports:
+import 'package:flutter/material.dart';
+
+// Package imports:
+import 'package:firebase_auth_repo/auth_repo.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 // Project imports:
 import 'package:condivisionericette/controller/auth_controller/auth_controller.dart';
 import 'package:condivisionericette/screens/gaming/components/add_gaming_screen.dart';
@@ -7,10 +15,6 @@ import 'package:condivisionericette/screens/gaming/components/gaming_header.dart
 import 'package:condivisionericette/screens/gaming/controller/gaming_controller.dart';
 import 'package:condivisionericette/utils/constant.dart';
 import 'package:condivisionericette/widget/header.dart';
-import 'package:firebase_auth_repo/auth_repo.dart';
-import 'package:flutter/material.dart';
-// Package imports:
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class GamingScreen extends ConsumerWidget {
   const GamingScreen({super.key});
