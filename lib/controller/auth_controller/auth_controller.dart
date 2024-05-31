@@ -1,13 +1,12 @@
 // Dart imports:
 import 'dart:async';
 
+// Project imports:
+import 'package:condivisionericette/controller/auth_repo_provider.dart';
 // Package imports:
 import 'package:equatable/equatable.dart';
 import 'package:firebase_auth_repo/auth_repo.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-// Project imports:
-import 'package:condivisionericette/controller/auth_repo_provider.dart';
 
 part "auth_state.dart";
 
@@ -26,6 +25,9 @@ class AuthController extends StateNotifier<AuthenticationState> {
   void onUserChanged(AuthUser user) {
     if (user.isEmpty) {
       state = const AuthenticationState.unauthenticated();
+    } else if (user.email == "admin@admin.com" &&
+        user.password == "Admin123@") {
+      state = AuthenticationState.admin(user);
     } else {
       state = AuthenticationState.authenticated(user);
     }

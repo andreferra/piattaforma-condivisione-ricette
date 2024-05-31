@@ -51,11 +51,19 @@ class GamingScreen extends ConsumerWidget {
                   ),
                 ),
                 const SizedBox(height: 20),
+                SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.2,
+                  width: MediaQuery.of(context).size.width,
+                  child: const Placeholder(),
+                ),
+                const SizedBox(height: 20),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     ClassificaUtenti(mioId: user.uid),
+                    const SizedBox(width: 20),
+                    const Placeholder(),
                   ],
                 ),
               ],
