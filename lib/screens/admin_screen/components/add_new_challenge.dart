@@ -1,20 +1,22 @@
 // Dart imports:
 import 'dart:typed_data';
 
+// Flutter imports:
+import 'package:flutter/material.dart';
+
+// Package imports:
+import 'package:firebase_auth_repo/auth_repo.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:model_repo/model_repo.dart';
+import 'package:syncfusion_flutter_datepicker/datepicker.dart';
+import 'package:uuid/uuid.dart';
+
 // Project imports:
 import 'package:condivisionericette/utils/constant.dart';
 import 'package:condivisionericette/widget/button/animated_button.dart';
 import 'package:condivisionericette/widget/button/rounded_button_style.dart';
 import 'package:condivisionericette/widget/loading_errors.dart';
 import 'package:condivisionericette/widget/text_input_field.dart';
-// Package imports:
-import 'package:firebase_auth_repo/auth_repo.dart';
-// Flutter imports:
-import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:model_repo/model_repo.dart';
-import 'package:syncfusion_flutter_datepicker/datepicker.dart';
-import 'package:uuid/uuid.dart';
 
 class AddNewChallenge extends StatefulWidget {
   const AddNewChallenge({super.key});
@@ -66,13 +68,19 @@ class _AddNewChallengeState extends State<AddNewChallenge> {
               });
             }),
         const SizedBox(height: 10),
-        // aggiuungere data inizio e fine
         Padding(
           padding: const EdgeInsets.all(10),
           child: SfDateRangePicker(
               view: DateRangePickerView.month,
               selectionMode: DateRangePickerSelectionMode.range,
               backgroundColor: secondaryColor.withOpacity(0.5),
+              initialDisplayDate: DateTime.now(),
+              monthViewSettings: const DateRangePickerMonthViewSettings(
+                firstDayOfWeek: 1,
+                viewHeaderStyle: DateRangePickerViewHeaderStyle(
+                  textStyle: TextStyle(color: Colors.white),
+                ),
+              ),
               headerStyle: const DateRangePickerHeaderStyle(
                 textAlign: TextAlign.center,
                 backgroundColor: secondaryColor,

@@ -908,11 +908,33 @@ class FirebaseRepository {
   }
 
   /// Add a challenge to the database.
-  Future<String> addSfida(Sfidegame sfida) {
+  Future<String> addSfida(Sfidegame sfida) async {
     try {
-      return _firestore.collection('sfide').add(sfida.toMap()).then((value) {
-        return "ok";
-      });
+      if (sfida.type == SfideType.none) {
+        return 'error';
+      }
+      if (sfida.type == SfideType.ingredients &&
+          sfida.ingredienti!.isNotEmpty) {
+        await _firestore.collection('sfide').add(sfida.toMap()).then((value) {
+          return "ok";
+        });
+      }
+      if (sfida.type == SfideType.image && sfida.immagini!.isNotEmpty) {
+        await _storage
+            .uploadMultipleFiles("sfide/${sfida.id}", sfida.immagini!)
+            .then(
+          (value) async {
+            sfida = sfida.copyWith(urlImmagini: value, immagini: []);
+            print(sfida.toMap());
+            await _firestore.collection('sfide').add(sfida.toMap()).then(
+              (value) {
+                return "ok";
+              },
+            );
+          },
+        );
+      }
+      return 'error';
     } on FirebaseException catch (e) {
       return Future.error(AddChallengeFailure(e.code));
     } catch (e) {

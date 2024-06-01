@@ -1,9 +1,12 @@
 // Flutter imports:
+
 // Package imports:
 import 'package:cloud_firestore/cloud_firestore.dart';
 // Project imports:
 import 'package:condivisionericette/screens/admin_screen/components/add_new_challenge.dart';
 import 'package:condivisionericette/widget/sfide/sfide_card.dart';
+import 'package:firebase_auth_repo/auth_repo.dart';
+// Flutter imports:
 import 'package:flutter/material.dart';
 import 'package:model_repo/model_repo.dart';
 
@@ -16,12 +19,19 @@ class AdminScreen extends StatefulWidget {
 
 class _AdminScreenState extends State<AdminScreen> {
   FirebaseFirestore firestore = FirebaseFirestore.instance;
-
+  AuthenticationRepository auth = AuthenticationRepository();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Admin Screen'),
+        actions: [
+          IconButton(
+              icon: const Icon(Icons.logout),
+              onPressed: () async {
+                await auth.signOut();
+              }),
+        ],
       ),
       body: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
@@ -38,7 +48,14 @@ class _AdminScreenState extends State<AdminScreen> {
             ),
             const Text("SFIDE PRESENTI", style: TextStyle(fontSize: 20)),
             FutureBuilder(
-              future: firestore.collection("sfide").get(),
+              future: firestore
+                  .collection("sfide")
+                  .where("dataFine", isGreaterThan: DateTime.now())
+                  .orderBy("dataInizio", descending: false)
+                  .get()
+                  .catchError((error) {
+                print("Error: $error");
+              }),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const CircularProgressIndicator();
