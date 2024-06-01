@@ -13,6 +13,7 @@ import 'package:condivisionericette/screens/gaming/components/add_gaming_screen.
 import 'package:condivisionericette/screens/gaming/components/classifica.dart';
 import 'package:condivisionericette/screens/gaming/components/gaming_header.dart';
 import 'package:condivisionericette/screens/gaming/components/get_current_recipe.dart';
+import 'package:condivisionericette/screens/gaming/components/next_sfide_list.dart';
 import 'package:condivisionericette/screens/gaming/controller/gaming_controller.dart';
 import 'package:condivisionericette/utils/constant.dart';
 import 'package:condivisionericette/widget/header.dart';
@@ -61,15 +62,20 @@ class GamingScreen extends ConsumerWidget {
                   width: MediaQuery.of(context).size.width,
                   child: const GetCurrentRecipe(),
                 ),
-                const SizedBox(height: 20),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    ClassificaUtenti(mioId: user.uid),
-                    const SizedBox(width: 20),
-                    const Placeholder(),
-                  ],
+                SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.8,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(
+                        child: ClassificaUtenti(mioId: user.uid),
+                      ),
+                      const Expanded(
+                        child: NextSfideList(),
+                      ),
+                    ],
+                  ),
                 ),
               ],
             )

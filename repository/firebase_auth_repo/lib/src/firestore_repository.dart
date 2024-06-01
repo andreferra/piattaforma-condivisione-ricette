@@ -959,4 +959,26 @@ class FirebaseRepository {
       return Future.error(AddChallengeFailure(e.toString()));
     }
   }
+
+  /// get next challenge
+  Future<List<Sfidegame>> getNextChallenge() {
+    try {
+      return _firestore
+          .collection('sfide')
+          .where("dataInizio", isGreaterThan: DateTime.now())
+          .orderBy('dataInizio', descending: false)
+          .get()
+          .then((value) {
+        List<Sfidegame> sfide = [];
+        for (var sfida in value.docs) {
+          sfide.add(Sfidegame.fromMap(sfida.data()));
+        }
+        return sfide;
+      });
+    } on FirebaseException catch (e) {
+      return Future.error(AddChallengeFailure(e.code));
+    } catch (e) {
+      return Future.error(AddChallengeFailure(e.toString()));
+    }
+  }
 }
