@@ -1,11 +1,11 @@
 // Flutter imports:
-import 'package:flutter/material.dart';
-
 // Package imports:
 import 'package:cloud_firestore/cloud_firestore.dart';
-
 // Project imports:
 import 'package:condivisionericette/screens/admin_screen/components/add_new_challenge.dart';
+import 'package:condivisionericette/widget/sfide/sfide_card.dart';
+import 'package:flutter/material.dart';
+import 'package:model_repo/model_repo.dart';
 
 class AdminScreen extends StatefulWidget {
   const AdminScreen({super.key});
@@ -53,15 +53,15 @@ class _AdminScreenState extends State<AdminScreen> {
                 }
 
                 return ListView.builder(
+                  padding: const EdgeInsets.all(10),
                   shrinkWrap: true,
                   itemCount: snapshot.data!.docs.length,
                   itemBuilder: (context, index) {
-                    return ListTile(
-                      title: Text("Ciao"),
-                      trailing: IconButton(
-                        icon: const Icon(Icons.delete),
-                        onPressed: () {},
-                      ),
+                    return InkWell(
+                      onTap: () {},
+                      child: SfideCard(
+                          sfida: Sfidegame.fromMap(
+                              snapshot.data!.docs[index].data())),
                     );
                   },
                 );

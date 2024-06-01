@@ -96,29 +96,35 @@ class Sfidegame {
   }
 
   factory Sfidegame.fromMap(Map<String, dynamic> map) {
+    print(map);
     try {
       return Sfidegame(
         id: map['id'],
         name: map['name'],
         description: map['description'],
         image: map['image'],
-        partecipanti: map['partecipanti'] ?? 0,
+        partecipanti: map['partecipanti'],
         type: SfideType.values[map['type']],
-        utentiPartecipanti: List<String>.from(map['utentiPartecipanti']) ?? [],
-        classifica: List<String>.from(map['classifica']) ?? [],
-        punti: map['punti'] ?? 0,
-        ingredienti: List<String>.from(map['ingredienti']),
-        urlImmagini: List<String>.from(map['urlImmagini']),
+        utentiPartecipanti: List<String>.from(map['utentiPartecipanti']),
+        classifica: List<String>.from(map['classifica']),
+        punti: map['punti'],
+        ingredienti: map['ingredienti'] != null
+            ? List<String>.from(map['ingredienti'])
+            : [],
+        urlImmagini: map['urlImmagini'] != null
+            ? List<String>.from(map['urlImmagini'])
+            : [],
         dataCreazione: map['dataCreazione'] != null
-            ? DateTime.parse(map['dataCreazione'])
-            : null,
+            ? map['dataCreazione'].toDate()
+            : DateTime.now(),
         dataFine:
-            map['dataFine'] != null ? DateTime.parse(map['dataFine']) : null,
+            map['dataFine'] != null ? map['dataFine'].toDate() : DateTime.now(),
         dataInizio: map['dataInizio'] != null
-            ? DateTime.parse(map['dataInizio'])
-            : null,
+            ? map['dataInizio'].toDate()
+            : DateTime.now(),
       );
     } catch (e) {
+      print(e);
       return Sfidegame();
     }
   }
