@@ -14,6 +14,7 @@ import 'package:condivisionericette/screens/gaming/components/classifica.dart';
 import 'package:condivisionericette/screens/gaming/components/gaming_header.dart';
 import 'package:condivisionericette/screens/gaming/components/get_current_recipe.dart';
 import 'package:condivisionericette/screens/gaming/components/next_sfide_list.dart';
+import 'package:condivisionericette/screens/gaming/components/old_sfide_list.dart';
 import 'package:condivisionericette/screens/gaming/controller/gaming_controller.dart';
 import 'package:condivisionericette/utils/constant.dart';
 import 'package:condivisionericette/widget/header.dart';
@@ -57,26 +58,35 @@ class GamingScreen extends ConsumerWidget {
                   ),
                 ),
                 const SizedBox(height: 20),
-                SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.2,
-                  width: MediaQuery.of(context).size.width,
-                  child: const GetCurrentRecipe(),
+                const GetCurrentRecipe(),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      child: ClassificaUtenti(mioId: user.uid),
+                    ),
+                    const Expanded(
+                      child: NextSfideList(),
+                    ),
+                  ],
                 ),
-                SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.8,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Expanded(
-                        child: ClassificaUtenti(mioId: user.uid),
-                      ),
-                      const Expanded(
-                        child: NextSfideList(),
-                      ),
-                    ],
+                const Divider(
+                  color: Colors.white60,
+                  thickness: 2,
+                ),
+                const Center(
+                  child: Text(
+                    'Sfide terminate',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
+                const SizedBox(height: 20),
+                const OldSfideList(),
               ],
             )
           : const AddGamingScreen(),

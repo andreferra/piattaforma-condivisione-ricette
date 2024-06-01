@@ -981,4 +981,39 @@ class FirebaseRepository {
       return Future.error(AddChallengeFailure(e.toString()));
     }
   }
+
+  /// get old challenge
+  Future<List<Sfidegame>> getOldChallenge() {
+    try {
+      return _firestore
+          .collection('sfide')
+          .where("dataFine", isLessThan: DateTime.now())
+          .orderBy('dataInizio', descending: false)
+          .get()
+          .then((value) {
+        List<Sfidegame> sfide = [];
+        for (var sfida in value.docs) {
+          sfide.add(Sfidegame.fromMap(sfida.data()));
+        }
+        return sfide;
+      });
+    } on FirebaseException catch (e) {
+      return Future.error(AddChallengeFailure(e.code));
+    } catch (e) {
+      return Future.error(AddChallengeFailure(e.toString()));
+    }
+  }
+
+  /// get nickname from string
+  Future<String> getNickname(String uid) async {
+    try {
+      return _firestore.collection('users').doc(uid).get().then((value) {
+        return value.data()!['nickname'];
+      });
+    } on FirebaseException catch (e) {
+      return Future.error(UpdateProfileFailure(e.code));
+    } catch (e) {
+      return Future.error(UpdateProfileFailure(e.toString()));
+    }
+  }
 }

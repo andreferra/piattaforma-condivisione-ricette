@@ -5,17 +5,20 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 // Package imports:
+import 'package:firebase_auth_repo/auth_repo.dart';
 import 'package:model_repo/model_repo.dart';
 
 class SfideCard extends StatefulWidget {
   final Sfidegame? sfida;
-  const SfideCard({super.key, required this.sfida});
+  final bool old;
+  const SfideCard({super.key, required this.sfida, this.old = false});
 
   @override
   State<SfideCard> createState() => _SfideCardState();
 }
 
 class _SfideCardState extends State<SfideCard> {
+  final FirebaseRepository firebase = FirebaseRepository();
   Sfidegame get sfida => widget.sfida!;
   late Timer _timer;
   Duration _countdownDuration = const Duration();
@@ -98,10 +101,11 @@ class _SfideCardState extends State<SfideCard> {
         child: Padding(
           padding: const EdgeInsets.all(10.0),
           child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Expanded(
+                flex: 2,
                 child: Column(
                   children: [
                     Text(
@@ -122,7 +126,10 @@ class _SfideCardState extends State<SfideCard> {
                 ),
               ),
               Expanded(
+                flex: 1,
                 child: Column(
+                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
                       sfida.partecipanti.toString(),
@@ -141,8 +148,9 @@ class _SfideCardState extends State<SfideCard> {
                   ],
                 ),
               ),
-              if (sfida.dataFine != null)
+              if (sfida.dataFine != null && !widget.old)
                 Expanded(
+                  flex: 1,
                   child: Column(
                     children: [
                       Text(
@@ -161,6 +169,39 @@ class _SfideCardState extends State<SfideCard> {
                       ),
                     ],
                   ),
+                ),
+              if (widget.old && sfida.classifica.isNotEmpty)
+                FutureBuilder<String>(
+                  future: firebase.getNickname(sfida.classifica.first),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const CircularProgressIndicator();
+                    }
+                    if (snapshot.hasError) {
+                      return const Text('Errore nel caricamento dei dati');
+                    }
+                    return Expanded(
+                      flex: 1,
+                      child: Column(
+                        children: [
+                          Text(
+                            snapshot.data!,
+                            style: const TextStyle(
+                              fontSize: 26.0,
+                            ),
+                          ),
+                          const SizedBox(height: 8.0),
+                          const Text(
+                            'Vincitore',
+                            style: TextStyle(
+                              fontSize: 16.0,
+                              color: Colors.grey,
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
                 ),
             ],
           ),
