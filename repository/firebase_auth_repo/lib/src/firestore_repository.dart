@@ -941,4 +941,22 @@ class FirebaseRepository {
       return Future.error(AddChallengeFailure(e.toString()));
     }
   }
+
+  /// get current challenge
+  Future<Sfidegame> getCurrentSfida() {
+    try {
+      return _firestore
+          .collection('sfide')
+          .where("dataFine", isGreaterThanOrEqualTo: DateTime.now())
+          .orderBy('dataInizio', descending: false)
+          .get()
+          .then((value) {
+        return Sfidegame.fromMap(value.docs[0].data());
+      });
+    } on FirebaseException catch (e) {
+      return Future.error(AddChallengeFailure(e.code));
+    } catch (e) {
+      return Future.error(AddChallengeFailure(e.toString()));
+    }
+  }
 }
