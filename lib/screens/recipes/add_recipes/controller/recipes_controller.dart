@@ -32,6 +32,10 @@ class AddRecipesController extends StateNotifier<RecipesState> {
     state = state.copyWith(nomePiatto: value);
   }
 
+  void onIngredientiSfidaChanged(List<String> value) {
+    state = state.copyWith(ingredienti: value);
+  }
+
   void onDescrizioneChanged(String value) {
     state = state.copyWith(descrizione: value);
   }
@@ -127,7 +131,28 @@ class AddRecipesController extends StateNotifier<RecipesState> {
     state = state.copyWith(stepIndex: value);
   }
 
+  void resetError() {
+    state = state.copyWith(
+      errorMessage: '',
+      errorType: ErrorType.nessuno,
+    );
+  }
+
   void addStep() {
+    if (state.stepImage == null) {
+      state = state.copyWith(
+        errorMessage: "Lo step deve avere un'immagine",
+        errorType: ErrorType.stepImage,
+      );
+    }
+
+    if (state.stepText == null || state.stepText!.isEmpty) {
+      state = state.copyWith(
+        errorMessage: "Lo step deve avere una descrizione",
+        errorType: ErrorType.stepText,
+      );
+    }
+
     if (state.stepImage != null && state.stepText != null) {
       state = state.copyWith(
         passaggi: [...state.passaggi, state.stepText!],

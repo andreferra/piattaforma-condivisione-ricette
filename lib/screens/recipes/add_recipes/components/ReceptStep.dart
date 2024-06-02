@@ -5,6 +5,7 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 
 // Package imports:
+import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:uuid/uuid.dart';
@@ -24,6 +25,47 @@ class ReceptsStep extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    ref.listen(addRecipesProvider, (previous, current) {
+      if (current.errorType == ErrorType.stepImage) {
+        SnackBar snackBar = SnackBar(
+          duration: const Duration(seconds: 2),
+          padding: const EdgeInsets.all(defaultPadding * 3),
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          content: AwesomeSnackbarContent(
+            title: "Errore!",
+            inMaterialBanner: true,
+            message: current.errorMessage.toString(),
+            contentType: ContentType.failure,
+          ),
+        );
+        ScaffoldMessenger.of(context)
+          ..hideCurrentSnackBar()
+          ..showSnackBar(snackBar);
+
+        ref.read(addRecipesProvider.notifier).resetError();
+      } else if (current.errorType == ErrorType.stepText) {
+        SnackBar snackBar = SnackBar(
+          duration: const Duration(seconds: 2),
+          padding: const EdgeInsets.all(defaultPadding * 3),
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          content: AwesomeSnackbarContent(
+            title: "Errore!",
+            inMaterialBanner: true,
+            message: current.errorMessage.toString(),
+            contentType: ContentType.failure,
+          ),
+        );
+
+        ScaffoldMessenger.of(context)
+          ..hideCurrentSnackBar()
+          ..showSnackBar(snackBar);
+
+        ref.read(addRecipesProvider.notifier).resetError();
+      }
+    });
+
     final recipesController = ref.watch(addRecipesProvider.notifier);
     final recipesState = ref.watch(addRecipesProvider);
     final stepImage = recipesState.stepImage;
@@ -32,7 +74,6 @@ class ReceptsStep extends ConsumerWidget {
     final pageController = ref.watch(pageControllerProvider);
     return Column(
       children: [
-        // form creazione step
         const SizedBox(
           height: defaultPadding * 3,
         ),
@@ -111,7 +152,6 @@ class ReceptsStep extends ConsumerWidget {
         const SizedBox(
           height: defaultPadding * 3,
         ),
-
         if (recipesState.passaggi.isNotEmpty)
           for (int i = 0; i < recipesState.passaggi.length; i++)
             Column(

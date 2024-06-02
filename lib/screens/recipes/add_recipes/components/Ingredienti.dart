@@ -1,4 +1,6 @@
 // Flutter imports:
+
+// Flutter imports:
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -89,7 +91,8 @@ class Ingredienti extends ConsumerWidget {
                   trailing: IconButton(
                     icon: const Icon(Icons.delete),
                     onPressed: () {
-                      recipeController.removeIngredienti(recipeState.ingredienti[index]);
+                      recipeController
+                          .removeIngredienti(recipeState.ingredienti[index]);
                     },
                   ),
                 );

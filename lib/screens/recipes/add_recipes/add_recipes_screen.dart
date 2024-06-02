@@ -1,23 +1,31 @@
 // Flutter imports:
 
+// Flutter imports:
+import 'package:flutter/material.dart';
+
+// Package imports:
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 // Project imports:
 import 'package:condivisionericette/screens/recipes/add_recipes/components/Allergie.dart';
 import 'package:condivisionericette/screens/recipes/add_recipes/components/Ingredienti.dart';
+import 'package:condivisionericette/screens/recipes/add_recipes/components/IngredientiSfida.dart';
 import 'package:condivisionericette/screens/recipes/add_recipes/components/ReceptStep.dart';
 import 'package:condivisionericette/screens/recipes/add_recipes/components/Tag.dart';
 import 'package:condivisionericette/screens/recipes/add_recipes/components/header_recipes.dart';
 import 'package:condivisionericette/screens/recipes/add_recipes/controller/recipes_controller.dart';
 import 'package:condivisionericette/utils/constant.dart';
 import 'package:condivisionericette/widget/loading_errors.dart';
-// Flutter imports:
-import 'package:flutter/material.dart';
-// Package imports:
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class AddRecipesScreen extends ConsumerWidget {
   final bool sfida;
   final String sfidaId;
-  const AddRecipesScreen({super.key, this.sfida = false, this.sfidaId = ""});
+  final List<String> ingredienti;
+  const AddRecipesScreen(
+      {super.key,
+      this.sfida = false,
+      this.sfidaId = "",
+      this.ingredienti = const []});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -38,6 +46,11 @@ class AddRecipesScreen extends ConsumerWidget {
     });
 
     return Scaffold(
+      appBar: sfida
+          ? AppBar(
+              title: const Text("Aggiungi ricetta per la sfida"),
+            )
+          : null,
       body: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
         padding: const EdgeInsets.symmetric(horizontal: defaultPadding),
@@ -64,7 +77,9 @@ class AddRecipesScreen extends ConsumerWidget {
                 Expanded(
                   child: SizedBox(
                     width: MediaQuery.of(context).size.width / 3,
-                    child: const Ingredienti(),
+                    child: sfida
+                        ? Ingredientisfida(ingredienti: ingredienti)
+                        : const Ingredienti(),
                   ),
                 ),
                 Expanded(

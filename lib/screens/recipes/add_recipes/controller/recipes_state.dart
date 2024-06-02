@@ -13,6 +13,8 @@ class RecipesState extends Equatable {
   final String? recipeID;
   final String? userID;
   final Timestamp? dataCreazione;
+  final String? errorMessage;
+  final ErrorType errorType;
 
   //utili
   final String? ingrediente;
@@ -34,36 +36,37 @@ class RecipesState extends Equatable {
   final StateRecipes status;
   final FileState fileState;
 
-  const RecipesState({
-    this.recipeID,
-    this.nomePiatto,
-    this.descrizione,
-    this.dataCreazione,
-    this.tempoPreparazione,
-    this.porzioni,
-    this.difficolta = "facile",
-    this.immagini = const [],
-    this.ingredienti = const [],
-    this.tag = const [],
-    this.passaggi = const [],
-    this.allergie = const [],
-    this.ingrediente,
-    this.tagSingolo,
-    this.passaggio,
-    this.allergia,
-    this.misura,
-    this.quantita,
-    this.coverImage,
-    this.stepIndex = 0,
-    this.stepImage,
-    this.stepText,
-    this.linkCoverImage,
-    this.linkStepImages,
-    this.userID,
-    this.recipeInteraction,
-    this.status = StateRecipes.initial,
-    this.fileState = FileState.initial,
-  });
+  const RecipesState(
+      {this.recipeID,
+      this.nomePiatto,
+      this.descrizione,
+      this.dataCreazione,
+      this.tempoPreparazione,
+      this.porzioni,
+      this.difficolta = "facile",
+      this.immagini = const [],
+      this.ingredienti = const [],
+      this.tag = const [],
+      this.passaggi = const [],
+      this.allergie = const [],
+      this.ingrediente,
+      this.tagSingolo,
+      this.passaggio,
+      this.allergia,
+      this.misura,
+      this.quantita,
+      this.coverImage,
+      this.stepIndex = 0,
+      this.stepImage,
+      this.stepText,
+      this.linkCoverImage,
+      this.linkStepImages,
+      this.userID,
+      this.recipeInteraction,
+      this.status = StateRecipes.initial,
+      this.fileState = FileState.initial,
+      this.errorMessage,
+      this.errorType = ErrorType.nessuno});
 
   RecipesState copyWith({
     String? nomePiatto,
@@ -92,6 +95,8 @@ class RecipesState extends Equatable {
     RecipeInteraction? recipeInteraction,
     StateRecipes? status,
     FileState? fileState,
+    String? errorMessage,
+    ErrorType? errorType,
   }) {
     return RecipesState(
       recipeID: recipeID ?? this.recipeID,
@@ -117,6 +122,8 @@ class RecipesState extends Equatable {
       stepText: stepText ?? this.stepText,
       status: status ?? this.status,
       recipeInteraction: recipeInteraction ?? this.recipeInteraction,
+      errorMessage: errorMessage ?? this.errorMessage,
+      errorType: errorType ?? this.errorType,
     );
   }
 
@@ -191,5 +198,7 @@ class RecipesState extends Equatable {
         recipeInteraction,
         status,
         fileState,
+        errorMessage,
+        errorType,
       ];
 }
