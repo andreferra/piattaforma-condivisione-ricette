@@ -3,15 +3,16 @@ import 'dart:typed_data';
 
 // Package imports:
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:equatable/equatable.dart';
+import 'package:firebase_auth_repo/auth_repo.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:uuid/uuid.dart';
+
 // Project imports:
 import 'package:condivisionericette/controller/auth_repo_provider.dart';
 import 'package:condivisionericette/model/Comment.dart';
 import 'package:condivisionericette/screens/recipes/view_screen/controller/recipe_interaction_controller.dart';
 import 'package:condivisionericette/utils/constant.dart';
-import 'package:equatable/equatable.dart';
-import 'package:firebase_auth_repo/auth_repo.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:uuid/uuid.dart';
 
 part 'recipes_state.dart';
 
@@ -208,10 +209,11 @@ class AddRecipesController extends StateNotifier<RecipesState> {
     state = state.copyWith(
       errorMessage: '',
       errorType: ErrorType.nessuno,
+      status: StateRecipes.initial,
     );
   }
 
-  void addStep() {
+  String addStep() {
     if (state.stepImage == null) {
       state = state.copyWith(
         errorMessage: "Lo step deve avere un'immagine",
@@ -233,6 +235,8 @@ class AddRecipesController extends StateNotifier<RecipesState> {
         stepIndex: state.stepIndex! + 1,
       );
     }
+
+    return 'ok';
   }
 
   void removeStep(int value) {
@@ -255,6 +259,29 @@ class AddRecipesController extends StateNotifier<RecipesState> {
 
   Future<String> addRecipes(AuthUser oldUser) async {
     try {
+      if (state.errorType != ErrorType.nessuno) {
+        state = state.copyWith(status: StateRecipes.error);
+        return "error";
+      }
+
+      if (state.coverImage == null) {
+        state = state.copyWith(
+          errorMessage: "Il piatto deve avere una cover image",
+          errorType: ErrorType.coverImage,
+        );
+        state = state.copyWith(status: StateRecipes.error);
+        return "error";
+      }
+
+      if (state.stepImage == null || state.passaggi.isEmpty) {
+        state = state.copyWith(
+          errorMessage: "Lo step deve avere un'immagine e una descrizione",
+          errorType: ErrorType.stepImage,
+        );
+        state = state.copyWith(status: StateRecipes.error);
+        return "error";
+      }
+
       state = state.copyWith(status: StateRecipes.inProgress);
       _firebaseRepo.addRecipe(
         oldUser,

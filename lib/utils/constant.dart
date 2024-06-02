@@ -26,5 +26,6 @@ enum ErrorType {
   allergie,
   coverImage,
   stepImage,
-  stepText
+  stepText,
+  generale
 }

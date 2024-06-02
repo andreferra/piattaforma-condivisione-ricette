@@ -139,7 +139,21 @@ class ReceptsStep extends ConsumerWidget {
         AnimatedButton(
             onTap: () {
               try {
-                recipesController.addStep();
+                String res = recipesController.addStep();
+                if (res == "ok") {
+                  SnackBar snackBar = SnackBar(
+                    backgroundColor: Colors.transparent,
+                    elevation: 0,
+                    content: AwesomeSnackbarContent(
+                      title: "Step aggiunto",
+                      message: "Lo step è stato aggiunto con successo",
+                      contentType: ContentType.success,
+                    ),
+                    duration: const Duration(seconds: 2),
+                    padding: const EdgeInsets.all(defaultPadding * 3),
+                  );
+                  ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                }
               } catch (e) {
                 print(e);
               }
@@ -164,7 +178,7 @@ class ReceptsStep extends ConsumerWidget {
                     Text(
                       "PASSAGGIO ${i + 1}",
                       style: const TextStyle(
-                        fontSize: 20,
+                        fontSize: 22,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -237,19 +251,33 @@ class ReceptsStep extends ConsumerWidget {
 
                     String res = await recipesController.addRecipes(user);
                     if (res == "ok") {
-                      SnackBar snackBar = const SnackBar(
-                        content: Text("Ricetta pubblicata con successo"),
-                        duration: Duration(seconds: 2),
-                        padding: EdgeInsets.all(defaultPadding * 3),
+                      SnackBar snackBar = SnackBar(
+                        backgroundColor: Colors.transparent,
+                        elevation: 0,
+                        content: AwesomeSnackbarContent(
+                          title: "Ricetta pubblicata",
+                          message:
+                              "La tua ricetta è stata pubblicata con successo",
+                          contentType: ContentType.success,
+                        ),
+                        duration: const Duration(seconds: 2),
+                        padding: const EdgeInsets.all(defaultPadding * 3),
                       );
                       ScaffoldMessenger.of(context).showSnackBar(snackBar);
                       pageController.setPage(1);
                     } else if (res == "error") {
-                      SnackBar snackBar = const SnackBar(
-                        content: Text(
-                            "Errore durante la pubblicazione della ricetta"),
-                        duration: Duration(seconds: 2),
-                        padding: EdgeInsets.all(defaultPadding * 3),
+                      recipesController.resetError();
+                      SnackBar snackBar = SnackBar(
+                        backgroundColor: Colors.transparent,
+                        elevation: 0,
+                        content: AwesomeSnackbarContent(
+                          title: "Errore",
+                          message:
+                              "Errore pubblicazione della ricetta, controlla di aver compilato tutti i campi",
+                          contentType: ContentType.failure,
+                        ),
+                        duration: const Duration(seconds: 5),
+                        padding: const EdgeInsets.all(defaultPadding * 3),
                       );
                       ScaffoldMessenger.of(context).showSnackBar(snackBar);
                     }

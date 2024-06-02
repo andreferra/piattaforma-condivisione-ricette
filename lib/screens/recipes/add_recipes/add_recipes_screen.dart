@@ -32,9 +32,6 @@ class AddRecipesScreen extends ConsumerWidget {
     ref.listen<RecipesState>(addRecipesProvider, (previous, current) {
       if (current.status == StateRecipes.inProgress) {
         LoadingSheet.show(context);
-      } else if (current.status == StateRecipes.error) {
-        Navigator.of(context).pop();
-        ErrorDialog.show(context, "Errore pubblicazione della ricetta");
       } else if (current.status == StateRecipes.done) {
         SnackBar snackBar = const SnackBar(
           content: Text("Impostazioni aggiornate con successo"),
