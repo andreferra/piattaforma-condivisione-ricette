@@ -58,7 +58,7 @@ class GamingScreen extends ConsumerWidget {
                   ),
                 ),
                 const SizedBox(height: 20),
-                const GetCurrentRecipe(),
+                GetCurrentRecipe(user: user),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,

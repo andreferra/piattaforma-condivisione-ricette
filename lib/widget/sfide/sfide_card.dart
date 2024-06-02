@@ -150,7 +150,7 @@ class _SfideCardState extends State<SfideCard> {
               ),
               if (sfida.dataFine != null && !widget.old)
                 Expanded(
-                  flex: 1,
+                  flex: 2,
                   child: Column(
                     children: [
                       Text(

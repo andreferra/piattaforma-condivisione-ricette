@@ -1,8 +1,4 @@
 // Flutter imports:
-import 'package:flutter/material.dart';
-
-// Package imports:
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 // Project imports:
 import 'package:condivisionericette/screens/recipes/add_recipes/components/Allergie.dart';
@@ -13,9 +9,15 @@ import 'package:condivisionericette/screens/recipes/add_recipes/components/heade
 import 'package:condivisionericette/screens/recipes/add_recipes/controller/recipes_controller.dart';
 import 'package:condivisionericette/utils/constant.dart';
 import 'package:condivisionericette/widget/loading_errors.dart';
+// Flutter imports:
+import 'package:flutter/material.dart';
+// Package imports:
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class AddRecipesScreen extends ConsumerWidget {
-  const AddRecipesScreen({super.key});
+  final bool sfida;
+  final String sfidaId;
+  const AddRecipesScreen({super.key, this.sfida = false, this.sfidaId = ""});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -35,8 +37,8 @@ class AddRecipesScreen extends ConsumerWidget {
       }
     });
 
-    return SafeArea(
-      child: SingleChildScrollView(
+    return Scaffold(
+      body: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
         padding: const EdgeInsets.symmetric(horizontal: defaultPadding),
         child: Column(

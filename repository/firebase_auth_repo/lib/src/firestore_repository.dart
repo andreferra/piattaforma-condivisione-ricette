@@ -1016,4 +1016,73 @@ class FirebaseRepository {
       return Future.error(UpdateProfileFailure(e.toString()));
     }
   }
+
+  /// iscrivi user alla sfida
+  Future<String> iscriviUserSfida(String uid, String sfidaId) async {
+    try {
+      await _firestore
+          .collection('sfide')
+          .where('id', isEqualTo: sfidaId)
+          .get()
+          .then((value) async {
+        await _firestore.collection('sfide').doc(value.docs[0].id).update({
+          'utentiPartecipanti': FieldValue.arrayUnion([uid]),
+          'partecipanti': FieldValue.increment(1),
+        });
+      });
+
+      return 'ok';
+    } on FirebaseException catch (e) {
+      return Future.error(AddChallengeFailure(e.code));
+    } catch (e) {
+      return Future.error(AddChallengeFailure(e.toString()));
+    }
+  }
+
+  /// get sfida by id
+  Future<Sfidegame> getSfidaById(String sfidaId) async {
+    try {
+      return _firestore.collection('sfide').doc(sfidaId).get().then((value) {
+        return Sfidegame.fromMap(value.data()!);
+      });
+    } on FirebaseException catch (e) {
+      return Future.error(AddChallengeFailure(e.code));
+    } catch (e) {
+      return Future.error(AddChallengeFailure(e.toString()));
+    }
+  }
+
+  /// get sfida by id
+  Future<String> updateSfida(Sfidegame sfida) async {
+    try {
+      if (sfida.type == SfideType.none) {
+        return 'error';
+      }
+      if (sfida.type == SfideType.ingredients &&
+          sfida.ingredienti!.isNotEmpty) {
+        await _firestore
+            .collection('sfide')
+            .doc(sfida.id)
+            .update(sfida.toMap());
+      }
+      if (sfida.type == SfideType.image && sfida.immagini!.isNotEmpty) {
+        await _storage
+            .uploadMultipleFiles("sfide/${sfida.id}", sfida.immagini!)
+            .then(
+          (value) async {
+            sfida = sfida.copyWith(urlImmagini: value, immagini: []);
+            await _firestore
+                .collection('sfide')
+                .doc(sfida.id)
+                .update(sfida.toMap());
+          },
+        );
+      }
+      return 'ok';
+    } on FirebaseException catch (e) {
+      return Future.error(AddChallengeFailure(e.code));
+    } catch (e) {
+      return Future.error(AddChallengeFailure(e.toString()));
+    }
+  }
 }
