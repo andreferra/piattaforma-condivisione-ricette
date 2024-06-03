@@ -3,7 +3,6 @@ import 'dart:async';
 
 // Flutter imports:
 import 'package:flutter/material.dart';
-
 // Package imports:
 import 'package:model_repo/model_repo.dart';
 
@@ -97,40 +96,47 @@ class _SfidaInfoState extends State<SfidaInfo> {
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
-          Column(
-            children: [
-              const Text("Descrizione della sfida:",
-                  style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white)),
-              const SizedBox(height: 10),
-              Text(sfide.description, style: const TextStyle(fontSize: 20)),
-            ],
+          Expanded(
+            flex: 3,
+            child: Column(
+              children: [
+                const Text("Descrizione della sfida:",
+                    style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white)),
+                const SizedBox(height: 10),
+                Text(sfide.description, style: const TextStyle(fontSize: 20)),
+              ],
+            ),
           ),
-          Column(
-            children: [
-              const Text("Punti:",
-                  style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white)),
-              const SizedBox(height: 10),
-              Text(sfide.punti.toString(),
-                  style: const TextStyle(fontSize: 20)),
-            ],
+          Expanded(
+            child: Column(
+              children: [
+                const Text("Punti:",
+                    style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white)),
+                const SizedBox(height: 10),
+                Text(sfide.punti.toString(),
+                    style: const TextStyle(fontSize: 20)),
+              ],
+            ),
           ),
-          Column(
-            children: [
-              const Text("Gioactori iscritti:",
-                  style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white)),
-              const SizedBox(height: 10),
-              Text(sfide.partecipanti.toString(),
-                  style: const TextStyle(fontSize: 20)),
-            ],
+          Expanded(
+            child: Column(
+              children: [
+                const Text("Gioactori iscritti:",
+                    style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white)),
+                const SizedBox(height: 10),
+                Text(sfide.partecipanti.toString(),
+                    style: const TextStyle(fontSize: 20)),
+              ],
+            ),
           ),
           Column(
             children: [

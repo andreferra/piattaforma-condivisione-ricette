@@ -10,6 +10,7 @@ class Sfidegame {
   int partecipanti;
   List<String> utentiPartecipanti;
   List<String> classifica;
+  List<String> ricettePubblicate;
   int punti;
   SfideType type;
   List<String>? ingredienti;
@@ -29,6 +30,7 @@ class Sfidegame {
     this.classifica = const [],
     this.punti = 0,
     this.type = SfideType.none,
+    this.ricettePubblicate = const [],
     this.ingredienti,
     this.immagini,
     this.urlImmagini,
@@ -52,6 +54,7 @@ class Sfidegame {
     List<String>? ingredienti,
     List<Uint8List>? immagini,
     List<String>? urlImmagini,
+    List<String>? ricettePubblicate,
     DateTime? dataCreazione,
     DateTime? dataFine,
     DateTime? dataInizio,
@@ -72,6 +75,7 @@ class Sfidegame {
       dataCreazione: dataCreazione ?? this.dataCreazione,
       dataFine: dataFine ?? this.dataFine,
       dataInizio: dataInizio ?? this.dataInizio,
+      ricettePubblicate: ricettePubblicate ?? this.ricettePubblicate,
     );
   }
 
@@ -92,11 +96,11 @@ class Sfidegame {
       'dataCreazione': dataCreazione,
       'dataFine': dataFine,
       'dataInizio': dataInizio,
+      'ricettePubblicate': ricettePubblicate,
     };
   }
 
   factory Sfidegame.fromMap(Map<String, dynamic> map) {
-    print(map);
     try {
       return Sfidegame(
         id: map['id'],
@@ -117,6 +121,9 @@ class Sfidegame {
         dataCreazione: map['dataCreazione'] != null
             ? map['dataCreazione'].toDate()
             : DateTime.now(),
+        ricettePubblicate: map['ricettePubblicate'] != null
+            ? List<String>.from(map['ricettePubblicate'])
+            : [],
         dataFine:
             map['dataFine'] != null ? map['dataFine'].toDate() : DateTime.now(),
         dataInizio: map['dataInizio'] != null

@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:condivisionericette/screens/recipes/add_recipes/controller/recipes_controller.dart';
 import 'package:firebase_auth_repo/auth_repo.dart';
 import 'package:firebase_auth_repo/src/storage_respository.dart';
 import 'package:model_repo/model_repo.dart';
@@ -78,6 +79,11 @@ class GetRecipeFailure implements Exception {
   final String code;
 
   const GetRecipeFailure(this.code);
+
+  @override
+  String toString() {
+    return 'GetRecipeFailure: $code';
+  }
 }
 
 class FirebaseRepository {
@@ -1083,6 +1089,110 @@ class FirebaseRepository {
       return Future.error(AddChallengeFailure(e.code));
     } catch (e) {
       return Future.error(AddChallengeFailure(e.toString()));
+    }
+  }
+
+  Future<String> addRecipeSfida(
+      AuthUser oldUser, RecipesState state, String uid, String sfidaId) async {
+    try {
+      String coverImageUrl = await _storage.uploadFile(
+          'cover_images_sfida/$sfidaId', state.coverImage!, "${sfidaId}cover");
+      List<String> stepImagesUrl = await _storage.uploadMultipleFiles(
+          'step_images_sfida/$sfidaId', state.immagini);
+
+      final Recipesfide recipe = Recipesfide(
+          recipeID: uid,
+          sfidaID: sfidaId,
+          userID: oldUser.uid,
+          nomePiatto: state.nomePiatto!,
+          descrizione: state.descrizione!,
+          coverImage: coverImageUrl,
+          tempoPreparazione: state.tempoPreparazione!,
+          porzioni: state.porzioni!,
+          difficolta: state.difficolta!,
+          ingredienti: state.ingredienti,
+          tag: state.tag,
+          allergie: state.allergie,
+          immaginiPassaggi: stepImagesUrl,
+          passaggi: state.passaggi,
+          totaleVoti: 0,
+          utentiVotanti: [],
+          visualizzazioni: 0,
+          votiNegativi: 0,
+          votiPositivi: 0);
+
+      print(sfidaId);
+      print(uid);
+
+      String docId = await _firestore
+          .collection('sfide')
+          .where('id', isEqualTo: sfidaId)
+          .get()
+          .then((value) {
+        return value.docs[0].id;
+      });
+
+      print(docId);
+
+      await _firestore
+          .collection("sfide")
+          .doc(docId)
+          .collection("recipes")
+          .doc(uid)
+          .set(recipe.toMap());
+
+      await _firestore.collection('sfide').doc(docId).update({
+        'ricettePubblicate': FieldValue.arrayUnion([uid])
+      });
+
+      return 'ok';
+    } on FirebaseException catch (e) {
+      return Future.error(AddChallengeFailure(e.code));
+    } catch (e) {
+      return Future.error(AddChallengeFailure(e.toString()));
+    }
+  }
+
+  Future<Recipesfide> getUserSfideRecipe(String sfidaId, String uid) async {
+    try {
+      Recipesfide recipe = Recipesfide.empty();
+
+      String docID = await _firestore
+          .collection('sfide')
+          .where('id', isEqualTo: sfidaId)
+          .get()
+          .then((value) {
+        return value.docs[0].id;
+      });
+
+      print(docID);
+      print(uid);
+
+      DocumentReference docRef = _firestore.collection("sfide").doc(docID);
+
+      await docRef.collection("recipes").get().then((value) {
+        if (value.docs.isNotEmpty) {
+          for (var doc in value.docs) {
+            print(doc.data()['userID']);
+            if (doc.data()['userID'] == uid) {
+              recipe = Recipesfide.fromSnapshot(doc.data());
+            }
+          }
+        } else {
+          return Future.error(
+              const GetRecipeFailure('Nessuna ricetta pubblicata'));
+        }
+      });
+      if (recipe.recipeID != '') {
+        return recipe;
+      } else {
+        return Future.error(
+            const GetRecipeFailure('Nessuna ricetta pubblicata'));
+      }
+    } on FirebaseException catch (e) {
+      return Future.error(GetRecipeFailure(e.code));
+    } catch (e) {
+      return Future.error(GetRecipeFailure(e.toString()));
     }
   }
 }

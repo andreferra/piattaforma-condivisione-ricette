@@ -3,16 +3,15 @@ import 'dart:typed_data';
 
 // Package imports:
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:equatable/equatable.dart';
-import 'package:firebase_auth_repo/auth_repo.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:uuid/uuid.dart';
-
 // Project imports:
 import 'package:condivisionericette/controller/auth_repo_provider.dart';
 import 'package:condivisionericette/model/Comment.dart';
 import 'package:condivisionericette/screens/recipes/view_screen/controller/recipe_interaction_controller.dart';
 import 'package:condivisionericette/utils/constant.dart';
+import 'package:equatable/equatable.dart';
+import 'package:firebase_auth_repo/auth_repo.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:uuid/uuid.dart';
 
 part 'recipes_state.dart';
 
@@ -257,7 +256,8 @@ class AddRecipesController extends StateNotifier<RecipesState> {
     state = state.copyWith(stepText: value);
   }
 
-  Future<String> addRecipes(AuthUser oldUser) async {
+  Future<String> addRecipes(
+      AuthUser oldUser, bool sfida, String sfidaId) async {
     try {
       if (state.errorType != ErrorType.nessuno) {
         state = state.copyWith(status: StateRecipes.error);
@@ -283,15 +283,25 @@ class AddRecipesController extends StateNotifier<RecipesState> {
       }
 
       state = state.copyWith(status: StateRecipes.inProgress);
-      _firebaseRepo.addRecipe(
-        oldUser,
-        state,
-        const Uuid().v4(),
-      );
+      if (!sfida) {
+        _firebaseRepo.addRecipe(
+          oldUser,
+          state,
+          const Uuid().v4(),
+        );
+      } else if (sfida) {
+        _firebaseRepo.addRecipeSfida(
+          oldUser,
+          state,
+          const Uuid().v4(),
+          sfidaId,
+        );
+      }
       state = state.copyWith(status: StateRecipes.done);
 
       return "ok";
     } catch (e) {
+      print(e);
       state = state.copyWith(status: StateRecipes.error);
       return "error";
     }

@@ -1,11 +1,5 @@
 // Flutter imports:
 
-// Flutter imports:
-import 'package:flutter/material.dart';
-
-// Package imports:
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-
 // Project imports:
 import 'package:condivisionericette/screens/recipes/add_recipes/components/Allergie.dart';
 import 'package:condivisionericette/screens/recipes/add_recipes/components/Ingredienti.dart';
@@ -16,6 +10,10 @@ import 'package:condivisionericette/screens/recipes/add_recipes/components/heade
 import 'package:condivisionericette/screens/recipes/add_recipes/controller/recipes_controller.dart';
 import 'package:condivisionericette/utils/constant.dart';
 import 'package:condivisionericette/widget/loading_errors.dart';
+// Flutter imports:
+import 'package:flutter/material.dart';
+// Package imports:
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class AddRecipesScreen extends ConsumerWidget {
   final bool sfida;
@@ -110,7 +108,10 @@ class AddRecipesScreen extends ConsumerWidget {
               ),
             ),
             const SizedBox(height: defaultPadding * 3),
-            const ReceptsStep(),
+            ReceptsStep(
+              sfida: sfida,
+              sfidaId: sfidaId,
+            ),
           ],
         ),
       ),

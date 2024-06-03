@@ -1,15 +1,8 @@
 // Dart imports:
 import 'dart:typed_data';
 
-// Flutter imports:
-import 'package:flutter/material.dart';
-
 // Package imports:
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:uuid/uuid.dart';
-
 // Project imports:
 import 'package:condivisionericette/controller/PageController.dart';
 import 'package:condivisionericette/controller/auth_controller/auth_controller.dart';
@@ -19,9 +12,16 @@ import 'package:condivisionericette/utils/constant.dart';
 import 'package:condivisionericette/widget/button/animated_button.dart';
 import 'package:condivisionericette/widget/button/rounded_button_style.dart';
 import 'package:condivisionericette/widget/text_input_field.dart';
+// Flutter imports:
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:uuid/uuid.dart';
 
 class ReceptsStep extends ConsumerWidget {
-  const ReceptsStep({super.key});
+  final bool sfida;
+  final String sfidaId;
+  const ReceptsStep({super.key, required this.sfida, required this.sfidaId});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -197,10 +197,12 @@ class ReceptsStep extends ConsumerWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    Text(
-                      recipesState.passaggi[i],
-                      style: const TextStyle(
-                        fontSize: 16,
+                    Expanded(
+                      child: Text(
+                        recipesState.passaggi[i],
+                        style: const TextStyle(
+                          fontSize: 16,
+                        ),
                       ),
                     ),
                     const SizedBox(
@@ -249,38 +251,47 @@ class ReceptsStep extends ConsumerWidget {
                     await recipesController.addMultiNotification(
                         notificheDaInviare, user.follower!);
 
-                    String res = await recipesController.addRecipes(user);
-                    if (res == "ok") {
-                      SnackBar snackBar = SnackBar(
-                        backgroundColor: Colors.transparent,
-                        elevation: 0,
-                        content: AwesomeSnackbarContent(
-                          title: "Ricetta pubblicata",
-                          message:
-                              "La tua ricetta è stata pubblicata con successo",
-                          contentType: ContentType.success,
-                        ),
-                        duration: const Duration(seconds: 2),
-                        padding: const EdgeInsets.all(defaultPadding * 3),
-                      );
-                      ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                      pageController.setPage(1);
-                    } else if (res == "error") {
-                      recipesController.resetError();
-                      SnackBar snackBar = SnackBar(
-                        backgroundColor: Colors.transparent,
-                        elevation: 0,
-                        content: AwesomeSnackbarContent(
-                          title: "Errore",
-                          message:
-                              "Errore pubblicazione della ricetta, controlla di aver compilato tutti i campi",
-                          contentType: ContentType.failure,
-                        ),
-                        duration: const Duration(seconds: 5),
-                        padding: const EdgeInsets.all(defaultPadding * 3),
-                      );
-                      ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                    }
+                    await recipesController
+                        .addRecipes(user, sfida, sfidaId)
+                        .then(
+                      (value) {
+                        if (value == "ok") {
+                          SnackBar snackBar = SnackBar(
+                            backgroundColor: Colors.transparent,
+                            elevation: 0,
+                            content: AwesomeSnackbarContent(
+                              title: "Ricetta pubblicata",
+                              message:
+                                  "La tua ricetta è stata pubblicata con successo",
+                              contentType: ContentType.success,
+                            ),
+                            duration: const Duration(seconds: 2),
+                            padding: const EdgeInsets.all(defaultPadding * 3),
+                          );
+                          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                          if (sfida) {
+                            Navigator.of(context).pop();
+                          } else if (!sfida) {
+                            pageController.setPage(1);
+                          }
+                        } else if (value == "error") {
+                          recipesController.resetError();
+                          SnackBar snackBar = SnackBar(
+                            backgroundColor: Colors.transparent,
+                            elevation: 0,
+                            content: AwesomeSnackbarContent(
+                              title: "Errore",
+                              message:
+                                  "Errore pubblicazione della ricetta, controlla di aver compilato tutti i campi",
+                              contentType: ContentType.failure,
+                            ),
+                            duration: const Duration(seconds: 5),
+                            padding: const EdgeInsets.all(defaultPadding * 3),
+                          );
+                          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                        }
+                      },
+                    );
                   } catch (e) {
                     print(e);
                   }
