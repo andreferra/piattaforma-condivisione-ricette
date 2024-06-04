@@ -1,12 +1,5 @@
 // Flutter imports:
 
-// Flutter imports:
-import 'package:flutter/material.dart';
-
-// Package imports:
-import 'package:firebase_auth_repo/auth_repo.dart';
-import 'package:model_repo/model_repo.dart';
-
 // Project imports:
 import 'package:condivisionericette/screens/recipes/add_recipes/add_recipes_screen.dart';
 import 'package:condivisionericette/screens/sfida_screen/components/header_sfida.dart';
@@ -16,6 +9,11 @@ import 'package:condivisionericette/screens/sfida_screen/components/sfida_info.d
 import 'package:condivisionericette/screens/sfida_screen/components/sfida_ricetta_info.dart';
 import 'package:condivisionericette/widget/button/animated_button.dart';
 import 'package:condivisionericette/widget/button/rounded_button_style.dart';
+// Package imports:
+import 'package:firebase_auth_repo/auth_repo.dart';
+// Flutter imports:
+import 'package:flutter/material.dart';
+import 'package:model_repo/model_repo.dart';
 
 class SfidaScreen extends StatefulWidget {
   final Sfidegame sfide;
@@ -109,7 +107,10 @@ class _SfidaScreenState extends State<SfidaScreen> {
                             builder: (context) => AddRecipesScreen(
                               sfida: true,
                               sfidaId: sfide.id,
+                              sfideType: SfideType.values
+                                  .firstWhere((e) => sfide.type == e),
                               ingredienti: sfide.ingredienti!,
+                              urlImmagini: sfide.urlImmagini!,
                             ),
                           ),
                         );

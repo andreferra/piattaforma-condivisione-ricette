@@ -1,11 +1,5 @@
 // Flutter imports:
 
-// Flutter imports:
-import 'package:flutter/material.dart';
-
-// Package imports:
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-
 // Project imports:
 import 'package:condivisionericette/screens/recipes/add_recipes/components/Allergie.dart';
 import 'package:condivisionericette/screens/recipes/add_recipes/components/Ingredienti.dart';
@@ -16,19 +10,31 @@ import 'package:condivisionericette/screens/recipes/add_recipes/components/heade
 import 'package:condivisionericette/screens/recipes/add_recipes/controller/recipes_controller.dart';
 import 'package:condivisionericette/utils/constant.dart';
 import 'package:condivisionericette/widget/loading_errors.dart';
+import 'package:firebase_auth_repo/auth_repo.dart';
+// Flutter imports:
+import 'package:flutter/material.dart';
+// Package imports:
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:model_repo/model_repo.dart';
 
 class AddRecipesScreen extends ConsumerWidget {
   final bool sfida;
+  final SfideType sfideType;
   final String sfidaId;
   final List<String> ingredienti;
+  final List<String> urlImmagini;
   const AddRecipesScreen(
       {super.key,
       this.sfida = false,
+      this.sfideType = SfideType.none,
       this.sfidaId = "",
+      this.urlImmagini = const [],
       this.ingredienti = const []});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final FirebaseRepository firebaseRepository = FirebaseRepository();
+
     ref.listen<RecipesState>(addRecipesProvider, (previous, current) {
       if (current.status == StateRecipes.inProgress) {
         LoadingSheet.show(context);
@@ -74,7 +80,7 @@ class AddRecipesScreen extends ConsumerWidget {
                 Expanded(
                   child: SizedBox(
                     width: MediaQuery.of(context).size.width / 3,
-                    child: sfida
+                    child: sfideType == SfideType.ingredients
                         ? Ingredientisfida(ingredienti: ingredienti)
                         : const Ingredienti(),
                   ),
@@ -99,7 +105,47 @@ class AddRecipesScreen extends ConsumerWidget {
             ),
             //inizio seconda parte della ricetta con gli step
             const SizedBox(height: defaultPadding * 3),
-
+            if (sfideType == SfideType.image)
+              Column(
+                children: [
+                  const Text(
+                      "Ecco le immagini che devi usare per la tua ricetta"),
+                  const SizedBox(height: defaultPadding),
+                  FutureBuilder<Sfidegame>(
+                      future: firebaseRepository.getSfidaById(sfidaId),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return const CircularProgressIndicator();
+                        }
+                        if (snapshot.hasError) {
+                          return const Text(
+                              "Errore durante il caricamento delle immagini");
+                        }
+                        return GridView.builder(
+                            shrinkWrap: true,
+                            itemCount: snapshot.data!.urlImmagini!.length,
+                            gridDelegate:
+                                const SliverGridDelegateWithFixedCrossAxisCount(
+                                    crossAxisCount: 5,
+                                    crossAxisSpacing: 4.0,
+                                    mainAxisSpacing: 4.0),
+                            itemBuilder: (context, index) {
+                              return Image.network(
+                                snapshot.data!.urlImmagini![index],
+                                fit: BoxFit.cover,
+                                height: 150,
+                                width: 150,
+                              );
+                            });
+                      }),
+                  const Divider(
+                    height: 40,
+                    thickness: 2,
+                  ),
+                  const SizedBox(height: defaultPadding * 3),
+                ],
+              ),
             Center(
               child: Text(
                 'CREA GLI STEP DELLA RICETTA',
@@ -114,6 +160,8 @@ class AddRecipesScreen extends ConsumerWidget {
               sfida: sfida,
               sfidaId: sfidaId,
               ingredienti: ingredienti,
+              urlImmagini: urlImmagini,
+              type: sfideType,
             ),
           ],
         ),

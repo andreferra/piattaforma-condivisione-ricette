@@ -1076,8 +1076,12 @@ class FirebaseRepository {
   /// get sfida by id
   Future<Sfidegame> getSfidaById(String sfidaId) async {
     try {
-      return _firestore.collection('sfide').doc(sfidaId).get().then((value) {
-        return Sfidegame.fromMap(value.data()!);
+      return _firestore
+          .collection('sfide')
+          .where('id', isEqualTo: sfidaId)
+          .get()
+          .then((value) {
+        return Sfidegame.fromMap(value.docs[0].data());
       });
     } on FirebaseException catch (e) {
       return Future.error(AddChallengeFailure(e.code));
