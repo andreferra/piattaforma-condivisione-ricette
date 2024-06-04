@@ -80,7 +80,8 @@ class _SfideMyRecipeCardState extends State<SfideMyRecipeCard> {
                     children: [
                       const Icon(Icons.star),
                       const SizedBox(width: 5),
-                      Text('${recipe.totaleVoti} voti positivi'),
+                      Text(
+                          '${recipe.votiNegativi.length + recipe.votiPositivi.length} voti positivi'),
                     ],
                   ),
                 ],
@@ -114,7 +115,7 @@ class _SfideMyRecipeCardState extends State<SfideMyRecipeCard> {
                     children: [
                       const Icon(Icons.remove_red_eye),
                       const SizedBox(width: 5),
-                      Text('${recipe.visualizzazioni} visualizzazioni'),
+                      Text('${recipe.visualizzazioni.length} visualizzazioni'),
                     ],
                   ),
                 ],
