@@ -1,12 +1,10 @@
 // Flutter imports:
-import 'package:flutter/material.dart';
-
-// Package imports:
-import 'package:firebase_auth_repo/auth_repo.dart';
-import 'package:model_repo/model_repo.dart';
-
 // Project imports:
 import 'package:condivisionericette/widget/sfide/sfide_card.dart';
+// Package imports:
+import 'package:firebase_auth_repo/auth_repo.dart';
+import 'package:flutter/material.dart';
+import 'package:model_repo/model_repo.dart';
 
 class OldSfideList extends StatefulWidget {
   const OldSfideList({super.key});
@@ -30,7 +28,7 @@ class _OldSfideListState extends State<OldSfideList> {
           }
           if (sfide.hasError) {
             return const Center(
-              child: Text('Errore nel caricamento dei dati'),
+              child: Text('NESSUNA SFIDA VECCHIA'),
             );
           }
           return ListView.builder(

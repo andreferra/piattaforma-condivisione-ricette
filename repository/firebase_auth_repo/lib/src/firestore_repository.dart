@@ -1417,4 +1417,32 @@ class FirebaseRepository {
       return Future.error(GetRecipeFailure(e.toString()));
     }
   }
+
+  Future<String> getNicknameFromSfida(Sfidegame sfida) async {
+    try {
+      String docID = await _firestore
+          .collection('sfide')
+          .where('id', isEqualTo: sfida.id)
+          .get()
+          .then((value) {
+        return value.docs[0].id;
+      });
+
+      String userId = await _firestore
+          .collection('sfide')
+          .doc(docID)
+          .collection('recipes')
+          .doc(sfida.classifica.first)
+          .get()
+          .then((value) {
+        return value.data()!['userID'];
+      });
+
+      return getNickname(userId);
+    } on FirebaseException catch (e) {
+      return Future.error(UpdateProfileFailure(e.code));
+    } catch (e) {
+      return Future.error(UpdateProfileFailure(e.toString()));
+    }
+  }
 }

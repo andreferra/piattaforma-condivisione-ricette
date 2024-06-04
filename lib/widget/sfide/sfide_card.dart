@@ -1,11 +1,10 @@
 // Dart imports:
 import 'dart:async';
 
-// Flutter imports:
-import 'package:flutter/material.dart';
-
 // Package imports:
 import 'package:firebase_auth_repo/auth_repo.dart';
+// Flutter imports:
+import 'package:flutter/material.dart';
 import 'package:model_repo/model_repo.dart';
 
 class SfideCard extends StatefulWidget {
@@ -172,7 +171,7 @@ class _SfideCardState extends State<SfideCard> {
                 ),
               if (widget.old && sfida.classifica.isNotEmpty)
                 FutureBuilder<String>(
-                  future: firebase.getNickname(sfida.classifica.first),
+                  future: firebase.getNicknameFromSfida(sfida),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return const CircularProgressIndicator();
