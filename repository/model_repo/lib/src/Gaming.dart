@@ -1,5 +1,3 @@
-import 'package:model_repo/src/SfideGame.dart';
-
 enum GameName {
   reginaDellaPasta,
   maestroDiDolci,
@@ -13,7 +11,7 @@ class Gaming {
   int punti;
   int sfideVinte;
   int sfidePartecipate = 0;
-  List<Sfidegame>? sfide = [];
+  List<String>? sfide = [];
 
   Gaming({
     this.gameName = GameName.reginaDellaPasta,
@@ -30,7 +28,7 @@ class Gaming {
     int? punti,
     int? sfideVinte,
     int? sfidePartecipate,
-    List<Sfidegame>? sfide,
+    List<String>? sfide,
   }) {
     return Gaming(
       gameName: gameName ?? this.gameName,
@@ -47,7 +45,7 @@ class Gaming {
       'punti': punti,
       'sfideVinte': sfideVinte,
       'sfidePartecipate': sfidePartecipate,
-      'sfide': (sfide ?? []).map((e) => e.toMap()).toList(),
+      'sfide': sfide,
     };
   }
 
@@ -60,9 +58,7 @@ class Gaming {
         punti: map['punti'],
         sfideVinte: map['sfideVinte'],
         sfidePartecipate: map['sfidePartecipate'],
-        sfide: (map['sfide'] as List<dynamic>)
-            .map((e) => Sfidegame.fromMap(e))
-            .toList(),
+        sfide: List<String>.from(map['sfide']),
       );
     } catch (e) {
       print("Errore Gaming.fromMap: ${e.toString()}");
