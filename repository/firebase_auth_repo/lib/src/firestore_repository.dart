@@ -1275,6 +1275,21 @@ class FirebaseRepository {
           .then((value) {
         if (value.exists) {
           if (value.data()!['visualizzazioni'].contains(userID)) {
+            List<String> unique =
+                Set<String>.from(value.data()!['visualizzazioni']).toList();
+            if (unique.length == value.data()!['visualizzazioni'].length) {
+              return;
+            }
+
+            _firestore
+                .collection('sfide')
+                .doc(docID)
+                .collection("recipes")
+                .doc(recipeID)
+                .update({
+              'visualizzazioni': unique,
+            });
+
             return;
           }
           _firestore
@@ -1287,6 +1302,29 @@ class FirebaseRepository {
           });
         }
       });
+    } on FirebaseException catch (e) {
+      return Future.error(AddRecipeViewFailure(e.code));
+    } catch (e) {
+      return Future.error(AddRecipeViewFailure(e.toString()));
+    }
+  }
+
+  updateRecipeSfide(Recipesfide recipe) async {
+    try {
+      String docID = await _firestore
+          .collection('sfide')
+          .where('id', isEqualTo: recipe.sfidaID)
+          .get()
+          .then((value) {
+        return value.docs[0].id;
+      });
+
+      await _firestore
+          .collection('sfide')
+          .doc(docID)
+          .collection("recipes")
+          .doc(recipe.recipeID)
+          .update(recipe.toMap());
     } on FirebaseException catch (e) {
       return Future.error(AddRecipeViewFailure(e.code));
     } catch (e) {
