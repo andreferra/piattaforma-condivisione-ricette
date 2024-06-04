@@ -1,7 +1,13 @@
-import 'package:condivisionericette/widget/sfide/sfide_my_recipe_card.dart';
-import 'package:firebase_auth_repo/auth_repo.dart';
+// Flutter imports:
 import 'package:flutter/material.dart';
+
+// Package imports:
+import 'package:firebase_auth_repo/auth_repo.dart';
 import 'package:model_repo/model_repo.dart';
+
+// Project imports:
+import 'package:condivisionericette/screens/recipes/recipe_sfide/recipe_sfide.dart';
+import 'package:condivisionericette/widget/sfide/sfide_my_recipe_card.dart';
 
 class MieRicettePubblicate extends StatefulWidget {
   final String sfidaId;
@@ -41,7 +47,28 @@ class _MieRicettePubblicateState extends State<MieRicettePubblicate> {
 
                 return InkWell(
                   borderRadius: BorderRadius.circular(10),
-                  onTap: () {},
+                  onTap: () async {
+                    await _firebaseRepository
+                        .addViewToRecipe(
+                      recipe.recipeID,
+                      recipe.sfidaID,
+                      recipe.userID,
+                    )
+                        .then(
+                      (value) {
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => RecipeSfide(
+                                  newRecipe: recipe.copyWith(
+                                    visualizzazioni: [
+                                      ...recipe.visualizzazioni,
+                                      user.uid
+                                    ],
+                                  ),
+                                  user: user,
+                                )));
+                      },
+                    );
+                  },
                   child: SfideMyRecipeCard(recipe: recipe),
                 );
               } else {

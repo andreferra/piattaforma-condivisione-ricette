@@ -1,8 +1,13 @@
+// Flutter imports:
+import 'package:flutter/material.dart';
+
+// Package imports:
+import 'package:firebase_auth_repo/auth_repo.dart';
+import 'package:model_repo/model_repo.dart';
+
+// Project imports:
 import 'package:condivisionericette/screens/search_screen/components/user_card.dart';
 import 'package:condivisionericette/utils/constant.dart';
-import 'package:firebase_auth_repo/auth_repo.dart';
-import 'package:flutter/material.dart';
-import 'package:model_repo/model_repo.dart';
 
 class SfideMyRecipeCard extends StatefulWidget {
   final Recipesfide recipe;

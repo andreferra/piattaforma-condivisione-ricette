@@ -16,11 +16,9 @@ class Recipesfide {
   final String userID;
   final String sfidaID;
   final String recipeID;
-  final int totaleVoti;
-  final int votiPositivi;
-  final int votiNegativi;
-  final int visualizzazioni;
-  final List<String> utentiVotanti;
+  final List<String> votiPositivi;
+  final List<String> votiNegativi;
+  final List<String> visualizzazioni;
 
   const Recipesfide({
     required this.nomePiatto,
@@ -37,11 +35,9 @@ class Recipesfide {
     required this.userID,
     required this.sfidaID,
     required this.recipeID,
-    required this.totaleVoti,
     required this.votiPositivi,
     required this.votiNegativi,
     required this.visualizzazioni,
-    required this.utentiVotanti,
   });
 
   Recipesfide.empty()
@@ -60,11 +56,9 @@ class Recipesfide {
           coverImage: '',
           userID: '',
           recipeID: '',
-          totaleVoti: 0,
-          votiPositivi: 0,
-          votiNegativi: 0,
-          visualizzazioni: 0,
-          utentiVotanti: [],
+          votiPositivi: [],
+          votiNegativi: [],
+          visualizzazioni: [],
         );
 
   Recipesfide copyWith({
@@ -82,11 +76,9 @@ class Recipesfide {
     String? coverImage,
     String? userID,
     String? recipeID,
-    int? totaleVoti,
-    int? votiPositivi,
-    int? votiNegativi,
-    int? visualizzazioni,
-    List<String>? utentiVotanti,
+    List<String>? votiPositivi,
+    List<String>? votiNegativi,
+    List<String>? visualizzazioni,
   }) {
     return Recipesfide(
       nomePiatto: nomePiatto ?? this.nomePiatto,
@@ -102,11 +94,9 @@ class Recipesfide {
       coverImage: coverImage ?? this.coverImage,
       userID: userID ?? this.userID,
       recipeID: recipeID ?? this.recipeID,
-      totaleVoti: totaleVoti ?? this.totaleVoti,
       votiPositivi: votiPositivi ?? this.votiPositivi,
       votiNegativi: votiNegativi ?? this.votiNegativi,
       visualizzazioni: visualizzazioni ?? this.visualizzazioni,
-      utentiVotanti: utentiVotanti ?? this.utentiVotanti,
       sfidaID: sfidaID ?? this.sfidaID,
     );
   }
@@ -126,12 +116,10 @@ class Recipesfide {
       coverImage: snapshot['coverImage'] ?? '',
       userID: snapshot['userID'] ?? '',
       recipeID: snapshot['recipeID'] ?? '',
-      totaleVoti: snapshot['totaleVoti'] ?? 0,
       sfidaID: snapshot['sfidaID'] ?? '',
-      votiPositivi: snapshot['votiPositivi'] ?? 0,
-      votiNegativi: snapshot['votiNegativi'] ?? 0,
-      visualizzazioni: snapshot['visualizzazioni'] ?? 0,
-      utentiVotanti: List<String>.from(snapshot['utentiVotanti'] ?? []),
+      votiPositivi: List<String>.from(snapshot['votiPositivi']),
+      votiNegativi: List<String>.from(snapshot['votiNegativi']),
+      visualizzazioni: List<String>.from(snapshot['visualizzazioni']),
     );
   }
 
@@ -151,11 +139,9 @@ class Recipesfide {
       'coverImage': coverImage,
       'userID': userID,
       'recipeID': recipeID,
-      'totaleVoti': totaleVoti,
       'votiPositivi': votiPositivi,
       'votiNegativi': votiNegativi,
       'visualizzazioni': visualizzazioni,
-      'utentiVotanti': utentiVotanti,
     };
   }
 }

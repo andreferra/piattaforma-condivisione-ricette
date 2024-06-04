@@ -1,13 +1,23 @@
-import 'package:condivisionericette/widget/sfide/sfide_recipe_card.dart';
-import 'package:firebase_auth_repo/auth_repo.dart';
+// Flutter imports:
 import 'package:flutter/material.dart';
+
+// Package imports:
+import 'package:firebase_auth_repo/auth_repo.dart';
 import 'package:model_repo/model_repo.dart';
+
+// Project imports:
+import 'package:condivisionericette/screens/recipes/recipe_sfide/recipe_sfide.dart';
+import 'package:condivisionericette/widget/sfide/sfide_recipe_card.dart';
 
 class RicettePubblicate extends StatefulWidget {
   final String sfidaId;
   final String userId;
+  final AuthUser user;
   const RicettePubblicate(
-      {super.key, required this.sfidaId, required this.userId});
+      {super.key,
+      required this.sfidaId,
+      required this.userId,
+      required this.user});
 
   @override
   State<RicettePubblicate> createState() => _RicettePubblicateState();
@@ -16,6 +26,7 @@ class RicettePubblicate extends StatefulWidget {
 class _RicettePubblicateState extends State<RicettePubblicate> {
   String get sfidaId => widget.sfidaId;
   String get userId => widget.userId;
+  AuthUser get user => widget.user;
   final FirebaseRepository _firebaseRepository = FirebaseRepository();
 
   @override
@@ -49,7 +60,28 @@ class _RicettePubblicateState extends State<RicettePubblicate> {
                 itemBuilder: (context, index) {
                   return InkWell(
                     borderRadius: BorderRadius.circular(10),
-                    onTap: () {},
+                    onTap: () async {
+                      await _firebaseRepository
+                          .addViewToRecipe(
+                        ricette[index].recipeID,
+                        ricette[index].sfidaID,
+                        user.uid,
+                      )
+                          .then(
+                        (value) {
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => RecipeSfide(
+                                    newRecipe: ricette[index].copyWith(
+                                      visualizzazioni: [
+                                        ...ricette[index].visualizzazioni,
+                                        user.uid
+                                      ],
+                                    ),
+                                    user: user,
+                                  )));
+                        },
+                      );
+                    },
                     child: SfideRecipeCard(recipe: ricette[index]),
                   );
                 });
