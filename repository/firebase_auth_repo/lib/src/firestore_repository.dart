@@ -17,6 +17,28 @@ class UpdateProfileFailure implements Exception {
   }
 }
 
+class UpdateRecipeFailure {
+  final String message;
+
+  UpdateRecipeFailure(this.message);
+
+  @override
+  String toString() {
+    return 'UpdateRecipeFailure{message: $message}';
+  }
+}
+
+class AddRecipeViewFailure implements Exception {
+  final String code;
+
+  const AddRecipeViewFailure(this.code);
+
+  @override
+  String toString() {
+    return 'AddRecipeViewFailure: $code';
+  }
+}
+
 class AddChallengeFailure implements Exception {
   final String code;
 
@@ -1037,6 +1059,11 @@ class FirebaseRepository {
         });
       });
 
+      await _firestore.collection('users').doc(uid).update({
+        'gaming.sfide': FieldValue.arrayUnion([sfidaId]),
+        'gaming.sfidePartecipate': FieldValue.increment(1),
+      });
+
       return 'ok';
     } on FirebaseException catch (e) {
       return Future.error(AddChallengeFailure(e.code));
@@ -1115,11 +1142,9 @@ class FirebaseRepository {
           allergie: state.allergie,
           immaginiPassaggi: stepImagesUrl,
           passaggi: state.passaggi,
-          totaleVoti: 0,
-          utentiVotanti: [],
-          visualizzazioni: 0,
-          votiNegativi: 0,
-          votiPositivi: 0);
+          visualizzazioni: [],
+          votiNegativi: [],
+          votiPositivi: []);
 
       print(sfidaId);
       print(uid);
@@ -1226,6 +1251,46 @@ class FirebaseRepository {
       return Future.error(GetRecipeFailure(e.code));
     } catch (e) {
       return Future.error(GetRecipeFailure(e.toString()));
+    }
+  }
+
+  Future<void> addViewToRecipe(
+      String recipeID, String sfidaID, String userID) async {
+    try {
+      String docID = await _firestore
+          .collection('sfide')
+          .where('id', isEqualTo: sfidaID)
+          .get()
+          .then((value) {
+        return value.docs[0].id;
+      });
+
+      // controllo se l'utenete ha già visualizzato la ricetta
+      await _firestore
+          .collection('sfide')
+          .doc(docID)
+          .collection("recipes")
+          .doc(recipeID)
+          .get()
+          .then((value) {
+        if (value.exists) {
+          if (value.data()!['visualizzazioni'].contains(userID)) {
+            return;
+          }
+          _firestore
+              .collection('sfide')
+              .doc(docID)
+              .collection("recipes")
+              .doc(recipeID)
+              .update({
+            'visualizzazioni': FieldValue.arrayUnion([userID]),
+          });
+        }
+      });
+    } on FirebaseException catch (e) {
+      return Future.error(AddRecipeViewFailure(e.code));
+    } catch (e) {
+      return Future.error(AddRecipeViewFailure(e.toString()));
     }
   }
 }
