@@ -1397,4 +1397,24 @@ class FirebaseRepository {
       return Future.error(GetRecipeFailure(e.toString()));
     }
   }
+
+  Future<int> getPosizioneInClassifica(Recipesfide recipe) async {
+    try {
+      List<Recipesfide> recipes = [];
+      await getRicetteClassificaSfida(recipe.sfidaID).then((value) {
+        recipes = value;
+      });
+
+      for (var i = 0; i < recipes.length; i++) {
+        if (recipes[i].recipeID == recipe.recipeID) {
+          return i + 1;
+        }
+      }
+      return 0;
+    } on FirebaseException catch (e) {
+      return Future.error(GetRecipeFailure(e.code));
+    } catch (e) {
+      return Future.error(GetRecipeFailure(e.toString()));
+    }
+  }
 }

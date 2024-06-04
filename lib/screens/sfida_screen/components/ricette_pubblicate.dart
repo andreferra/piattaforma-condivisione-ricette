@@ -1,11 +1,15 @@
 // Flutter imports:
+
+// Flutter imports:
+import 'package:flutter/material.dart';
+
+// Package imports:
+import 'package:firebase_auth_repo/auth_repo.dart';
+import 'package:model_repo/model_repo.dart';
+
 // Project imports:
 import 'package:condivisionericette/screens/recipes/recipe_sfide/recipe_sfide.dart';
 import 'package:condivisionericette/widget/sfide/sfide_recipe_card.dart';
-// Package imports:
-import 'package:firebase_auth_repo/auth_repo.dart';
-import 'package:flutter/material.dart';
-import 'package:model_repo/model_repo.dart';
 
 class RicettePubblicate extends StatefulWidget {
   final String sfidaId;
