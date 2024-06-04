@@ -1123,9 +1123,11 @@ class FirebaseRepository {
       AuthUser oldUser, RecipesState state, String uid, String sfidaId) async {
     try {
       String coverImageUrl = await _storage.uploadFile(
-          'cover_images_sfida/$sfidaId', state.coverImage!, "${sfidaId}cover");
+          'cover_images_sfida/$sfidaId/$uid',
+          state.coverImage!,
+          "${sfidaId}cover");
       List<String> stepImagesUrl = await _storage.uploadMultipleFiles(
-          'step_images_sfida/$sfidaId', state.immagini);
+          'step_images_sfida/$sfidaId/$uid', state.immagini);
 
       final Recipesfide recipe = Recipesfide(
           recipeID: uid,
@@ -1146,9 +1148,6 @@ class FirebaseRepository {
           votiNegativi: [],
           votiPositivi: []);
 
-      print(sfidaId);
-      print(uid);
-
       String docId = await _firestore
           .collection('sfide')
           .where('id', isEqualTo: sfidaId)
@@ -1167,7 +1166,8 @@ class FirebaseRepository {
           .set(recipe.toMap());
 
       await _firestore.collection('sfide').doc(docId).update({
-        'ricettePubblicate': FieldValue.arrayUnion([uid])
+        'ricettePubblicate': FieldValue.arrayUnion([uid]),
+        'classifica': FieldValue.arrayUnion([uid]),
       });
 
       return 'ok';
@@ -1191,15 +1191,11 @@ class FirebaseRepository {
         return value.docs[0].id;
       });
 
-      print(docID);
-      print(uid);
-
       DocumentReference docRef = _firestore.collection("sfide").doc(docID);
 
       await docRef.collection("recipes").get().then((value) {
         if (value.docs.isNotEmpty) {
           for (var doc in value.docs) {
-            print(doc.data()['userID']);
             if (doc.data()['userID'] == uid) {
               recipe = Recipesfide.fromSnapshot(doc.data());
             }
@@ -1254,6 +1250,7 @@ class FirebaseRepository {
     }
   }
 
+  /// Aggiungi una visualizzazione alla ricetta
   Future<void> addViewToRecipe(
       String recipeID, String sfidaID, String userID) async {
     try {
@@ -1309,7 +1306,8 @@ class FirebaseRepository {
     }
   }
 
-  updateRecipeSfide(Recipesfide recipe) async {
+  /// Aggiorna ricetta
+  Future<void> updateRecipeSfide(Recipesfide recipe) async {
     try {
       String docID = await _firestore
           .collection('sfide')
@@ -1325,10 +1323,78 @@ class FirebaseRepository {
           .collection("recipes")
           .doc(recipe.recipeID)
           .update(recipe.toMap());
+
+      List<String> classifica = await updateClassifica(recipe.sfidaID);
+
+      await _firestore.collection('sfide').doc(docID).update({
+        'classifica': classifica,
+      });
     } on FirebaseException catch (e) {
       return Future.error(AddRecipeViewFailure(e.code));
     } catch (e) {
       return Future.error(AddRecipeViewFailure(e.toString()));
+    }
+  }
+
+  /// Update classifica of the challenge
+  Future<List<String>> updateClassifica(String sfidaId) async {
+    try {
+      List<String> classifica = [];
+      List<Recipesfide> recipes = [];
+
+      await getRicetteClassificaSfida(sfidaId).then((value) {
+        recipes = value;
+      });
+
+      // Calcola il punteggio per ogni ricetta
+      for (Recipesfide ricetta in recipes) {
+        int score = ricetta.visualizzazioni.length +
+            (2 * ricetta.votiPositivi.length) -
+            ricetta.votiNegativi.length;
+        ricetta.copyWith(score: score);
+      }
+
+      // Ordina le ricette in base al punteggio
+      recipes.sort((a, b) => b.score.compareTo(a.score));
+
+      // Aggiorna la classifica
+      classifica = recipes.map((ricetta) => ricetta.recipeID).toList();
+
+      return classifica;
+    } on FirebaseException catch (e) {
+      return Future.error(GetRecipeFailure(e.code));
+    } catch (e) {
+      return Future.error(GetRecipeFailure(e.toString()));
+    }
+  }
+
+  /// Get all the recipes of a challenge
+  Future<List<Recipesfide>> getRicetteClassificaSfida(String sfidaId) async {
+    try {
+      String docID = await _firestore
+          .collection('sfide')
+          .where('id', isEqualTo: sfidaId)
+          .get()
+          .then((value) {
+        return value.docs[0].id;
+      });
+
+      List<Recipesfide> recipes = [];
+      await _firestore
+          .collection('sfide')
+          .doc(docID)
+          .collection('recipes')
+          .get()
+          .then((value) {
+        for (var doc in value.docs) {
+          recipes.add(Recipesfide.fromSnapshot(doc.data()));
+        }
+      });
+      return recipes;
+    } on FirebaseException catch (e) {
+      return Future.error(GetRecipeFailure(e.code));
+    } catch (e) {
+      return Future.error(GetRecipeFailure(e.toString()));
     }
   }
 }

@@ -147,17 +147,21 @@ class _RecipeSfideState extends State<RecipeSfide> {
             if (recipe.ingredienti.isNotEmpty)
               Column(
                 children: [
-                  Text(
-                    'Ingredienti:',
-                    style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
+                  const SizedBox(height: 16),
+                  Center(
+                    child: Text(
+                      'Ingredienti:',
+                      style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                    ),
                   ),
+                  const SizedBox(height: 8),
                   Text(
                     recipe.ingredienti.join(', '),
                     style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                          color: Colors.black54,
+                          color: Colors.white60,
                         ),
                   ),
                 ],
