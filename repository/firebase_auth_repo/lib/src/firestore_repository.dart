@@ -976,6 +976,7 @@ class FirebaseRepository {
       return _firestore
           .collection('sfide')
           .where("dataFine", isGreaterThanOrEqualTo: DateTime.now())
+          .where("dataInizio", isLessThanOrEqualTo: DateTime.now())
           .orderBy('dataInizio', descending: false)
           .get()
           .then((value) {

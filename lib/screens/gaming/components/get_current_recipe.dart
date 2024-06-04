@@ -1,15 +1,13 @@
 // Flutter imports:
 
-// Flutter imports:
-import 'package:flutter/material.dart';
-
-// Package imports:
-import 'package:firebase_auth_repo/auth_repo.dart';
-import 'package:model_repo/model_repo.dart';
-
 // Project imports:
 import 'package:condivisionericette/screens/sfida_screen/sfida_screen.dart';
 import 'package:condivisionericette/widget/sfide/sfide_card.dart';
+// Package imports:
+import 'package:firebase_auth_repo/auth_repo.dart';
+// Flutter imports:
+import 'package:flutter/material.dart';
+import 'package:model_repo/model_repo.dart';
 
 class GetCurrentRecipe extends StatelessWidget {
   final AuthUser user;
@@ -27,8 +25,34 @@ class GetCurrentRecipe extends StatelessWidget {
             );
           }
           if (snapshot.hasError) {
-            return const Center(
-              child: Text('Errore nel caricamento dei dati'),
+            return SizedBox(
+              width: MediaQuery.of(context).size.width,
+              height: MediaQuery.of(context).size.height * 0.2,
+              child: Card(
+                color: Colors.red[100],
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      const Icon(
+                        Icons.error_outline,
+                        color: Colors.red,
+                        size: 60,
+                      ),
+                      const SizedBox(height: 16),
+                      Text(
+                        'NESSUNA SFIDA IN CORSO',
+                        style: TextStyle(
+                          color: Colors.red[900],
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
             );
           }
           return InkWell(
