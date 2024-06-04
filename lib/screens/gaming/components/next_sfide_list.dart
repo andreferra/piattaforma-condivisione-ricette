@@ -1,12 +1,10 @@
 // Flutter imports:
-import 'package:flutter/material.dart';
-
-// Package imports:
-import 'package:firebase_auth_repo/auth_repo.dart';
-import 'package:model_repo/model_repo.dart';
-
 // Project imports:
 import 'package:condivisionericette/screens/gaming/components/next_sfide_list_components.dart';
+// Package imports:
+import 'package:firebase_auth_repo/auth_repo.dart';
+import 'package:flutter/material.dart';
+import 'package:model_repo/model_repo.dart';
 
 class NextSfideList extends StatefulWidget {
   const NextSfideList({super.key});
@@ -29,7 +27,7 @@ class _NextSfideListState extends State<NextSfideList> {
           }
           if (sfide.hasError) {
             return const Center(
-              child: Text('Errore nel caricamento delle sfide'),
+              child: Text('NESSUNA SFIDA PREVISTA'),
             );
           }
 

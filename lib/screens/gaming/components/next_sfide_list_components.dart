@@ -1,14 +1,12 @@
 // Dart imports:
 import 'dart:async';
 
-// Flutter imports:
-import 'package:flutter/material.dart';
-
-// Package imports:
-import 'package:model_repo/model_repo.dart';
-
 // Project imports:
 import 'package:condivisionericette/utils/constant.dart';
+// Flutter imports:
+import 'package:flutter/material.dart';
+// Package imports:
+import 'package:model_repo/model_repo.dart';
 
 class NextSfideListComponents extends StatefulWidget {
   final Sfidegame sfidegame;
@@ -138,7 +136,7 @@ class _NextSfideListComponentsState extends State<NextSfideListComponents> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    sfida.name,
+                    sfida.name.split(':').last,
                     style: const TextStyle(
                       fontSize: 22,
                       fontWeight: FontWeight.w900,
@@ -146,7 +144,9 @@ class _NextSfideListComponentsState extends State<NextSfideListComponents> {
                     ),
                   ),
                   Text(
-                    sfida.description,
+                    sfida.description.length > 150
+                        ? '${sfida.description.substring(0, 150)}...'
+                        : sfida.description,
                     style: const TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
