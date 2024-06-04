@@ -1,3 +1,4 @@
+import 'package:condivisionericette/widget/sfide/sfide_my_recipe_card.dart';
 import 'package:firebase_auth_repo/auth_repo.dart';
 import 'package:flutter/material.dart';
 import 'package:model_repo/model_repo.dart';
@@ -38,28 +39,10 @@ class _MieRicettePubblicateState extends State<MieRicettePubblicate> {
               if (snapshot.hasData) {
                 final Recipesfide recipe = snapshot.data!;
 
-                return Column(
-                  children: [
-                    Text(recipe.nomePiatto),
-                    Text(recipe.descrizione),
-                    Text(recipe.tempoPreparazione.toString()),
-                    Text(recipe.porzioni.toString()),
-                    Text(recipe.difficolta),
-                    Text(recipe.ingredienti.toString()),
-                    Text(recipe.tag.toString()),
-                    Text(recipe.passaggi.toString()),
-                    Text(recipe.allergie.toString()),
-                    Text(recipe.immaginiPassaggi.toString()),
-                    Text(recipe.coverImage),
-                    Text(recipe.userID),
-                    Text(recipe.sfidaID),
-                    Text(recipe.recipeID),
-                    Text(recipe.totaleVoti.toString()),
-                    Text(recipe.votiPositivi.toString()),
-                    Text(recipe.votiNegativi.toString()),
-                    Text(recipe.visualizzazioni.toString()),
-                    Text(recipe.utentiVotanti.toString()),
-                  ],
+                return InkWell(
+                  borderRadius: BorderRadius.circular(10),
+                  onTap: () {},
+                  child: SfideMyRecipeCard(recipe: recipe),
                 );
               } else {
                 return const Center(child: Text('Nessuna ricetta pubblicata'));

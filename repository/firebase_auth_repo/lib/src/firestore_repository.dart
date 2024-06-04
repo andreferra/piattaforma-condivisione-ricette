@@ -1153,6 +1153,7 @@ class FirebaseRepository {
     }
   }
 
+  /// Get user recipe of challenge
   Future<Recipesfide> getUserSfideRecipe(String sfidaId, String uid) async {
     try {
       Recipesfide recipe = Recipesfide.empty();
@@ -1189,6 +1190,38 @@ class FirebaseRepository {
         return Future.error(
             const GetRecipeFailure('Nessuna ricetta pubblicata'));
       }
+    } on FirebaseException catch (e) {
+      return Future.error(GetRecipeFailure(e.code));
+    } catch (e) {
+      return Future.error(GetRecipeFailure(e.toString()));
+    }
+  }
+
+  /// Get all the recipes of a challenge
+  Future<List<Recipesfide>> getRicettePubbllicateSfida(
+      String sfidaId, String userId) async {
+    try {
+      String docID = await _firestore
+          .collection('sfide')
+          .where('id', isEqualTo: sfidaId)
+          .get()
+          .then((value) {
+        return value.docs[0].id;
+      });
+
+      List<Recipesfide> recipes = [];
+      await _firestore
+          .collection('sfide')
+          .doc(docID)
+          .collection('recipes')
+          .get()
+          .then((value) {
+        for (var doc in value.docs) {
+          recipes.add(Recipesfide.fromSnapshot(doc.data()));
+        }
+      });
+
+      return recipes;
     } on FirebaseException catch (e) {
       return Future.error(GetRecipeFailure(e.code));
     } catch (e) {

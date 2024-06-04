@@ -4,6 +4,7 @@
 import 'package:condivisionericette/screens/recipes/add_recipes/add_recipes_screen.dart';
 import 'package:condivisionericette/screens/sfida_screen/components/header_sfida.dart';
 import 'package:condivisionericette/screens/sfida_screen/components/mie_ricette_pubblicate.dart';
+import 'package:condivisionericette/screens/sfida_screen/components/ricette_pubblicate.dart';
 import 'package:condivisionericette/screens/sfida_screen/components/sfida_info.dart';
 import 'package:condivisionericette/screens/sfida_screen/components/sfida_ricetta_info.dart';
 import 'package:condivisionericette/widget/button/animated_button.dart';
@@ -126,7 +127,26 @@ class _SfidaScreenState extends State<SfidaScreen> {
                 MieRicettePubblicate(
                   sfidaId: sfide.id,
                   user: user,
-                )
+                ),
+              const SizedBox(height: 20),
+              if (sfide.utentiPartecipanti.contains(user.uid))
+                Column(
+                  children: [
+                    const Divider(
+                      height: 40,
+                      thickness: 2,
+                    ),
+                    const Text("Ricette pubblicate dagli altri partecipanti",
+                        style: TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.bold)),
+                    const SizedBox(height: 20),
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height * 0.8,
+                      child: RicettePubblicate(
+                          sfidaId: sfide.id, userId: user.uid),
+                    ),
+                  ],
+                ),
             ],
           ),
         ));
