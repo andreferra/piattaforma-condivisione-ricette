@@ -65,6 +65,7 @@ class AddRecipesScreen extends ConsumerWidget {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 Expanded(
+                  flex: 2,
                   child: SizedBox(
                     width: MediaQuery.of(context).size.width / 3,
                     child: sfideType == SfideType.ingredients
@@ -73,12 +74,14 @@ class AddRecipesScreen extends ConsumerWidget {
                   ),
                 ),
                 Expanded(
+                  flex: 1,
                   child: SizedBox(
                     width: MediaQuery.of(context).size.width / 3,
                     child: const Allergie(),
                   ),
                 ),
                 Expanded(
+                  flex: 1,
                   child: SizedBox(
                     width: MediaQuery.of(context).size.width / 3,
                     child: const Tag(),

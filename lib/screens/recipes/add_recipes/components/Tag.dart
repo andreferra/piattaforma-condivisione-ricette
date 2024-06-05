@@ -1,4 +1,6 @@
 // Flutter imports:
+
+// Flutter imports:
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -16,8 +18,8 @@ class Tag extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-
     final recipeState = ref.watch(addRecipesProvider);
+    final FocusNode focusNode = FocusNode();
     final recipeController = ref.read(addRecipesProvider.notifier);
     return Column(
       children: [
@@ -26,6 +28,10 @@ class Tag extends ConsumerWidget {
           children: [
             Expanded(
               child: TextInputField(
+                focusNode: focusNode,
+                onSubmitted: () {
+                  recipeController.addTag();
+                },
                 hintText: "Tag",
                 onChanged: (p0) {
                   recipeController.onTagChanged(p0);

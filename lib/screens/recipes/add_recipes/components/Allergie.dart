@@ -1,4 +1,6 @@
 // Flutter imports:
+
+// Flutter imports:
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -18,6 +20,7 @@ class Allergie extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final recipeState = ref.watch(addRecipesProvider);
     final recipeController = ref.read(addRecipesProvider.notifier);
+    final FocusNode focusNode = FocusNode();
 
     return Column(
       children: [
@@ -26,6 +29,10 @@ class Allergie extends ConsumerWidget {
           children: [
             Expanded(
               child: TextInputField(
+                focusNode: focusNode,
+                onSubmitted: () {
+                  recipeController.addAllergie();
+                },
                 hintText: "Allergia",
                 onChanged: (p0) {
                   recipeController.onAllergieChanged(p0);
@@ -34,7 +41,6 @@ class Allergie extends ConsumerWidget {
             ),
             AnimatedButton(
                 onTap: () {
-                  print(recipeState.allergia);
                   recipeController.addAllergie();
                 },
                 child: const RoundedButtonStyle(
@@ -44,7 +50,6 @@ class Allergie extends ConsumerWidget {
                 )),
           ],
         ),
-
         spacer(0, 10),
         SizedBox(
           width: MediaQuery.of(context).size.width * 0.8,
@@ -57,7 +62,8 @@ class Allergie extends ConsumerWidget {
                 trailing: IconButton(
                   icon: const Icon(Icons.delete),
                   onPressed: () {
-                    recipeController.removeAllergie(recipeState.allergie[index]);
+                    recipeController
+                        .removeAllergie(recipeState.allergie[index]);
                   },
                 ),
               );
