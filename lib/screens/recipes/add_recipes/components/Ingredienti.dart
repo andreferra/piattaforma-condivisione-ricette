@@ -29,6 +29,7 @@ class Ingredienti extends ConsumerWidget {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             Expanded(
+              flex: 1,
               child: TextInputField(
                 hintText: "Ingrediente",
                 onChanged: (p0) {
@@ -37,6 +38,7 @@ class Ingredienti extends ConsumerWidget {
               ),
             ),
             Expanded(
+              flex: 1,
               child: TextInputField(
                 hintText: "Quantità",
                 onChanged: (p0) {
@@ -45,29 +47,30 @@ class Ingredienti extends ConsumerWidget {
               ),
             ),
             Expanded(
+                flex: 2,
                 child: DropdownButton<String>(
-              value: recipeState.misura,
-              style: const TextStyle(color: Colors.white),
-              autofocus: false,
-              focusColor: Colors.transparent,
-              alignment: Alignment.bottomCenter,
-              borderRadius: BorderRadius.circular(12),
-              underline: Container(
-                color: Colors.white,
-              ),
-              onChanged: (String? newValue) {
-                recipeController.onMisuraChanged(newValue!);
-              },
-              items: misure.map<DropdownMenuItem<String>>((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(
-                    value.toUpperCase(),
-                    selectionColor: Colors.white,
+                  value: recipeState.misura,
+                  style: const TextStyle(color: Colors.white),
+                  autofocus: false,
+                  focusColor: Colors.transparent,
+                  alignment: Alignment.bottomCenter,
+                  borderRadius: BorderRadius.circular(12),
+                  underline: Container(
+                    color: Colors.white,
                   ),
-                );
-              }).toList(),
-            )),
+                  onChanged: (String? newValue) {
+                    recipeController.onMisuraChanged(newValue!);
+                  },
+                  items: misure.map<DropdownMenuItem<String>>((String value) {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(
+                        value.toUpperCase(),
+                        selectionColor: Colors.white,
+                      ),
+                    );
+                  }).toList(),
+                )),
             AnimatedButton(
                 onTap: () {
                   recipeController.addIngredienti();

@@ -283,6 +283,27 @@ class AddRecipesController extends StateNotifier<RecipesState> {
         return "error";
       }
 
+      if (state.allergie.isEmpty) {
+        state = state.copyWith(
+          allergie: ["nessuna"],
+        );
+      }
+
+      if (state.tag.isEmpty) {
+        state = state.copyWith(
+          tag: ["nessun tag"],
+        );
+      }
+
+      if (state.ingredienti.isEmpty && !sfida) {
+        state = state.copyWith(
+          errorMessage: "Inserisci almeno un ingrediente",
+          errorType: ErrorType.ingredienti,
+        );
+        state = state.copyWith(status: StateRecipes.error);
+        return "error";
+      }
+
       state = state.copyWith(status: StateRecipes.inProgress);
       if (!sfida) {
         _firebaseRepo.addRecipe(
