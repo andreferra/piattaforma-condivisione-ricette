@@ -8,6 +8,7 @@ import 'package:condivisionericette/controller/auth_controller/auth_controller.d
 import 'package:condivisionericette/controller/auth_repo_provider.dart';
 import 'package:condivisionericette/screens/feed_screen/components/new_message.dart';
 import 'package:condivisionericette/screens/feed_screen/components/new_notification.dart';
+import 'package:condivisionericette/screens/gaming/components/get_current_recipe.dart';
 import 'package:condivisionericette/screens/recipes/add_recipes/controller/recipes_controller.dart';
 import 'package:condivisionericette/screens/recipes/view_screen/view_recipe_screen.dart';
 import 'package:condivisionericette/utils/constant.dart';
@@ -34,6 +35,7 @@ class FeedScreen extends ConsumerWidget {
               const Header(),
               const SizedBox(height: defaultPadding * 3),
               Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   InkWell(
                     onTap: () {
@@ -51,9 +53,16 @@ class FeedScreen extends ConsumerWidget {
                       child: NewMessage(
                         userID: user.uid,
                       )),
-                  // sfida corrente
+                  const SizedBox(width: defaultPadding),
+                  if (user.gameActive!)
+                    GetCurrentRecipe(
+                      user: user,
+                      height: 120,
+                      width: MediaQuery.of(context).size.width * 0.5,
+                    )
                 ],
               ),
+              const SizedBox(height: defaultPadding * 3),
               Text(user.uid),
               Text(user.name!),
               Text(user.email!),

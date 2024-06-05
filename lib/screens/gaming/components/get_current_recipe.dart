@@ -1,19 +1,20 @@
 // Flutter imports:
 
-// Flutter imports:
-import 'package:flutter/material.dart';
-
-// Package imports:
-import 'package:firebase_auth_repo/auth_repo.dart';
-import 'package:model_repo/model_repo.dart';
-
 // Project imports:
 import 'package:condivisionericette/screens/sfida_screen/sfida_screen.dart';
 import 'package:condivisionericette/widget/sfide/sfide_card.dart';
+// Package imports:
+import 'package:firebase_auth_repo/auth_repo.dart';
+// Flutter imports:
+import 'package:flutter/material.dart';
+import 'package:model_repo/model_repo.dart';
 
 class GetCurrentRecipe extends StatelessWidget {
   final AuthUser user;
-  const GetCurrentRecipe({super.key, required this.user});
+  final double height;
+  final double width;
+  const GetCurrentRecipe(
+      {super.key, required this.user, this.height = 120, this.width = 120});
 
   @override
   Widget build(BuildContext context) {
@@ -28,8 +29,8 @@ class GetCurrentRecipe extends StatelessWidget {
           }
           if (snapshot.hasError) {
             return SizedBox(
-              width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height * 0.2,
+              width: width,
+              height: height,
               child: Card(
                 color: Colors.red[100],
                 child: Padding(
@@ -37,18 +38,21 @@ class GetCurrentRecipe extends StatelessWidget {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
-                      const Icon(
-                        Icons.error_outline,
-                        color: Colors.red,
-                        size: 60,
+                      const Expanded(
+                        child: Icon(
+                          Icons.error_outline,
+                          color: Colors.red,
+                          size: 40,
+                        ),
                       ),
-                      const SizedBox(height: 16),
-                      Text(
-                        'NESSUNA SFIDA IN CORSO',
-                        style: TextStyle(
-                          color: Colors.red[900],
-                          fontWeight: FontWeight.bold,
-                          fontSize: 20,
+                      Expanded(
+                        child: Text(
+                          'NESSUNA SFIDA IN CORSO',
+                          style: TextStyle(
+                            color: Colors.red[900],
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20,
+                          ),
                         ),
                       ),
                     ],
