@@ -4,7 +4,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 // Project imports:
 import 'package:condivisionericette/model/Comment.dart';
-import 'package:condivisionericette/model/Message.dart';
 import 'package:condivisionericette/screens/public_profile/public_profile_screen.dart';
 import 'package:condivisionericette/screens/recipes/add_recipes/controller/recipes_controller.dart';
 import 'package:condivisionericette/screens/recipes/view_screen/components/add_comment_component.dart';
@@ -15,6 +14,7 @@ import 'package:condivisionericette/widget/share/share_screen.dart';
 import 'package:firebase_auth_repo/auth_repo.dart';
 // Flutter imports:
 import 'package:flutter/material.dart';
+import 'package:model_repo/src/Message.dart';
 import 'package:model_repo/src/Notification.dart';
 import 'package:uuid/uuid.dart';
 

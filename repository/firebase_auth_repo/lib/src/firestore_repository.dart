@@ -17,6 +17,17 @@ class UpdateProfileFailure implements Exception {
   }
 }
 
+class GetMessageFailure implements Exception {
+  final String code;
+
+  const GetMessageFailure(this.code);
+
+  @override
+  String toString() {
+    return 'GetMessageFailure: $code';
+  }
+}
+
 class AddPointerFailure implements Exception {
   final String code;
 

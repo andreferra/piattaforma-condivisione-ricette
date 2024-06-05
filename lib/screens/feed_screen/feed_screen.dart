@@ -6,6 +6,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:condivisionericette/controller/PageController.dart';
 import 'package:condivisionericette/controller/auth_controller/auth_controller.dart';
 import 'package:condivisionericette/controller/auth_repo_provider.dart';
+import 'package:condivisionericette/screens/feed_screen/components/new_message.dart';
 import 'package:condivisionericette/screens/feed_screen/components/new_notification.dart';
 import 'package:condivisionericette/screens/recipes/add_recipes/controller/recipes_controller.dart';
 import 'package:condivisionericette/screens/recipes/view_screen/view_recipe_screen.dart';
@@ -43,6 +44,13 @@ class FeedScreen extends ConsumerWidget {
                     ),
                   ),
                   const SizedBox(width: defaultPadding),
+                  InkWell(
+                      onTap: () {
+                        ref.read(pageControllerProvider).setPage(6);
+                      },
+                      child: NewMessage(
+                        userID: user.uid,
+                      )),
                   // sfida corrente
                 ],
               ),

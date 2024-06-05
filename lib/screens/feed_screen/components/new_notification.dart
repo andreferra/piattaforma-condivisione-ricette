@@ -49,7 +49,9 @@ class _NewNotificationState extends State<NewNotification> {
                 const Icon(Icons.notifications),
                 const SizedBox(height: 5),
                 Text(
-                  "${notificheNonLette.length} nuove notifiche",
+                  notificheNonLette == 1
+                      ? "${notificheNonLette.length} nuova notifica"
+                      : "${notificheNonLette.length} nuove notifiche",
                   textAlign: TextAlign.center,
                 ),
               ],

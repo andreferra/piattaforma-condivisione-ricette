@@ -1,4 +1,5 @@
 // Package imports:
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 enum MessageType {
