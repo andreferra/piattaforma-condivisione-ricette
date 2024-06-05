@@ -1,18 +1,16 @@
 // Dart imports:
 import 'dart:typed_data';
 
-// Flutter imports:
-import 'package:flutter/cupertino.dart';
-
+// Project imports:
+import 'package:condivisionericette/controller/auth_repo_provider.dart';
 // Package imports:
 import 'package:equatable/equatable.dart';
 import 'package:firebase_auth_repo/auth_repo.dart';
+// Flutter imports:
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:form_validation/form_validator.dart';
 import 'package:universal_html/html.dart' as html;
-
-// Project imports:
-import 'package:condivisionericette/controller/auth_repo_provider.dart';
 
 part "profile_state.dart";
 
@@ -151,6 +149,45 @@ class ProfileController extends StateNotifier<ProfileState> {
     state = state.copyWith(status: FormzStatus.submissionInProgress);
 
     final profiloImmagine = state.newPhotoUrl ?? oldUser.photoURL;
+
+    if (oldUser.nickname == state.newNickname!.value &&
+        oldUser.bio == state.newBio!.value &&
+        oldUser.prefAlimentari == state.prefAlimentari &&
+        oldUser.allergie == state.allergie &&
+        oldUser.interessiCulinari == state.interessiCulinari &&
+        oldUser.photoURL == profiloImmagine) {
+      state = state.copyWith(status: FormzStatus.submissionSuccess);
+      return;
+    }
+
+    if (state.newNickname!.value.isEmpty) {
+      state = state.copyWith(
+        newNickname: Nickname.dirty(oldUser.nickname!),
+      );
+    }
+    if (state.newBio!.value.isEmpty) {
+      state = state.copyWith(
+        newBio: Bio.dirty(oldUser.bio!),
+      );
+    }
+
+    if (state.interessiCulinari.isEmpty) {
+      state = state.copyWith(
+        interessiCulinari: oldUser.interessiCulinari,
+      );
+    }
+
+    if (state.prefAlimentari.isEmpty) {
+      state = state.copyWith(
+        prefAlimentari: oldUser.prefAlimentari,
+      );
+    }
+
+    if (state.allergie.isEmpty) {
+      state = state.copyWith(
+        allergie: oldUser.allergie,
+      );
+    }
 
     oldUser = oldUser.copyWith(
       photoURL: profiloImmagine,

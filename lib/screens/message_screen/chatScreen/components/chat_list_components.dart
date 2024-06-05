@@ -1,16 +1,14 @@
 // Flutter imports:
 
-// Flutter imports:
-import 'package:flutter/material.dart';
-
 // Package imports:
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth_repo/auth_repo.dart';
-
-// Project imports:
-import 'package:condivisionericette/model/Message.dart';
 import 'package:condivisionericette/screens/message_screen/singleChat/single_chat.dart';
 import 'package:condivisionericette/utils/message/chat_card.dart';
+import 'package:firebase_auth_repo/auth_repo.dart';
+// Flutter imports:
+import 'package:flutter/material.dart';
+// Project imports:
+import 'package:model_repo/src/Message.dart';
 
 class ChatList extends StatelessWidget {
   final String mioID;

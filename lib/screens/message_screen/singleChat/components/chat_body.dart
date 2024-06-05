@@ -1,14 +1,12 @@
 // Flutter imports:
-import 'package:flutter/material.dart';
-
 // Package imports:
 import 'package:cloud_firestore/cloud_firestore.dart';
-
-// Project imports:
-import 'package:condivisionericette/model/Message.dart';
 import 'package:condivisionericette/utils/message/message_card.dart';
 import 'package:condivisionericette/utils/message/recipe_card.dart';
 import 'package:condivisionericette/utils/message/user_card.dart';
+import 'package:flutter/material.dart';
+// Project imports:
+import 'package:model_repo/src/Message.dart';
 
 class ChatBody extends StatefulWidget {
   final String user1;

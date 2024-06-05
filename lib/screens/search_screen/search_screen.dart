@@ -1,11 +1,5 @@
 // Flutter imports:
 
-// Flutter imports:
-import 'package:flutter/material.dart';
-
-// Package imports:
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-
 // Project imports:
 import 'package:condivisionericette/controller/auth_controller/auth_controller.dart';
 import 'package:condivisionericette/screens/public_profile/public_profile_screen.dart';
@@ -16,6 +10,11 @@ import 'package:condivisionericette/widget/dropDown/DropDownFilter.dart';
 import 'package:condivisionericette/widget/dropDown/DropDownMenu.dart';
 import 'package:condivisionericette/widget/recipe_card.dart';
 import 'package:condivisionericette/widget/text_input_field.dart';
+// Flutter imports:
+import 'package:flutter/material.dart';
+// Package imports:
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import 'controller/search_controller.dart';
 
 class SearchScreen extends ConsumerWidget {
@@ -41,10 +40,12 @@ class SearchScreen extends ConsumerWidget {
     final filter = ref.watch(searchControllerProvider).filter;
 
     return Scaffold(
-        appBar: AppBar(
-          title: const Text('Search'),
-        ),
-        body: Column(
+      appBar: AppBar(
+        title: const Text('Search'),
+      ),
+      body: SingleChildScrollView(
+        physics: const BouncingScrollPhysics(),
+        child: Column(
           children: [
             const SizedBox(height: 20),
             Row(
@@ -358,6 +359,8 @@ class SearchScreen extends ConsumerWidget {
                 )),
             if (isEmpty) const Center(child: Text('No results found')),
           ],
-        ));
+        ),
+      ),
+    );
   }
 }
