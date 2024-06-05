@@ -1,9 +1,5 @@
 // Flutter imports:
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
-// Project imports:
-import 'package:condivisionericette/utils/constant.dart';
 
 class TextInputField extends StatefulWidget {
   final String hintText;
@@ -17,7 +13,9 @@ class TextInputField extends StatefulWidget {
   final String? labelText;
   final bool obscureText;
   final void Function()? onTap;
+  final void Function()? onSubmitted;
   final int? minLines;
+  final FocusNode? focusNode;
   final String? testoSopra;
   final BorderRadius? borderRadius;
   final TextEditingController? controller;
@@ -33,11 +31,13 @@ class TextInputField extends StatefulWidget {
     this.testoSopra,
     this.prefixIcon,
     this.labelText,
+    this.onSubmitted,
     this.keyboardType = TextInputType.text,
     required this.hintText,
     this.onTap,
     required this.onChanged,
     this.errorText,
+    this.focusNode,
     this.valoreIniziale,
     this.obscureText = false,
     this.maxLength,
@@ -54,7 +54,7 @@ class _TextInputFieldState extends State<TextInputField> {
 
   @override
   void initState() {
-    if(widget.valoreIniziale != null){
+    if (widget.valoreIniziale != null) {
       controllerTest.text = widget.valoreIniziale!;
     }
     super.initState();
@@ -62,7 +62,6 @@ class _TextInputFieldState extends State<TextInputField> {
 
   @override
   Widget build(BuildContext context) {
-
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -82,16 +81,26 @@ class _TextInputFieldState extends State<TextInputField> {
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 18),
           child: TextFormField(
-            autofillHints: widget.autofillHints != null ? [widget.autofillHints!] : null,
-            maxLength: widget.hasMaxLenght? widget.maxLength : null,
+            focusNode: widget.focusNode,
+            autofillHints:
+                widget.autofillHints != null ? [widget.autofillHints!] : null,
+            maxLength: widget.hasMaxLenght ? widget.maxLength : null,
             enabled: widget.enable,
             onTap: widget.onTap,
             controller: widget.controller ?? controllerTest,
             maxLines: widget.obscureText ? 1 : widget.minLines,
             onChanged: widget.onChanged,
             obscureText: widget.obscureText ? showPassword : false,
+            onFieldSubmitted: (p0) {
+              if (widget.onSubmitted != null) {
+                widget.onSubmitted!();
+                widget.focusNode!.requestFocus();
+              }
+            },
             decoration: InputDecoration(
-              counterText: widget.hasMaxLenght ? '${ controllerTest.text.length}/${widget.maxLength}' : null,
+              counterText: widget.hasMaxLenght
+                  ? '${controllerTest.text.length}/${widget.maxLength}'
+                  : null,
               prefixIcon: widget.prefixIcon,
               suffixIcon: widget.obscureText
                   ? IconButton(

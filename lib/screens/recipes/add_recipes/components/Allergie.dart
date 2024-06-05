@@ -1,15 +1,13 @@
 // Flutter imports:
-import 'package:flutter/material.dart';
-
-// Package imports:
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-
 // Project imports:
 import 'package:condivisionericette/screens/recipes/add_recipes/controller/recipes_controller.dart';
 import 'package:condivisionericette/utils/utils.dart';
 import 'package:condivisionericette/widget/button/animated_button.dart';
 import 'package:condivisionericette/widget/button/rounded_button_style.dart';
 import 'package:condivisionericette/widget/text_input_field.dart';
+import 'package:flutter/material.dart';
+// Package imports:
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class Allergie extends ConsumerWidget {
   const Allergie({super.key});
@@ -18,6 +16,7 @@ class Allergie extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final recipeState = ref.watch(addRecipesProvider);
     final recipeController = ref.read(addRecipesProvider.notifier);
+    final FocusNode focusNode = FocusNode();
 
     return Column(
       children: [
@@ -26,6 +25,10 @@ class Allergie extends ConsumerWidget {
           children: [
             Expanded(
               child: TextInputField(
+                focusNode: focusNode,
+                onSubmitted: () {
+                  recipeController.addAllergie();
+                },
                 hintText: "Allergia",
                 onChanged: (p0) {
                   recipeController.onAllergieChanged(p0);
@@ -34,7 +37,6 @@ class Allergie extends ConsumerWidget {
             ),
             AnimatedButton(
                 onTap: () {
-                  print(recipeState.allergia);
                   recipeController.addAllergie();
                 },
                 child: const RoundedButtonStyle(
@@ -44,7 +46,6 @@ class Allergie extends ConsumerWidget {
                 )),
           ],
         ),
-
         spacer(0, 10),
         SizedBox(
           width: MediaQuery.of(context).size.width * 0.8,
@@ -57,7 +58,8 @@ class Allergie extends ConsumerWidget {
                 trailing: IconButton(
                   icon: const Icon(Icons.delete),
                   onPressed: () {
-                    recipeController.removeAllergie(recipeState.allergie[index]);
+                    recipeController
+                        .removeAllergie(recipeState.allergie[index]);
                   },
                 ),
               );

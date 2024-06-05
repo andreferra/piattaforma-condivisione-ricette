@@ -1,23 +1,21 @@
 // Flutter imports:
-import 'package:flutter/material.dart';
-
-// Package imports:
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-
 // Project imports:
 import 'package:condivisionericette/screens/recipes/add_recipes/controller/recipes_controller.dart';
 import 'package:condivisionericette/utils/utils.dart';
 import 'package:condivisionericette/widget/button/animated_button.dart';
 import 'package:condivisionericette/widget/button/rounded_button_style.dart';
 import 'package:condivisionericette/widget/text_input_field.dart';
+import 'package:flutter/material.dart';
+// Package imports:
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class Tag extends ConsumerWidget {
   const Tag({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-
     final recipeState = ref.watch(addRecipesProvider);
+    final FocusNode focusNode = FocusNode();
     final recipeController = ref.read(addRecipesProvider.notifier);
     return Column(
       children: [
@@ -26,6 +24,10 @@ class Tag extends ConsumerWidget {
           children: [
             Expanded(
               child: TextInputField(
+                focusNode: focusNode,
+                onSubmitted: () {
+                  recipeController.addTag();
+                },
                 hintText: "Tag",
                 onChanged: (p0) {
                   recipeController.onTagChanged(p0);
