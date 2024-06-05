@@ -11,10 +11,10 @@
 import 'dart:typed_data';
 
 // Flutter imports:
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 // Package imports:
+import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -32,6 +32,34 @@ class HeaderRecipes extends ConsumerWidget {
 
     final recipesController = ref.watch(addRecipesProvider.notifier);
     final recipesState = ref.watch(addRecipesProvider);
+
+    ref.listen(addRecipesProvider, (previus, current) {
+      if (current.errorType == ErrorType.nomePiatto ||
+          current.errorType == ErrorType.descrizione ||
+          current.errorType == ErrorType.tempoPreparazione ||
+          current.errorType == ErrorType.porzioni ||
+          current.errorType == ErrorType.difficolta ||
+          current.errorType == ErrorType.tag ||
+          current.errorType == ErrorType.ingredienti) {
+        final snackBar = SnackBar(
+          elevation: 0,
+          behavior: SnackBarBehavior.floating,
+          duration: const Duration(seconds: 2),
+          backgroundColor: Colors.transparent,
+          content: AwesomeSnackbarContent(
+            title: 'Errore!',
+            message: current.errorMessage.toString(),
+            contentType: ContentType.failure,
+          ),
+        );
+
+        ScaffoldMessenger.of(context)
+          ..hideCurrentSnackBar()
+          ..showSnackBar(snackBar);
+
+        ref.read(addRecipesProvider.notifier).resetError();
+      }
+    });
 
     return Container(
       width: MediaQuery.of(context).size.width,

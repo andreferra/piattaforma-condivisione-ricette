@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:model_repo/model_repo.dart';
 
 class AuthUser extends Equatable {
   final String uid;
@@ -22,6 +23,8 @@ class AuthUser extends Equatable {
   final int? posts;
   final List<String>? listaNotifiche;
   final bool? newNotifiche;
+  final bool? gameActive;
+  final Gaming? gaming;
 
   const AuthUser({
     required this.uid,
@@ -45,6 +48,8 @@ class AuthUser extends Equatable {
     this.following,
     this.posts,
     this.newNotifiche,
+    this.gameActive = false,
+    this.gaming,
   });
 
   static const empty = AuthUser(uid: '');
@@ -74,44 +79,56 @@ class AuthUser extends Equatable {
         listaNotifiche,
         posts,
         newNotifiche,
+        gameActive,
+        gaming,
       ];
 
   factory AuthUser.fromDocument(Map<String, dynamic> data) {
-    return AuthUser(
-      uid: data['uid'],
-      email: data['email'],
-      password: data['password'],
-      name: data['name'],
-      nickname: data['nickname'],
-      emailVerified: data['emailVerified'],
-      phone: data['phone'],
-      newNotifiche: data['newNotifiche'],
-      photoURL: data['photoURL'],
-      dataRegistrazione: data['dataRegistrazione'],
-      dataUltimoAccesso: data['dataUltimoAccesso'],
-      isLogged: data['isLogged'],
-      prefAlimentari: (data['prefAlimentari'] as List<dynamic>)
-          .map((item) => item.toString())
-          .toList(),
-      allergie: (data['allergie'] as List<dynamic>)
-          .map((item) => item.toString())
-          .toList(),
-      interessiCulinari: (data['interessiCulinari'] as List<dynamic>)
-          .map((item) => item.toString())
-          .toList(),
-      bio: data['bio'],
-      notification: data['notification'],
-      follower: (data['follower'] as List<dynamic>)
-          .map((item) => item.toString())
-          .toList(),
-      following: (data['following'] as List<dynamic>)
-          .map((e) => e.toString())
-          .toList(),
-      posts: data['posts'],
-      listaNotifiche: (data['listaNotifiche'] as List<dynamic>)
-          .map((e) => e.toString())
-          .toList(),
-    );
+    print(data);
+    try {
+      return AuthUser(
+        uid: data['uid'],
+        email: data['email'],
+        password: data['password'],
+        name: data['name'],
+        nickname: data['nickname'],
+        emailVerified: data['emailVerified'],
+        phone: data['phone'],
+        newNotifiche: data['newNotifiche'],
+        photoURL: data['photoURL'],
+        gameActive: data['gameActive'],
+        dataRegistrazione: data['dataRegistrazione'],
+        dataUltimoAccesso: data['dataUltimoAccesso'],
+        isLogged: data['isLogged'],
+        prefAlimentari: (data['prefAlimentari'] as List<dynamic>)
+            .map((item) => item.toString())
+            .toList(),
+        allergie: (data['allergie'] as List<dynamic>)
+            .map((item) => item.toString())
+            .toList(),
+        interessiCulinari: (data['interessiCulinari'] as List<dynamic>)
+            .map((item) => item.toString())
+            .toList(),
+        bio: data['bio'],
+        notification: data['notification'],
+        follower: (data['follower'] as List<dynamic>)
+            .map((item) => item.toString())
+            .toList(),
+        following: (data['following'] as List<dynamic>)
+            .map((e) => e.toString())
+            .toList(),
+        posts: data['posts'],
+        listaNotifiche: (data['listaNotifiche'] as List<dynamic>)
+            .map((e) => e.toString())
+            .toList(),
+        gaming: data['gaming'] != null
+            ? Gaming.fromMap(data['gaming'])
+            : Gaming.empty(),
+      );
+    } catch (e) {
+      print("Errore AuthUser.fromDocument: ${e.toString()}");
+      return AuthUser.empty;
+    }
   }
 
   Map<String, dynamic> toDocument() {
@@ -128,6 +145,7 @@ class AuthUser extends Equatable {
       'dataRegistrazione': dataRegistrazione,
       'dataUltimoAccesso': dataUltimoAccesso,
       'isLogged': isLogged,
+      'gameActive': gameActive,
       'prefAlimentari': prefAlimentari,
       'allergie': allergie,
       'interessiCulinari': interessiCulinari,
@@ -137,6 +155,7 @@ class AuthUser extends Equatable {
       'following': following,
       'posts': posts,
       'listaNotifiche': listaNotifiche,
+      'gaming': gaming?.toMap(),
     };
   }
 
@@ -147,6 +166,7 @@ class AuthUser extends Equatable {
     String? name,
     String? nickname,
     bool? emailVerified,
+    bool? gameActive,
     String? phone,
     String? photoURL,
     String? dataRegistrazione,
@@ -162,10 +182,12 @@ class AuthUser extends Equatable {
     List<String>? following,
     int? posts,
     List<String>? listaNotifiche,
+    Gaming? gaming,
   }) {
     return AuthUser(
       uid: uid ?? this.uid,
       email: email ?? this.email,
+      gameActive: gameActive ?? this.gameActive,
       password: password ?? this.password,
       name: name ?? this.name,
       nickname: nickname ?? this.nickname,
@@ -185,6 +207,7 @@ class AuthUser extends Equatable {
       following: following ?? this.following,
       posts: posts ?? this.posts,
       listaNotifiche: listaNotifiche ?? this.listaNotifiche,
+      gaming: gaming ?? this.gaming,
     );
   }
 }

@@ -1,8 +1,11 @@
 // Flutter imports:
+
+// Flutter imports:
 import 'package:flutter/material.dart';
 
 // Package imports:
 import 'package:firebase_auth_repo/auth_repo.dart';
+import 'package:model_repo/model_repo.dart';
 import 'package:uuid/uuid.dart';
 
 // Project imports:
@@ -12,6 +15,7 @@ import 'package:condivisionericette/screens/message_screen/singleChat/single_cha
 import 'package:condivisionericette/screens/public_profile/components/recipes_list.dart';
 import 'package:condivisionericette/screens/public_profile/components/top_section.dart';
 import 'package:condivisionericette/screens/public_profile/components/user_info.dart';
+import 'package:condivisionericette/utils/constant.dart';
 import '../../widget/share/share_screen.dart';
 
 class PublicProfile extends StatefulWidget {
@@ -31,22 +35,30 @@ class _PublicProfileState extends State<PublicProfile> {
   bool isLoad = false;
   bool loSeguo = false;
   bool notifiche = false;
+  String nomeGioco = "";
 
   void laodUserData() async {
-    await _firebaseRepository.getUserFromDatabase(widget.userID).then((user) {
-      if (mounted) {
-        setState(() {
-          isLoad = true;
-          this.user = user;
-          user.follower!.contains(widget.mioId)
-              ? loSeguo = true
-              : loSeguo = false;
-          user.listaNotifiche!.contains(widget.mioId)
-              ? notifiche = true
-              : notifiche = false;
-        });
-      }
-    });
+    try {
+      await _firebaseRepository.getUserFromDatabase(widget.userID).then((user) {
+        if (mounted) {
+          setState(() {
+            isLoad = true;
+            this.user = user;
+            user.follower!.contains(widget.mioId)
+                ? loSeguo = true
+                : loSeguo = false;
+            user.listaNotifiche!.contains(widget.mioId)
+                ? notifiche = true
+                : notifiche = false;
+          });
+          if (user.gameActive!) {
+            _handlerNameGioco(user.gaming!.gameName);
+          }
+        }
+      });
+    } on Exception catch (e) {
+      print("loadUserData(): ${e.toString()}");
+    }
   }
 
   Future<void> _unfollowUser() async {
@@ -72,8 +84,8 @@ class _PublicProfileState extends State<PublicProfile> {
             break;
         }
       });
-    } on UpdateProfileFailure catch (e) {
-      print(e);
+    } on Exception catch (e) {
+      print("unfollowUser(): ${e.toString()}");
     }
   }
 
@@ -89,7 +101,8 @@ class _PublicProfileState extends State<PublicProfile> {
           date: DateTime.now().toString(),
           extraData: "");
       await _firebaseRepository
-          .followUser(widget.mioId, user.uid, notification.toMap())
+          .followUser(
+              widget.mioId, user.uid, notification.toMap(), user.gaming!)
           .then((value) {
         switch (value) {
           case 'ok':
@@ -106,8 +119,8 @@ class _PublicProfileState extends State<PublicProfile> {
             break;
         }
       });
-    } on UpdateProfileFailure catch (e) {
-      print(e);
+    } on Exception catch (e) {
+      print("followUser(): $e");
     }
   }
 
@@ -165,6 +178,16 @@ class _PublicProfileState extends State<PublicProfile> {
     await _firebaseRepository.checkChat(id, mioId).then((value) {});
   }
 
+  void _handlerNameGioco(GameName nome) {
+    String nomeSplittato = nome.toString().split('.').last;
+    String nomeCompelto = nomeSplittato.substring(0, 1).toUpperCase() +
+        nomeSplittato.substring(1).toLowerCase();
+
+    setState(() {
+      nomeGioco = nomeCompelto;
+    });
+  }
+
   @override
   void initState() {
     laodUserData();
@@ -192,14 +215,41 @@ class _PublicProfileState extends State<PublicProfile> {
                     padding: const EdgeInsets.all(8.0),
                     child: Column(
                       children: [
-                        Text(
-                          user.nickname!,
-                          style: Theme.of(context)
-                              .textTheme
-                              .headlineMedium
-                              ?.copyWith(
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              user.nickname!,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .headlineMedium
+                                  ?.copyWith(
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white),
+                            ),
+                            const SizedBox(width: defaultPadding),
+                            if (user.gameActive!)
+                              Container(
+                                decoration: BoxDecoration(
+                                  gradient: const LinearGradient(
+                                    begin: Alignment.topLeft,
+                                    end: Alignment.bottomRight,
+                                    colors: [Colors.blue, Colors.green],
+                                  ),
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: defaultPadding * 2,
+                                    vertical: defaultPadding * 0.5),
+                                child: Text(
+                                  nomeGioco,
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              )
+                          ],
                         ),
                         const SizedBox(height: 16),
                         if (user.uid != widget.mioId)

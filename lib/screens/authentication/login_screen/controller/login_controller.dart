@@ -1,4 +1,6 @@
 // Package imports:
+
+// Package imports:
 import 'package:equatable/equatable.dart';
 import 'package:firebase_auth_repo/auth_repo.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

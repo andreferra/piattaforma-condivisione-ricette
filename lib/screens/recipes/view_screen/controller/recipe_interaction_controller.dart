@@ -6,6 +6,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 import 'package:firebase_auth_repo/auth_repo.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:model_repo/model_repo.dart';
 import 'package:uuid/uuid.dart';
 
 // Project imports:
@@ -53,6 +54,21 @@ class RecipeInteractionController extends StateNotifier<RecipeInteraction> {
           commento: value,
         ),
       );
+    }
+  }
+
+  Future<void> updateGamingProfile(
+      String id, Gaming gaming, bool isMine) async {
+    try {
+      //se l'ho pubblicato io sono 25 punti altrimenti 50
+      gaming = gaming.copyWith(
+        punti: gaming.punti + (isMine ? 50 : 25),
+        gameName: _firebaseRepo.checkUserName(gaming),
+      );
+
+      await _firebaseRepo.updateGamingData(id, gaming);
+    } catch (e) {
+      print(e);
     }
   }
 

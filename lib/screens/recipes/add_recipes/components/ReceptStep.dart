@@ -5,8 +5,10 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 
 // Package imports:
+import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:model_repo/model_repo.dart';
 import 'package:uuid/uuid.dart';
 
 // Project imports:
@@ -17,13 +19,70 @@ import 'package:condivisionericette/screens/recipes/add_recipes/controller/recip
 import 'package:condivisionericette/utils/constant.dart';
 import 'package:condivisionericette/widget/button/animated_button.dart';
 import 'package:condivisionericette/widget/button/rounded_button_style.dart';
+import 'package:condivisionericette/widget/loading_errors.dart';
 import 'package:condivisionericette/widget/text_input_field.dart';
 
 class ReceptsStep extends ConsumerWidget {
-  const ReceptsStep({super.key});
+  final bool sfida;
+  final String sfidaId;
+  final List<String> ingredienti;
+  final List<String> urlImmagini;
+  final SfideType type;
+  const ReceptsStep(
+      {super.key,
+      required this.sfida,
+      required this.sfidaId,
+      this.type = SfideType.none,
+      this.urlImmagini = const [],
+      this.ingredienti = const []});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    ref.listen(addRecipesProvider, (previous, current) {
+      if (current.errorType == ErrorType.stepImage) {
+        SnackBar snackBar = SnackBar(
+          duration: const Duration(seconds: 2),
+          padding: const EdgeInsets.all(defaultPadding * 3),
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          content: AwesomeSnackbarContent(
+            title: "Errore!",
+            inMaterialBanner: true,
+            message: current.errorMessage.toString(),
+            contentType: ContentType.failure,
+          ),
+        );
+        ScaffoldMessenger.of(context)
+          ..hideCurrentSnackBar()
+          ..showSnackBar(snackBar);
+
+        ref.read(addRecipesProvider.notifier).resetError();
+      } else if (current.errorType == ErrorType.stepText) {
+        SnackBar snackBar = SnackBar(
+          duration: const Duration(seconds: 2),
+          padding: const EdgeInsets.all(defaultPadding * 3),
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          content: AwesomeSnackbarContent(
+            title: "Errore!",
+            inMaterialBanner: true,
+            message: current.errorMessage.toString(),
+            contentType: ContentType.failure,
+          ),
+        );
+
+        ScaffoldMessenger.of(context)
+          ..hideCurrentSnackBar()
+          ..showSnackBar(snackBar);
+
+        ref.read(addRecipesProvider.notifier).resetError();
+      }
+      if (current.status == StateRecipes.inProgress) {
+        ScaffoldMessenger.of(context).hideCurrentSnackBar();
+        LoadingSheet.show(context);
+      }
+    });
+
     final recipesController = ref.watch(addRecipesProvider.notifier);
     final recipesState = ref.watch(addRecipesProvider);
     final stepImage = recipesState.stepImage;
@@ -32,7 +91,6 @@ class ReceptsStep extends ConsumerWidget {
     final pageController = ref.watch(pageControllerProvider);
     return Column(
       children: [
-        // form creazione step
         const SizedBox(
           height: defaultPadding * 3,
         ),
@@ -98,7 +156,23 @@ class ReceptsStep extends ConsumerWidget {
         AnimatedButton(
             onTap: () {
               try {
-                recipesController.addStep();
+                String res = recipesController.addStep();
+                if (res == "ok") {
+                  SnackBar snackBar = SnackBar(
+                    backgroundColor: Colors.transparent,
+                    elevation: 0,
+                    content: AwesomeSnackbarContent(
+                      title: "Step aggiunto",
+                      message: "Lo step è stato aggiunto con successo",
+                      contentType: ContentType.success,
+                    ),
+                    duration: const Duration(seconds: 2),
+                    padding: const EdgeInsets.all(defaultPadding * 3),
+                  );
+                  ScaffoldMessenger.of(context)
+                    ..hideCurrentSnackBar()
+                    ..showSnackBar(snackBar);
+                }
               } catch (e) {
                 print(e);
               }
@@ -111,7 +185,6 @@ class ReceptsStep extends ConsumerWidget {
         const SizedBox(
           height: defaultPadding * 3,
         ),
-
         if (recipesState.passaggi.isNotEmpty)
           for (int i = 0; i < recipesState.passaggi.length; i++)
             Column(
@@ -124,7 +197,7 @@ class ReceptsStep extends ConsumerWidget {
                     Text(
                       "PASSAGGIO ${i + 1}",
                       style: const TextStyle(
-                        fontSize: 20,
+                        fontSize: 22,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -143,10 +216,12 @@ class ReceptsStep extends ConsumerWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    Text(
-                      recipesState.passaggi[i],
-                      style: const TextStyle(
-                        fontSize: 16,
+                    Expanded(
+                      child: Text(
+                        recipesState.passaggi[i],
+                        style: const TextStyle(
+                          fontSize: 16,
+                        ),
                       ),
                     ),
                     const SizedBox(
@@ -195,24 +270,55 @@ class ReceptsStep extends ConsumerWidget {
                     await recipesController.addMultiNotification(
                         notificheDaInviare, user.follower!);
 
-                    String res = await recipesController.addRecipes(user);
-                    if (res == "ok") {
-                      SnackBar snackBar = const SnackBar(
-                        content: Text("Ricetta pubblicata con successo"),
-                        duration: Duration(seconds: 2),
-                        padding: EdgeInsets.all(defaultPadding * 3),
-                      );
-                      ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                      pageController.setPage(1);
-                    } else if (res == "error") {
-                      SnackBar snackBar = const SnackBar(
-                        content: Text(
-                            "Errore durante la pubblicazione della ricetta"),
-                        duration: Duration(seconds: 2),
-                        padding: EdgeInsets.all(defaultPadding * 3),
-                      );
-                      ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                    }
+                    await recipesController
+                        .addRecipes(user, sfida, sfidaId, ingredienti)
+                        .then(
+                      (value) {
+                        if (value == "ok") {
+                          Navigator.of(context).pop();
+                          SnackBar snackBar = SnackBar(
+                            backgroundColor: Colors.transparent,
+                            elevation: 0,
+                            content: AwesomeSnackbarContent(
+                              title: "Ricetta pubblicata",
+                              message:
+                                  "La tua ricetta è stata pubblicata con successo",
+                              contentType: ContentType.success,
+                            ),
+                            duration: const Duration(seconds: 2),
+                            padding: const EdgeInsets.all(defaultPadding * 3),
+                          );
+                          ScaffoldMessenger.of(context)
+                            ..hideCurrentSnackBar()
+                            ..showSnackBar(snackBar);
+                          if (sfida) {
+                            print("sfida");
+
+                            Navigator.of(context)
+                                .popUntil((route) => route.isFirst);
+                          } else if (!sfida) {
+                            pageController.setPage(1);
+                          }
+                        } else if (value == "error") {
+                          recipesController.resetError();
+                          SnackBar snackBar = SnackBar(
+                            backgroundColor: Colors.transparent,
+                            elevation: 0,
+                            content: AwesomeSnackbarContent(
+                              title: "Errore",
+                              message:
+                                  "Errore pubblicazione della ricetta, controlla di aver compilato tutti i campi",
+                              contentType: ContentType.failure,
+                            ),
+                            duration: const Duration(seconds: 5),
+                            padding: const EdgeInsets.all(defaultPadding * 3),
+                          );
+                          ScaffoldMessenger.of(context)
+                            ..hideCurrentSnackBar()
+                            ..showSnackBar(snackBar);
+                        }
+                      },
+                    );
                   } catch (e) {
                     print(e);
                   }

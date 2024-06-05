@@ -1,4 +1,6 @@
 // Flutter imports:
+
+// Flutter imports:
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -29,6 +31,7 @@ class Header extends ConsumerWidget {
       'Impostazioni',
       '',
       'Messaggi',
+      'Gaming',
     ];
 
     final page = ref.watch(pageControllerProvider);

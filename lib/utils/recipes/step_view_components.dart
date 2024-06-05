@@ -63,10 +63,15 @@ class StepViewComponents extends StatelessWidget {
                     const SizedBox(
                       width: 10,
                     ),
-                    Text(
-                      testo,
-                      style: const TextStyle(
-                        fontSize: 20,
+                    Expanded(
+                      flex: 2,
+                      child: Text(
+                        testo,
+                        overflow: TextOverflow.clip,
+                        softWrap: true,
+                        style: const TextStyle(
+                          fontSize: 20,
+                        ),
                       ),
                     ),
                   ],

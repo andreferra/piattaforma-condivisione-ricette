@@ -29,27 +29,80 @@ class AddRecipesController extends StateNotifier<RecipesState> {
       : super(const RecipesState());
 
   void onNomePiattoChanged(String value) {
-    state = state.copyWith(nomePiatto: value);
+    if (value.isEmpty) {
+      state = state.copyWith(
+          errorMessage: "Il nome del piatto non può essere vuoto",
+          errorType: ErrorType.nomePiatto);
+    } else {
+      state = state.copyWith(nomePiatto: value);
+    }
+  }
+
+  void onIngredientiSfidaChanged(List<String> value) {
+    state = state.copyWith(ingredienti: value);
   }
 
   void onDescrizioneChanged(String value) {
-    state = state.copyWith(descrizione: value);
+    if (value.isEmpty) {
+      state = state.copyWith(
+          errorMessage: "La descrizione non può essere vuota",
+          errorType: ErrorType.descrizione);
+    } else {
+      state = state.copyWith(descrizione: value);
+    }
   }
 
   void onTempoPreparazioneChanged(int value) {
-    state = state.copyWith(tempoPreparazione: value);
+    if (value == 0 || value.isNegative) {
+      state = state.copyWith(
+        errorType: ErrorType.tempoPreparazione,
+        errorMessage: "Il tempo di preparazione non può essere 0",
+      );
+    } else {
+      state = state.copyWith(tempoPreparazione: value);
+    }
   }
 
   void onPorzioniChanged(int value) {
-    state = state.copyWith(porzioni: value);
+    if (value == 0 || value.isNegative) {
+      state = state.copyWith(
+        errorType: ErrorType.porzioni,
+        errorMessage: "Le porzioni non possono essere 0",
+      );
+    } else {
+      state = state.copyWith(porzioni: value);
+    }
   }
 
   void onDifficoltaChanged(String value) {
-    state = state.copyWith(difficolta: value);
+    if (value.isEmpty ||
+        value == "Difficoltà" ||
+        value == "Seleziona la difficoltà") {
+      state = state.copyWith(
+        errorType: ErrorType.difficolta,
+        errorMessage: "La difficoltà non può essere vuota",
+      );
+    } else if (value.toLowerCase().trim() != "facile" &&
+        value.trim().toLowerCase() != "media" &&
+        value.trim().toLowerCase() != "difficile") {
+      state = state.copyWith(
+        errorType: ErrorType.difficolta,
+        errorMessage: "La difficoltà deve essere Facile, Media o Difficile",
+      );
+    } else {
+      state = state.copyWith(difficolta: value);
+    }
   }
 
   void onIngredientiChanged(String value) {
-    state = state.copyWith(ingrediente: value);
+    if (value.isEmpty) {
+      state = state.copyWith(
+        errorMessage: "L'ingrediente non può essere vuoto",
+        errorType: ErrorType.ingredienti,
+      );
+    } else {
+      state = state.copyWith(ingrediente: value);
+    }
   }
 
   void addIngredienti() {
@@ -68,8 +121,7 @@ class AddRecipesController extends StateNotifier<RecipesState> {
         misura = "kg";
         break;
     }
-    String ingrediente =
-        state.ingrediente! + " " + state.quantita! + " " + misura;
+    String ingrediente = "${state.ingrediente!} ${state.quantita!} $misura";
     state = state.copyWith(ingredienti: [...state.ingredienti, ingrediente]);
   }
 
@@ -79,7 +131,14 @@ class AddRecipesController extends StateNotifier<RecipesState> {
   }
 
   void onTagChanged(String value) {
-    state = state.copyWith(tagSingolo: value);
+    if (value.isEmpty) {
+      state = state.copyWith(
+        errorMessage: "Il tag non può essere vuoto",
+        errorType: ErrorType.tag,
+      );
+    } else {
+      state = state.copyWith(tagSingolo: value);
+    }
   }
 
   void addTag() {
@@ -95,7 +154,14 @@ class AddRecipesController extends StateNotifier<RecipesState> {
   }
 
   void onAllergieChanged(String value) {
-    state = state.copyWith(allergia: value);
+    if (value.isEmpty) {
+      state = state.copyWith(
+        errorMessage: "L'allergia non può essere vuota",
+        errorType: ErrorType.allergie,
+      );
+    } else {
+      state = state.copyWith(allergia: value);
+    }
   }
 
   void addAllergie() {
@@ -112,10 +178,22 @@ class AddRecipesController extends StateNotifier<RecipesState> {
   }
 
   void onMisuraChanged(String value) {
+    if (value.isEmpty) {
+      state = state.copyWith(
+        errorMessage: "La misura non può essere vuota",
+        errorType: ErrorType.ingredienti,
+      );
+    }
     state = state.copyWith(misura: value);
   }
 
   void onQuantitaChanged(String value) {
+    if (value.isEmpty) {
+      state = state.copyWith(
+        errorMessage: "La quantità non può essere vuota",
+        errorType: ErrorType.ingredienti,
+      );
+    }
     state = state.copyWith(quantita: value);
   }
 
@@ -127,7 +205,29 @@ class AddRecipesController extends StateNotifier<RecipesState> {
     state = state.copyWith(stepIndex: value);
   }
 
-  void addStep() {
+  void resetError() {
+    state = state.copyWith(
+      errorMessage: '',
+      errorType: ErrorType.nessuno,
+      status: StateRecipes.initial,
+    );
+  }
+
+  String addStep() {
+    if (state.stepImage == null) {
+      state = state.copyWith(
+        errorMessage: "Lo step deve avere un'immagine",
+        errorType: ErrorType.stepImage,
+      );
+    }
+
+    if (state.stepText == null || state.stepText!.isEmpty) {
+      state = state.copyWith(
+        errorMessage: "Lo step deve avere una descrizione",
+        errorType: ErrorType.stepText,
+      );
+    }
+
     if (state.stepImage != null && state.stepText != null) {
       state = state.copyWith(
         passaggi: [...state.passaggi, state.stepText!],
@@ -135,6 +235,8 @@ class AddRecipesController extends StateNotifier<RecipesState> {
         stepIndex: state.stepIndex! + 1,
       );
     }
+
+    return 'ok';
   }
 
   void removeStep(int value) {
@@ -155,18 +257,53 @@ class AddRecipesController extends StateNotifier<RecipesState> {
     state = state.copyWith(stepText: value);
   }
 
-  Future<String> addRecipes(AuthUser oldUser) async {
+  Future<String> addRecipes(AuthUser oldUser, bool sfida, String sfidaId,
+      List<String> ingredienti) async {
     try {
+      if (state.errorType != ErrorType.nessuno) {
+        state = state.copyWith(status: StateRecipes.error);
+        return "error";
+      }
+
+      if (state.coverImage == null) {
+        state = state.copyWith(
+          errorMessage: "Il piatto deve avere una cover image",
+          errorType: ErrorType.coverImage,
+        );
+        state = state.copyWith(status: StateRecipes.error);
+        return "error";
+      }
+
+      if (state.stepImage == null || state.passaggi.isEmpty) {
+        state = state.copyWith(
+          errorMessage: "Lo step deve avere un'immagine e una descrizione",
+          errorType: ErrorType.stepImage,
+        );
+        state = state.copyWith(status: StateRecipes.error);
+        return "error";
+      }
+
       state = state.copyWith(status: StateRecipes.inProgress);
-      _firebaseRepo.addRecipe(
-        oldUser,
-        state,
-        const Uuid().v4(),
-      );
+      if (!sfida) {
+        _firebaseRepo.addRecipe(
+          oldUser,
+          state,
+          const Uuid().v4(),
+        );
+      } else if (sfida) {
+        state = state.copyWith(ingredienti: ingredienti);
+        _firebaseRepo.addRecipeSfida(
+          oldUser,
+          state,
+          const Uuid().v4(),
+          sfidaId,
+        );
+      }
       state = state.copyWith(status: StateRecipes.done);
 
       return "ok";
     } catch (e) {
+      print(e);
       state = state.copyWith(status: StateRecipes.error);
       return "error";
     }

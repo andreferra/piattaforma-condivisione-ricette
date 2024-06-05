@@ -12,3 +12,20 @@ const defaultPadding = 16.0;
 enum StateRecipes { initial, inProgress, done, error }
 
 enum FileState { create, find, notFound, error, initial, inProgress }
+
+enum ErrorType {
+  nessuno,
+  nomePiatto,
+  descrizione,
+  tempoPreparazione,
+  porzioni,
+  difficolta,
+  ingredienti,
+  tag,
+  passaggi,
+  allergie,
+  coverImage,
+  stepImage,
+  stepText,
+  generale
+}

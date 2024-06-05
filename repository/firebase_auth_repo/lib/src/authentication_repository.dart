@@ -40,6 +40,7 @@ class AuthenticationRepository {
         name: name,
         nickname: nickname,
         phone: phone,
+        gameActive: false,
         password: password,
         emailVerified: credential.user!.emailVerified,
         dataRegistrazione: DateTime.now().toIso8601String(),

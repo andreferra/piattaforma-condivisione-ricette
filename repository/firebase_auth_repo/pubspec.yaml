@@ -7,9 +7,14 @@ dev_dependencies:
   flutter_lints: ^2.0.1
 
 dependencies:
+  flutter:
+        sdk: flutter
+  model_repo:
+    path: ../model_repo
   equatable: ^2.0.5
   firebase_auth: ^4.2.3
   cloud_firestore: ^4.3.0
   firebase_storage: ^11.7.4
   image_picker: ^1.1.1
+
 

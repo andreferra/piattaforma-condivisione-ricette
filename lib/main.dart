@@ -1,4 +1,6 @@
 // Flutter imports:
+
+// Flutter imports:
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -8,6 +10,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 // Project imports:
 import 'package:condivisionericette/controller/auth_controller/auth_controller.dart';
+import 'package:condivisionericette/screens/admin_screen/admin_screen.dart';
 import 'package:condivisionericette/screens/authentication/login_screen/login_screen.dart';
 import 'package:condivisionericette/screens/render_view.dart';
 import 'package:condivisionericette/utils/constant.dart';
@@ -33,6 +36,8 @@ class MyApp extends ConsumerWidget {
         return const RenderScreen();
       } else if (authState.status == AuthenticatedState.unauthenticated) {
         return const LoginScreen();
+      } else if (authState.status == AuthenticatedState.admin) {
+        return const AdminScreen();
       } else {
         return const LoginScreen();
       }

@@ -75,6 +75,14 @@ class AddCommentComponent extends ConsumerWidget {
               onTap: () async {
                 String res = "error";
 
+                if (user.gameActive! == true) {
+                  await recipeInteractionController.updateGamingProfile(
+                    user.uid,
+                    user.gaming!,
+                    user.uid == recipesState.userID,
+                  );
+                }
+
                 if (subComment) {
                   if (user.uid != recipesState.userID) {
                     NotificationModel notification = NotificationModel(

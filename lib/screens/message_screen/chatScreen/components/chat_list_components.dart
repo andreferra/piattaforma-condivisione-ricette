@@ -29,6 +29,9 @@ class ChatList extends StatelessWidget {
           if (snapshot.hasError) {
             return const Text('Errore');
           }
+          if (snapshot.connectionState == ConnectionState.none) {
+            return const Text('Nessuna connessione');
+          }
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(
               child: CircularProgressIndicator(),
@@ -87,7 +90,7 @@ class ChatList extends StatelessWidget {
             );
           } else {
             return const Center(
-              child: CircularProgressIndicator(),
+              child: Text("Non ci sono chat"),
             );
           }
         });
