@@ -1,21 +1,20 @@
 // Flutter imports:
 
-// Flutter imports:
-import 'package:flutter/material.dart';
-
 // Package imports:
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-
 // Project imports:
 import 'package:condivisionericette/controller/PageController.dart';
 import 'package:condivisionericette/controller/auth_controller/auth_controller.dart';
 import 'package:condivisionericette/controller/auth_repo_provider.dart';
+import 'package:condivisionericette/screens/feed_screen/components/new_notification.dart';
 import 'package:condivisionericette/screens/recipes/add_recipes/controller/recipes_controller.dart';
 import 'package:condivisionericette/screens/recipes/view_screen/view_recipe_screen.dart';
 import 'package:condivisionericette/utils/constant.dart';
 import 'package:condivisionericette/widget/header.dart';
 import 'package:condivisionericette/widget/recipe_card.dart';
+// Flutter imports:
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class FeedScreen extends ConsumerWidget {
   const FeedScreen({super.key});
@@ -32,7 +31,21 @@ class FeedScreen extends ConsumerWidget {
           child: Column(
             children: [
               const Header(),
-              const SizedBox(height: defaultPadding),
+              const SizedBox(height: defaultPadding * 3),
+              Row(
+                children: [
+                  InkWell(
+                    onTap: () {
+                      ref.read(pageControllerProvider).setPage(2);
+                    },
+                    child: NewNotification(
+                      userId: user.uid,
+                    ),
+                  ),
+                  const SizedBox(width: defaultPadding),
+                  // sfida corrente
+                ],
+              ),
               Text(user.uid),
               Text(user.name!),
               Text(user.email!),

@@ -1,19 +1,17 @@
 // Dart imports:
 import 'dart:typed_data';
 
-// Flutter imports:
-import 'package:flutter/material.dart';
-
 // Package imports:
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth_repo/auth_repo.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:uuid/uuid.dart';
-
 // Project imports:
 import 'package:condivisionericette/model/Message.dart';
-import 'package:condivisionericette/model/Notification.dart';
 import 'package:condivisionericette/widget/text_input_field.dart';
+import 'package:firebase_auth_repo/auth_repo.dart';
+// Flutter imports:
+import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:model_repo/src/Notification.dart';
+import 'package:uuid/uuid.dart';
 
 class ChatInput extends StatefulWidget {
   final String userId;
@@ -68,7 +66,7 @@ class _ChatInputState extends State<ChatInput> {
         widget.mioId,
         imageFile.isEmpty ? "text" : "image",
         imageFile,
-        notificationModel.toMap(),
+        notificationModel,
       )
           .then(
         (value) {

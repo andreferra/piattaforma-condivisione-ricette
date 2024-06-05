@@ -469,7 +469,7 @@ class FirebaseRepository {
 
   /// Send a message
   Future<String> sendMessage(message, String id, String mioID, String type,
-      Uint8List file, notification) async {
+      Uint8List file, NotificationModel notification) async {
     try {
       switch (type) {
         case 'text':
@@ -576,7 +576,7 @@ class FirebaseRepository {
       }
 
       await _firestore.collection('users').doc(id).update({
-        'listaNotifiche': FieldValue.arrayUnion([notification]),
+        'listaNotifiche': FieldValue.arrayUnion([notification.toMap()]),
         'newNotifiche': true,
       });
 
