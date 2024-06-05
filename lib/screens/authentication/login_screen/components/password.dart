@@ -1,12 +1,10 @@
 // Flutter imports:
-import 'package:flutter/material.dart';
-
-// Package imports:
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-
 // Project imports:
 import 'package:condivisionericette/screens/authentication/login_screen/controller/login_controller.dart';
 import 'package:condivisionericette/widget/text_input_field.dart';
+import 'package:flutter/material.dart';
+// Package imports:
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class PasswordField extends ConsumerWidget {
   const PasswordField({super.key});
@@ -22,6 +20,7 @@ class PasswordField extends ConsumerWidget {
       hintText: "Inserisci la Password*",
       obscureText: true,
       errorText: null,
+      onSubmitted: () => loginController.signInWithEmailAndPassword(),
       onChanged: (password) => loginController.onPasswordChanged(password),
     );
   }
