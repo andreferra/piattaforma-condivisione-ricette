@@ -60,7 +60,7 @@ class GamingScreen extends ConsumerWidget {
                 const SizedBox(height: 20),
                 GetCurrentRecipe(
                   user: user,
-                  height: MediaQuery.of(context).size.height * 0.2,
+                  height: MediaQuery.of(context).size.height * 0.25,
                   width: MediaQuery.of(context).size.width,
                 ),
                 Row(

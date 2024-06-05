@@ -11,7 +11,9 @@ import 'package:model_repo/model_repo.dart';
 class SfideCard extends StatefulWidget {
   final Sfidegame? sfida;
   final bool old;
-  const SfideCard({super.key, required this.sfida, this.old = false});
+  final bool short;
+  const SfideCard(
+      {super.key, required this.sfida, this.old = false, this.short = false});
 
   @override
   State<SfideCard> createState() => _SfideCardState();
@@ -20,6 +22,7 @@ class SfideCard extends StatefulWidget {
 class _SfideCardState extends State<SfideCard> {
   final FirebaseRepository firebase = FirebaseRepository();
   Sfidegame get sfida => widget.sfida!;
+  bool get short => widget.short;
   late Timer _timer;
   Duration _countdownDuration = const Duration();
 
@@ -107,21 +110,23 @@ class _SfideCardState extends State<SfideCard> {
               Expanded(
                 flex: 2,
                 child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      sfida.name,
-                      style: const TextStyle(
-                        fontSize: 24.0,
+                      short ? sfida.name.split(':').last : sfida.name,
+                      style: TextStyle(
+                        fontSize: short ? 22 : 24.0,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                     const SizedBox(height: 8.0),
-                    Text(
-                      sfida.description,
-                      style: const TextStyle(
-                        fontSize: 16.0,
+                    if (!short)
+                      Text(
+                        '${sfida.description.substring(0, 100)}...',
+                        style: const TextStyle(
+                          fontSize: 16.0,
+                        ),
                       ),
-                    ),
                   ],
                 ),
               ),
@@ -133,15 +138,15 @@ class _SfideCardState extends State<SfideCard> {
                   children: [
                     Text(
                       sfida.partecipanti.toString(),
-                      style: const TextStyle(
-                        fontSize: 26.0,
+                      style: TextStyle(
+                        fontSize: short ? 22.0 : 26.0,
                       ),
                     ),
-                    const SizedBox(height: 8.0),
-                    const Text(
+                    if (!short) const SizedBox(height: 8.0),
+                    Text(
                       'Partecipanti',
                       style: TextStyle(
-                        fontSize: 16.0,
+                        fontSize: short ? 12 : 16.0,
                         color: Colors.grey,
                       ),
                     ),
@@ -152,18 +157,20 @@ class _SfideCardState extends State<SfideCard> {
                 Expanded(
                   flex: 2,
                   child: Column(
+                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
                         _formatDuration(_countdownDuration),
-                        style: const TextStyle(
-                          fontSize: 26.0,
+                        style: TextStyle(
+                          fontSize: short ? 22 : 26.0,
                         ),
                       ),
-                      const SizedBox(height: 8.0),
-                      const Text(
+                      if (!short) const SizedBox(height: 8.0),
+                      Text(
                         'Termine della gara',
                         style: TextStyle(
-                          fontSize: 16.0,
+                          fontSize: short ? 12 : 16.0,
                           color: Colors.grey,
                         ),
                       ),

@@ -57,6 +57,7 @@ class FeedScreen extends ConsumerWidget {
                   if (user.gameActive!)
                     GetCurrentRecipe(
                       user: user,
+                      short: true,
                       height: 120,
                       width: MediaQuery.of(context).size.width * 0.5,
                     )

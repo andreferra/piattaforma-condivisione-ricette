@@ -15,8 +15,13 @@ class GetCurrentRecipe extends StatelessWidget {
   final AuthUser user;
   final double height;
   final double width;
+  final bool short;
   const GetCurrentRecipe(
-      {super.key, required this.user, this.height = 120, this.width = 120});
+      {super.key,
+      required this.user,
+      this.height = 120,
+      this.width = 120,
+      this.short = false});
 
   @override
   Widget build(BuildContext context) {
@@ -75,7 +80,14 @@ class GetCurrentRecipe extends StatelessWidget {
                 ),
               );
             },
-            child: SfideCard(sfida: snapshot.data!),
+            child: SizedBox(
+              width: width,
+              height: height,
+              child: SfideCard(
+                sfida: snapshot.data!,
+                short: short,
+              ),
+            ),
           );
         });
   }

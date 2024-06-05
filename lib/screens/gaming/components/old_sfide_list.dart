@@ -42,6 +42,7 @@ class _OldSfideListState extends State<OldSfideList> {
             itemBuilder: (context, index) {
               return SfideCard(
                 sfida: sfide.data![index],
+                short: false,
                 old: true,
               );
             },
