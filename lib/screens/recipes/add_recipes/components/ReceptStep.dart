@@ -1,8 +1,16 @@
 // Dart imports:
 import 'dart:typed_data';
 
+// Flutter imports:
+import 'package:flutter/material.dart';
+
 // Package imports:
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:model_repo/model_repo.dart';
+import 'package:uuid/uuid.dart';
+
 // Project imports:
 import 'package:condivisionericette/controller/PageController.dart';
 import 'package:condivisionericette/controller/auth_controller/auth_controller.dart';
@@ -13,12 +21,6 @@ import 'package:condivisionericette/widget/button/animated_button.dart';
 import 'package:condivisionericette/widget/button/rounded_button_style.dart';
 import 'package:condivisionericette/widget/loading_errors.dart';
 import 'package:condivisionericette/widget/text_input_field.dart';
-// Flutter imports:
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:model_repo/model_repo.dart';
-import 'package:uuid/uuid.dart';
 
 class ReceptsStep extends ConsumerWidget {
   final bool sfida;

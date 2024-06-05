@@ -1,10 +1,11 @@
 // Dart imports:
 import 'dart:async';
 
-// Package imports:
-import 'package:firebase_auth_repo/auth_repo.dart';
 // Flutter imports:
 import 'package:flutter/material.dart';
+
+// Package imports:
+import 'package:firebase_auth_repo/auth_repo.dart';
 import 'package:model_repo/model_repo.dart';
 
 class SfideCard extends StatefulWidget {
