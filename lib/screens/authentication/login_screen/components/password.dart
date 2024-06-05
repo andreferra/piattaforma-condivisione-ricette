@@ -1,4 +1,6 @@
 // Flutter imports:
+
+// Flutter imports:
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -22,6 +24,7 @@ class PasswordField extends ConsumerWidget {
       hintText: "Inserisci la Password*",
       obscureText: true,
       errorText: null,
+      onSubmitted: () => loginController.signInWithEmailAndPassword(),
       onChanged: (password) => loginController.onPasswordChanged(password),
     );
   }

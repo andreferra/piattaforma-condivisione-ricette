@@ -22,6 +22,7 @@ class RecipesScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final userId = ref.read(authProvider).user.uid;
+    final allergie = ref.read(authProvider).user.allergie;
     return Scaffold(
       body: SingleChildScrollView(
         primary: false,
@@ -61,32 +62,62 @@ class RecipesScreen extends ConsumerWidget {
                       return Padding(
                           padding: const EdgeInsets.all(defaultPadding),
                           child: InkWell(
-                              onTap: () {
-                                Navigator.of(context).push(MaterialPageRoute(
-                                    builder: (context) => ViewRecipeScreen(
-                                        isMine: true,
-                                        mioId: userId,
-                                        mediaRecensioni:
-                                            document["media_recensioni"]
-                                                .toDouble(),
-                                        recipesState: RecipesState.fromSnapshot(
-                                            document))));
-                              },
-                              child: RecipeListItem(
-                                  imageUrl: document["cover_image"],
-                                  title: document["nome_piatto"],
-                                  description: document["descrizione"],
-                                  numeroLike:
-                                      document["numero_like"].toString(),
-                                  numeroCommenti:
-                                      document["numero_commenti"].toString(),
-                                  numeroCondivisioni:
-                                      document["numero_condivisioni"]
-                                          .toString(),
-                                  visualizzazioni:
-                                      document["numero_visualizzazioni"]
-                                          .toString(),
-                                  key: ValueKey(document.id))));
+                            onTap: () {
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) => ViewRecipeScreen(
+                                      isMine: true,
+                                      mioId: userId,
+                                      mediaRecensioni:
+                                          document["media_recensioni"]
+                                              .toDouble(),
+                                      recipesState: RecipesState.fromSnapshot(
+                                          document))));
+                            },
+                            child: Stack(
+                              children: [
+                                RecipeListItem(
+                                    imageUrl: document["cover_image"],
+                                    title: document["nome_piatto"],
+                                    description: document["descrizione"],
+                                    numeroLike:
+                                        document["numero_like"].toString(),
+                                    numeroCommenti:
+                                        document["numero_commenti"].toString(),
+                                    numeroCondivisioni:
+                                        document["numero_condivisioni"]
+                                            .toString(),
+                                    visualizzazioni:
+                                        document["numero_visualizzazioni"]
+                                            .toString(),
+                                    key: ValueKey(document.id)),
+                                if (allergie!.isNotEmpty &&
+                                    document["allergie"].any((element) =>
+                                        allergie.contains(element)))
+                                  Positioned(
+                                    top: 0,
+                                    right: 0,
+                                    child: Container(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 8, vertical: 4),
+                                      decoration: const BoxDecoration(
+                                        color: Colors.red,
+                                        borderRadius: BorderRadius.only(
+                                          bottomLeft: Radius.circular(8),
+                                          topRight: Radius.circular(8),
+                                        ),
+                                      ),
+                                      child: const Text(
+                                        'CONTIENE ALLERGIA',
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                              ],
+                            ),
+                          ));
                     }).toList(),
                   );
                 },

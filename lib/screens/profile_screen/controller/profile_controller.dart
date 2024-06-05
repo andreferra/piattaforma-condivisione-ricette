@@ -152,32 +152,17 @@ class ProfileController extends StateNotifier<ProfileState> {
 
     final profiloImmagine = state.newPhotoUrl ?? oldUser.photoURL;
 
-    AuthUser user = AuthUser(
-      uid: oldUser.uid,
-      email: oldUser.email,
-      name: oldUser.name,
-      nickname: state.newNickname!.value.isEmpty
-          ? oldUser.nickname
-          : state.newNickname!.value,
-      phone: oldUser.phone,
-      password: oldUser.password,
-      emailVerified: oldUser.emailVerified,
-      dataRegistrazione: oldUser.dataRegistrazione,
-      dataUltimoAccesso: oldUser.dataUltimoAccesso,
-      isLogged: oldUser.isLogged,
+    oldUser = oldUser.copyWith(
       photoURL: profiloImmagine,
-      bio: state.newBio!.value.isEmpty ? oldUser.bio : state.newBio!.value,
-      prefAlimentari: state.prefAlimentari.isEmpty
-          ? oldUser.prefAlimentari
-          : state.prefAlimentari,
-      allergie: state.allergie.isEmpty ? oldUser.allergie : state.allergie,
-      interessiCulinari: state.interessiCulinari.isEmpty
-          ? oldUser.interessiCulinari
-          : state.interessiCulinari,
+      nickname: state.newNickname!.value,
+      bio: state.newBio!.value,
+      prefAlimentari: state.prefAlimentari,
+      allergie: state.allergie,
+      interessiCulinari: state.interessiCulinari,
     );
 
     try {
-      await _firebaseRepo.updateProfile(user, state.newPhoto);
+      await _firebaseRepo.updateProfile(oldUser, state.newPhoto);
 
       state = state.copyWith(status: FormzStatus.submissionSuccess);
 

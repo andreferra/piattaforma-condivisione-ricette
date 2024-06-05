@@ -810,8 +810,13 @@ class FirebaseRepository {
         int index = notifications.indexWhere(
             (element) => element['notificationId'] == notificationId);
         notifications[index] = newNotification;
+
+        bool hasUnreadNotifications =
+            notifications.any((notification) => !notification['read']);
+
         _firestore.collection('users').doc(userId).update({
           'listaNotifiche': notifications,
+          'newNotifiche': hasUnreadNotifications,
         });
       });
     } on FirebaseException catch (e) {
