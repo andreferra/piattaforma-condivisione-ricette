@@ -1,10 +1,9 @@
 // Package imports:
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:equatable/equatable.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-
 // Project imports:
 import 'package:condivisionericette/model/Filter.dart';
+import 'package:equatable/equatable.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 part 'search_state.dart';
 
@@ -282,14 +281,32 @@ class SearchController extends StateNotifier<SearchState> {
           }
         }
 
-        if (state.users!.isNotEmpty || state.recipes!.isNotEmpty) {
-          state = state.copyWith(isSearching: true, isEmpty: false, results: [
-            ...state.users!,
-            ...state.recipes!,
-          ]);
-        }
-
-        if (state.users!.isEmpty && state.recipes!.isEmpty) {
+        if (state.users!.isNotEmpty && state.recipes!.isNotEmpty) {
+          state = state.copyWith(
+              isSearching: true,
+              isEmpty: false,
+              results: [
+                ...state.users!,
+                ...state.recipes!,
+              ],
+              dropDownValue: SearchType.all);
+        } else if (state.users!.isNotEmpty && state.recipes!.isEmpty) {
+          state = state.copyWith(
+              isSearching: true,
+              isEmpty: false,
+              results: [
+                ...state.users!,
+              ],
+              dropDownValue: SearchType.users);
+        } else if (state.users!.isEmpty && state.recipes!.isNotEmpty) {
+          state = state.copyWith(
+              isSearching: true,
+              isEmpty: false,
+              results: [
+                ...state.recipes!,
+              ],
+              dropDownValue: SearchType.recipes);
+        } else if (state.users!.isEmpty && state.recipes!.isEmpty) {
           state = state.copyWith(isSearching: false, isEmpty: true);
         }
       }
