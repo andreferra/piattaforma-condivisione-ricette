@@ -1,12 +1,10 @@
 // Flutter imports:
-import 'package:flutter/material.dart';
-
-// Package imports:
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-
 // Project imports:
 import 'package:condivisionericette/utils/constant.dart';
 import 'package:condivisionericette/utils/utils.dart';
+import 'package:flutter/material.dart';
+// Package imports:
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class RecipeListItem extends ConsumerWidget {
   final String imageUrl;
@@ -43,14 +41,15 @@ class RecipeListItem extends ConsumerWidget {
         ],
       ),
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Padding(
-            padding: const EdgeInsets.all(defaultPadding * 2),
-            child: Image.network(
-              imageUrl,
-              width: MediaQuery.of(context).size.width * 0.09,
-              height: MediaQuery.of(context).size.width * 0.09,
-              fit: BoxFit.cover,
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.all(defaultPadding * 2),
+              child: Image.network(imageUrl,
+                  width: MediaQuery.of(context).size.width * 0.09,
+                  height: MediaQuery.of(context).size.height * 0.2,
+                  fit: BoxFit.cover),
             ),
           ),
           const SizedBox(width: defaultPadding),
@@ -75,6 +74,7 @@ class RecipeListItem extends ConsumerWidget {
               ],
             ),
           ),
+          const SizedBox(width: defaultPadding),
           Expanded(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
