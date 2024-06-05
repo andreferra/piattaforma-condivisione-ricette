@@ -84,147 +84,183 @@ class SearchScreen extends ConsumerWidget {
                       userResult.isNotEmpty &&
                       recipeResult != null &&
                       recipeResult.isNotEmpty)
-                    Container(
-                        padding: const EdgeInsets.all(5),
-                        margin: const EdgeInsets.only(left: 10),
-                        decoration: BoxDecoration(
-                            border: Border.all(color: Colors.grey),
-                            borderRadius: BorderRadius.circular(8.0)),
-                        child: DropDown(
-                          underline: Container(),
-                          itemList: const ['All', 'Users', 'Recipes'],
-                          selectOption: selectedType,
-                          onChange: (value) {
-                            if (value == 'All') {
-                              searchController.setSearchType(SearchType.all);
-                            } else if (value == 'Users') {
-                              searchController.setSearchType(SearchType.users);
-                            } else if (value == 'Recipes') {
-                              searchController
-                                  .setSearchType(SearchType.recipes);
-                            }
-                          },
-                        )),
+                    Column(
+                      children: [
+                        const Text('Cerca in: '),
+                        Container(
+                            padding: const EdgeInsets.all(5),
+                            margin: const EdgeInsets.only(left: 10),
+                            decoration: BoxDecoration(
+                                border: Border.all(color: Colors.grey),
+                                borderRadius: BorderRadius.circular(8.0)),
+                            child: DropDown(
+                              underline: Container(),
+                              itemList: const ['All', 'Users', 'Recipes'],
+                              selectOption: selectedType,
+                              onChange: (value) {
+                                if (value == 'All') {
+                                  searchController
+                                      .setSearchType(SearchType.all);
+                                } else if (value == 'Users') {
+                                  searchController
+                                      .setSearchType(SearchType.users);
+                                } else if (value == 'Recipes') {
+                                  searchController
+                                      .setSearchType(SearchType.recipes);
+                                }
+                              },
+                            )),
+                      ],
+                    ),
                   if (selectedType == SearchType.recipes)
-                    Container(
-                        padding: const EdgeInsets.all(5),
-                        margin: const EdgeInsets.only(left: 10),
-                        decoration: BoxDecoration(
-                            border: Border.all(color: Colors.grey),
-                            borderRadius: BorderRadius.circular(8.0)),
-                        child: DropDown(
-                          underline: Container(),
-                          itemList: const [
-                            'Facile',
-                            'Media',
-                            'Difficile',
-                            'Tutte'
-                          ],
-                          selectOption: selectedDifficolta,
-                          onChange: (value) {
-                            if (value == 'Facile') {
-                              searchController.setDifficolta(Difficolta.facile);
-                            } else if (value == 'Media') {
-                              searchController.setDifficolta(Difficolta.media);
-                            } else if (value == 'Difficile') {
-                              searchController
-                                  .setDifficolta(Difficolta.difficile);
-                            } else if (value == 'Tutte') {
-                              searchController.setDifficolta(Difficolta.tutte);
-                            }
-                          },
-                        )),
+                    Column(
+                      children: [
+                        const Text('Difficoltà: '),
+                        Container(
+                            padding: const EdgeInsets.all(5),
+                            margin: const EdgeInsets.only(left: 10),
+                            decoration: BoxDecoration(
+                                border: Border.all(color: Colors.grey),
+                                borderRadius: BorderRadius.circular(8.0)),
+                            child: DropDown(
+                              underline: Container(),
+                              itemList: const [
+                                'Facile',
+                                'Media',
+                                'Difficile',
+                                'Tutte'
+                              ],
+                              selectOption: selectedDifficolta,
+                              onChange: (value) {
+                                if (value == 'Facile') {
+                                  searchController
+                                      .setDifficolta(Difficolta.facile);
+                                } else if (value == 'Media') {
+                                  searchController
+                                      .setDifficolta(Difficolta.media);
+                                } else if (value == 'Difficile') {
+                                  searchController
+                                      .setDifficolta(Difficolta.difficile);
+                                } else if (value == 'Tutte') {
+                                  searchController
+                                      .setDifficolta(Difficolta.tutte);
+                                }
+                              },
+                            )),
+                      ],
+                    ),
                   if (selectedType == SearchType.recipes)
-                    Container(
-                        padding: const EdgeInsets.all(5),
-                        margin: const EdgeInsets.only(left: 10),
-                        decoration: BoxDecoration(
-                            border: Border.all(color: Colors.grey),
-                            borderRadius: BorderRadius.circular(8.0)),
-                        child: DropDown(
-                          underline: Container(),
-                          itemList: const [
-                            '1 stella',
-                            '2 stelle',
-                            '3 stelle',
-                            '4 stelle',
-                            '5 stelle',
-                            'Tutte'
-                          ],
-                          selectOption: selectedStar,
-                          onChange: (value) {
-                            if (value == '1 stella') {
-                              searchController
-                                  .setNumeroStelleSelected(NumeroStelle.uno);
-                            } else if (value == '2 stelle') {
-                              searchController
-                                  .setNumeroStelleSelected(NumeroStelle.due);
-                            } else if (value == '3 stelle') {
-                              searchController
-                                  .setNumeroStelleSelected(NumeroStelle.tre);
-                            } else if (value == '4 stelle') {
-                              searchController.setNumeroStelleSelected(
-                                  NumeroStelle.quattro);
-                            } else if (value == '5 stelle') {
-                              searchController
-                                  .setNumeroStelleSelected(NumeroStelle.cinque);
-                            } else if (value == 'Tutte') {
-                              searchController
-                                  .setNumeroStelleSelected(NumeroStelle.tutte);
-                            }
-                          },
-                        )),
+                    Column(
+                      children: [
+                        const Text('Valutazione: '),
+                        Container(
+                            padding: const EdgeInsets.all(5),
+                            margin: const EdgeInsets.only(left: 10),
+                            decoration: BoxDecoration(
+                                border: Border.all(color: Colors.grey),
+                                borderRadius: BorderRadius.circular(8.0)),
+                            child: DropDown(
+                              underline: Container(),
+                              itemList: const [
+                                '1 stella',
+                                '2 stelle',
+                                '3 stelle',
+                                '4 stelle',
+                                '5 stelle',
+                                'Tutte'
+                              ],
+                              selectOption: selectedStar,
+                              onChange: (value) {
+                                if (value == '1 stella') {
+                                  searchController.setNumeroStelleSelected(
+                                      NumeroStelle.uno);
+                                } else if (value == '2 stelle') {
+                                  searchController.setNumeroStelleSelected(
+                                      NumeroStelle.due);
+                                } else if (value == '3 stelle') {
+                                  searchController.setNumeroStelleSelected(
+                                      NumeroStelle.tre);
+                                } else if (value == '4 stelle') {
+                                  searchController.setNumeroStelleSelected(
+                                      NumeroStelle.quattro);
+                                } else if (value == '5 stelle') {
+                                  searchController.setNumeroStelleSelected(
+                                      NumeroStelle.cinque);
+                                } else if (value == 'Tutte') {
+                                  searchController.setNumeroStelleSelected(
+                                      NumeroStelle.tutte);
+                                }
+                              },
+                            )),
+                      ],
+                    ),
                   if (selectedType == SearchType.recipes &&
                       filter!.tag.isNotEmpty)
-                    Container(
-                        padding: const EdgeInsets.all(5),
-                        margin: const EdgeInsets.only(left: 10),
-                        decoration: BoxDecoration(
-                            border: Border.all(color: Colors.grey),
-                            borderRadius: BorderRadius.circular(8.0)),
-                        child: DropDownFilter(
-                          underline: Container(),
-                          itemList: filter.tag,
-                          selectOption: serachState.tagSelected ?? 0,
-                          onChange: (value) {
-                            searchController.setTagSelected(
-                                filter.tag.indexOf(value.toString()));
-                          },
-                        )),
+                    Column(
+                      children: [
+                        const Text('Tag: '),
+                        Container(
+                            padding: const EdgeInsets.all(5),
+                            margin: const EdgeInsets.only(left: 10),
+                            decoration: BoxDecoration(
+                                border: Border.all(color: Colors.grey),
+                                borderRadius: BorderRadius.circular(8.0)),
+                            child: DropDownFilter(
+                              underline: Container(),
+                              itemList: filter.tag,
+                              selectOption: serachState.tagSelected ?? 0,
+                              onChange: (value) {
+                                searchController.setTagSelected(
+                                    filter.tag.indexOf(value.toString()));
+                              },
+                            )),
+                      ],
+                    ),
                   if (selectedType == SearchType.recipes &&
                       filter!.ingredienti.isNotEmpty)
-                    Container(
-                        padding: const EdgeInsets.all(5),
-                        margin: const EdgeInsets.only(left: 10),
-                        decoration: BoxDecoration(
-                            border: Border.all(color: Colors.grey),
-                            borderRadius: BorderRadius.circular(8.0)),
-                        child: DropDownFilter(
-                          underline: Container(),
-                          itemList: filter.ingredienti,
-                          selectOption: serachState.alimentiSelected ?? 0,
-                          onChange: (value) {
-                            searchController.setAlimentiSelected(
-                                filter.ingredienti.indexOf(value.toString()));
-                          },
-                        )),
+                    Column(
+                      children: [
+                        const Text('Ingredienti: '),
+                        Container(
+                            padding: const EdgeInsets.all(5),
+                            margin: const EdgeInsets.only(left: 10),
+                            decoration: BoxDecoration(
+                                border: Border.all(color: Colors.grey),
+                                borderRadius: BorderRadius.circular(8.0)),
+                            child: DropDownFilter(
+                              underline: Container(),
+                              itemList: filter.ingredienti,
+                              selectOption: serachState.alimentiSelected ?? 0,
+                              onChange: (value) {
+                                searchController.setAlimentiSelected(filter
+                                    .ingredienti
+                                    .indexOf(value.toString()));
+                              },
+                            )),
+                      ],
+                    ),
                   if (selectedType == SearchType.recipes &&
                       filter!.allergeni.isNotEmpty)
-                    Container(
-                        padding: const EdgeInsets.all(5),
-                        margin: const EdgeInsets.only(left: 10),
-                        decoration: BoxDecoration(
-                            border: Border.all(color: Colors.grey),
-                            borderRadius: BorderRadius.circular(8.0)),
-                        child: DropDownFilter(
-                          underline: Container(),
-                          itemList: filter.allergeni,
-                          selectOption: serachState.allergeniSelected ?? 0,
-                          onChange: (value) {
-                            searchController.setAllergeniSelected(
-                                filter.allergeni.indexOf(value.toString()));
-                          },
-                        )),
+                    Column(
+                      children: [
+                        const Text('Allergeni: '),
+                        Container(
+                            padding: const EdgeInsets.all(5),
+                            margin: const EdgeInsets.only(left: 10),
+                            decoration: BoxDecoration(
+                                border: Border.all(color: Colors.grey),
+                                borderRadius: BorderRadius.circular(8.0)),
+                            child: DropDownFilter(
+                              underline: Container(),
+                              itemList: filter.allergeni,
+                              selectOption: serachState.allergeniSelected ?? 0,
+                              onChange: (value) {
+                                searchController.setAllergeniSelected(
+                                    filter.allergeni.indexOf(value.toString()));
+                              },
+                            )),
+                      ],
+                    ),
                 ],
               ),
             SingleChildScrollView(
