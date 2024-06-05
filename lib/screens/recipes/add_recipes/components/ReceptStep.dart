@@ -11,6 +11,7 @@ import 'package:condivisionericette/screens/recipes/add_recipes/controller/recip
 import 'package:condivisionericette/utils/constant.dart';
 import 'package:condivisionericette/widget/button/animated_button.dart';
 import 'package:condivisionericette/widget/button/rounded_button_style.dart';
+import 'package:condivisionericette/widget/loading_errors.dart';
 import 'package:condivisionericette/widget/text_input_field.dart';
 // Flutter imports:
 import 'package:flutter/material.dart';
@@ -73,6 +74,10 @@ class ReceptsStep extends ConsumerWidget {
           ..showSnackBar(snackBar);
 
         ref.read(addRecipesProvider.notifier).resetError();
+      }
+      if (current.status == StateRecipes.inProgress) {
+        ScaffoldMessenger.of(context).hideCurrentSnackBar();
+        LoadingSheet.show(context);
       }
     });
 
@@ -162,7 +167,9 @@ class ReceptsStep extends ConsumerWidget {
                     duration: const Duration(seconds: 2),
                     padding: const EdgeInsets.all(defaultPadding * 3),
                   );
-                  ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                  ScaffoldMessenger.of(context)
+                    ..hideCurrentSnackBar()
+                    ..showSnackBar(snackBar);
                 }
               } catch (e) {
                 print(e);
@@ -266,6 +273,7 @@ class ReceptsStep extends ConsumerWidget {
                         .then(
                       (value) {
                         if (value == "ok") {
+                          Navigator.of(context).pop();
                           SnackBar snackBar = SnackBar(
                             backgroundColor: Colors.transparent,
                             elevation: 0,
@@ -278,9 +286,14 @@ class ReceptsStep extends ConsumerWidget {
                             duration: const Duration(seconds: 2),
                             padding: const EdgeInsets.all(defaultPadding * 3),
                           );
-                          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                          ScaffoldMessenger.of(context)
+                            ..hideCurrentSnackBar()
+                            ..showSnackBar(snackBar);
                           if (sfida) {
-                            Navigator.of(context).pop();
+                            print("sfida");
+
+                            Navigator.of(context)
+                                .popUntil((route) => route.isFirst);
                           } else if (!sfida) {
                             pageController.setPage(1);
                           }
@@ -298,7 +311,9 @@ class ReceptsStep extends ConsumerWidget {
                             duration: const Duration(seconds: 5),
                             padding: const EdgeInsets.all(defaultPadding * 3),
                           );
-                          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                          ScaffoldMessenger.of(context)
+                            ..hideCurrentSnackBar()
+                            ..showSnackBar(snackBar);
                         }
                       },
                     );

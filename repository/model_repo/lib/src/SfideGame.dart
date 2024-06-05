@@ -19,6 +19,7 @@ class Sfidegame {
   DateTime? dataCreazione;
   DateTime? dataFine;
   DateTime? dataInizio;
+  bool? old;
 
   Sfidegame({
     this.id = '',
@@ -37,6 +38,7 @@ class Sfidegame {
     this.dataCreazione,
     this.dataFine,
     this.dataInizio,
+    this.old = false,
   });
 
   Sfidegame.empty() : this();
@@ -58,6 +60,7 @@ class Sfidegame {
     DateTime? dataCreazione,
     DateTime? dataFine,
     DateTime? dataInizio,
+    bool? old,
   }) {
     return Sfidegame(
       id: id ?? this.id,
@@ -76,6 +79,7 @@ class Sfidegame {
       dataFine: dataFine ?? this.dataFine,
       dataInizio: dataInizio ?? this.dataInizio,
       ricettePubblicate: ricettePubblicate ?? this.ricettePubblicate,
+      old: old ?? this.old,
     );
   }
 
@@ -97,6 +101,7 @@ class Sfidegame {
       'dataFine': dataFine,
       'dataInizio': dataInizio,
       'ricettePubblicate': ricettePubblicate,
+      'old': old,
     };
   }
 
@@ -112,6 +117,7 @@ class Sfidegame {
         utentiPartecipanti: List<String>.from(map['utentiPartecipanti']),
         classifica: List<String>.from(map['classifica']),
         punti: map['punti'],
+        old: map['old'] ?? false,
         ingredienti: map['ingredienti'] != null
             ? List<String>.from(map['ingredienti'])
             : [],

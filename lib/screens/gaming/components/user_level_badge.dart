@@ -1,6 +1,5 @@
 // Flutter imports:
 import 'package:flutter/material.dart';
-
 // Package imports:
 import 'package:model_repo/model_repo.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
@@ -51,6 +50,8 @@ class _UserLevelBadgeState extends State<UserLevelBadge> {
   void initState() {
     _handlerLevelPoint();
     _getUserName();
+    print(levelPoint);
+    print(point);
     super.initState();
   }
 

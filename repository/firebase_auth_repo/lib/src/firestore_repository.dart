@@ -17,6 +17,17 @@ class UpdateProfileFailure implements Exception {
   }
 }
 
+class AddPointerFailure implements Exception {
+  final String code;
+
+  const AddPointerFailure(this.code);
+
+  @override
+  String toString() {
+    return 'AddPointerFailure: $code';
+  }
+}
+
 class UpdateRecipeFailure {
   final String message;
 
@@ -1011,18 +1022,68 @@ class FirebaseRepository {
     }
   }
 
+  /// Add point to winner user
+  Future<void> addPointToWinner(Sfidegame game) async {
+    try {
+      String docID = await _firestore
+          .collection('sfide')
+          .where('id', isEqualTo: game.id)
+          .get()
+          .then((value) {
+        return value.docs[0].id;
+      });
+
+      String userId = await _firestore
+          .collection('sfide')
+          .doc(docID)
+          .collection('recipes')
+          .doc(game.classifica.first)
+          .get()
+          .then((value) {
+        return value.data()!['userID'];
+      });
+
+      // aggiungi i punti all utente
+      await _firestore.collection('users').doc(userId).get().then((value) {
+        Gaming gaming = Gaming.fromMap(value.data()!['gaming']);
+        gaming = gaming.copyWith(
+          punti: gaming.punti + 500,
+          gameName: checkUserName(gaming.copyWith(punti: gaming.punti + 500)),
+          sfideVinte: gaming.sfideVinte + 1,
+        );
+        _firestore.collection('users').doc(userId).update({
+          'gaming': gaming.toMap(),
+        });
+      });
+    } on FirebaseException catch (e) {
+      return Future.error(AddPointerFailure(e.code));
+    } catch (e) {
+      return Future.error(AddPointerFailure(e.toString()));
+    }
+  }
+
   /// get old challenge
-  Future<List<Sfidegame>> getOldChallenge() {
+  Future<List<Sfidegame>> getOldChallenge() async {
     try {
       return _firestore
           .collection('sfide')
           .where("dataFine", isLessThan: DateTime.now())
           .orderBy('dataInizio', descending: false)
           .get()
-          .then((value) {
+          .then((value) async {
         List<Sfidegame> sfide = [];
         for (var sfida in value.docs) {
-          sfide.add(Sfidegame.fromMap(sfida.data()));
+          Sfidegame tempSfida = Sfidegame.fromMap(sfida.data());
+
+          sfide.add(tempSfida);
+
+          if (tempSfida.old == false) {
+            await addPointToWinner(tempSfida);
+
+            await _firestore.collection('sfide').doc(sfida.id).update({
+              'old': true,
+            });
+          }
         }
         return sfide;
       });
