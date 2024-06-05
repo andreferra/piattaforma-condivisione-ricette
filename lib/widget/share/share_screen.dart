@@ -1,17 +1,19 @@
 // Dart imports:
 import 'dart:typed_data';
 
-// Package imports:
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:condivisionericette/screens/search_screen/components/user_card.dart';
-import 'package:condivisionericette/widget/loading_errors.dart';
-import 'package:firebase_auth_repo/auth_repo.dart';
 // Flutter imports:
 import 'package:flutter/material.dart';
-// Project imports:
+
+// Package imports:
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth_repo/auth_repo.dart';
 import 'package:model_repo/src/Message.dart';
 import 'package:model_repo/src/Notification.dart';
 import 'package:uuid/uuid.dart';
+
+// Project imports:
+import 'package:condivisionericette/screens/search_screen/components/user_card.dart';
+import 'package:condivisionericette/widget/loading_errors.dart';
 
 class ShareScreen extends StatefulWidget {
   final String mioId;

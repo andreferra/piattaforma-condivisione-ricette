@@ -1,5 +1,8 @@
-import 'package:firebase_auth_repo/auth_repo.dart';
+// Flutter imports:
 import 'package:flutter/material.dart';
+
+// Package imports:
+import 'package:firebase_auth_repo/auth_repo.dart';
 
 class NewNotification extends StatefulWidget {
   final String userId;

@@ -1,6 +1,7 @@
 // Flutter imports:
 import 'package:flutter/material.dart';
-// Project imports:
+
+// Package imports:
 import 'package:model_repo/src/Message.dart';
 
 class MessageCard extends StatelessWidget {

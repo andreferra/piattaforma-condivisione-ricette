@@ -1,17 +1,19 @@
 // Dart imports:
 import 'dart:typed_data';
 
-// Package imports:
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:condivisionericette/widget/text_input_field.dart';
-import 'package:firebase_auth_repo/auth_repo.dart';
 // Flutter imports:
 import 'package:flutter/material.dart';
+
+// Package imports:
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth_repo/auth_repo.dart';
 import 'package:image_picker/image_picker.dart';
-// Project imports:
 import 'package:model_repo/src/Message.dart';
 import 'package:model_repo/src/Notification.dart';
 import 'package:uuid/uuid.dart';
+
+// Project imports:
+import 'package:condivisionericette/widget/text_input_field.dart';
 
 class ChatInput extends StatefulWidget {
   final String userId;

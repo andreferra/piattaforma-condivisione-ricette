@@ -1,10 +1,16 @@
+// Dart imports:
 import 'dart:math';
 
+// Flutter imports:
+import 'package:flutter/material.dart';
+
+// Package imports:
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth_repo/auth_repo.dart';
+
+// Project imports:
 import 'package:condivisionericette/screens/recipes/add_recipes/controller/recipes_controller.dart';
 import 'package:condivisionericette/screens/recipes/view_screen/view_recipe_screen.dart';
-import 'package:firebase_auth_repo/auth_repo.dart';
-import 'package:flutter/material.dart';
 
 class RicettaCasuale extends StatefulWidget {
   final AuthUser user;
