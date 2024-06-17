@@ -58,8 +58,21 @@ class LoginController extends StateNotifier<LoginState> {
         await _firebaseRepo.updateUserLogStatus(value, true);
       });
     } on SignInWithEmailAndPasswordFailure catch (e) {
+      String errore = "";
+      print(e.code);
+      if (e.code == "wrong-password") {
+        errore = "Password errata";
+      } else if (e.code == "user-not-found") {
+        errore = "Utente non trovato";
+      } else if (e.code == "invalid-email") {
+        errore = "Email non valida";
+      } else if (e.code == "too-many-requests") {
+        errore = "Troppi tentativi, riprova più tardi";
+      } else {
+        errore = e.code;
+      }
       state = state.copyWith(
-          status: FormzStatus.submissionFailure, errorMessage: e.code);
+          status: FormzStatus.submissionFailure, errorMessage: errore);
     }
   }
 }

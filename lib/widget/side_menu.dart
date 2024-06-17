@@ -23,13 +23,13 @@ class SideMenu extends ConsumerWidget {
     return Drawer(
       child: ListView(
         children: [
-          const DrawerHeader(
-            child: Text(
-              'Menu',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 24,
-              ),
+          DrawerHeader(
+            decoration: const BoxDecoration(
+              color: Colors.blueAccent,
+            ),
+            child: Image.asset(
+              'assets/images/menu_image.png',
+              fit: BoxFit.cover,
             ),
           ),
           DrawerListTile(

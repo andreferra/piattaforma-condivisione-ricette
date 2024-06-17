@@ -1,4 +1,6 @@
 // Flutter imports:
+
+// Flutter imports:
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -25,6 +27,7 @@ class LoginScreen extends ConsumerWidget {
         LoadingSheet.show(context);
         if (current.errorMessage != null) {
           Navigator.of(context).pop();
+          ScaffoldMessenger.of(context).hideCurrentSnackBar();
         }
       } else if (current.status.isSubmissionFailure) {
         Navigator.of(context).pop();

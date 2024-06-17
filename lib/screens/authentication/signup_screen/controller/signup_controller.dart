@@ -1,4 +1,6 @@
 // Package imports:
+
+// Package imports:
 import 'package:equatable/equatable.dart';
 import 'package:firebase_auth_repo/auth_repo.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -79,7 +81,7 @@ class SignUpController extends StateNotifier<SignUpState> {
       if (isNicknameInUse) {
         state = state.copyWith(
             status: FormzStatus.submissionFailure,
-            errorMessage: "Utente già registrato con questo nickname");
+            errorMessage: "Esiste già un utente con questo nickname");
       }
     });
 
@@ -93,8 +95,6 @@ class SignUpController extends StateNotifier<SignUpState> {
         state.phone,
       ]),
     );
-
-
   }
 
   void onPhoneChanged(String value) {
