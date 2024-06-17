@@ -1,15 +1,12 @@
 // Flutter imports:
 
-// Flutter imports:
-import 'package:flutter/material.dart';
-
-// Package imports:
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-
 // Project imports:
 import 'package:condivisionericette/controller/PageController.dart';
 import 'package:condivisionericette/controller/auth_controller/auth_controller.dart';
+import 'package:flutter/material.dart';
+// Package imports:
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class SideMenu extends ConsumerWidget {
   const SideMenu({super.key});
@@ -23,13 +20,13 @@ class SideMenu extends ConsumerWidget {
     return Drawer(
       child: ListView(
         children: [
-          const DrawerHeader(
-            child: Text(
-              'Menu',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 24,
-              ),
+          DrawerHeader(
+            decoration: const BoxDecoration(
+              color: Colors.blueAccent,
+            ),
+            child: Image.asset(
+              'assets/images/menu_image.png',
+              fit: BoxFit.cover,
             ),
           ),
           DrawerListTile(
