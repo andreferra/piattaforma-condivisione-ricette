@@ -1527,4 +1527,21 @@ class FirebaseRepository {
       return Future.error(UpdateProfileFailure(e.toString()));
     }
   }
+
+  Future<bool> checkUserEmail(String email) {
+    try {
+      return _firestore.collection('users').get().then((value) {
+        for (var user in value.docs) {
+          if (user.data()['email'] == email) {
+            return true;
+          }
+        }
+        return false;
+      });
+    } on FirebaseException catch (e) {
+      return Future.error(UpdateProfileFailure(e.code));
+    } catch (e) {
+      return Future.error(UpdateProfileFailure(e.toString()));
+    }
+  }
 }
