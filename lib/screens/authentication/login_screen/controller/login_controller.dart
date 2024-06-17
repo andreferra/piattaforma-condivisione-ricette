@@ -1,13 +1,12 @@
 // Package imports:
 
+// Project imports:
+import 'package:condivisionericette/controller/auth_repo_provider.dart';
 // Package imports:
 import 'package:equatable/equatable.dart';
 import 'package:firebase_auth_repo/auth_repo.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:form_validation/form_validator.dart';
-
-// Project imports:
-import 'package:condivisionericette/controller/auth_repo_provider.dart';
 
 part 'login_state.dart';
 
@@ -58,8 +57,21 @@ class LoginController extends StateNotifier<LoginState> {
         await _firebaseRepo.updateUserLogStatus(value, true);
       });
     } on SignInWithEmailAndPasswordFailure catch (e) {
+      String errore = "";
+      print(e.code);
+      if (e.code == "wrong-password") {
+        errore = "Password errata";
+      } else if (e.code == "user-not-found") {
+        errore = "Utente non trovato";
+      } else if (e.code == "invalid-email") {
+        errore = "Email non valida";
+      } else if (e.code == "too-many-requests") {
+        errore = "Troppi tentativi, riprova più tardi";
+      } else {
+        errore = e.code;
+      }
       state = state.copyWith(
-          status: FormzStatus.submissionFailure, errorMessage: e.code);
+          status: FormzStatus.submissionFailure, errorMessage: errore);
     }
   }
 }

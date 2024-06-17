@@ -1,10 +1,4 @@
 // Flutter imports:
-import 'package:flutter/material.dart';
-
-// Package imports:
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:form_validation/form_validator.dart';
-
 // Project imports:
 import 'package:condivisionericette/screens/authentication/login_screen/components/button.dart';
 import 'package:condivisionericette/screens/authentication/login_screen/components/email.dart';
@@ -14,6 +8,10 @@ import 'package:condivisionericette/screens/authentication/recuperoPWD/recupero_
 import 'package:condivisionericette/screens/authentication/signup_screen/signup_screen.dart';
 import 'package:condivisionericette/utils/utils.dart';
 import 'package:condivisionericette/widget/loading_errors.dart';
+import 'package:flutter/material.dart';
+// Package imports:
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:form_validation/form_validator.dart';
 
 class LoginScreen extends ConsumerWidget {
   const LoginScreen({super.key});
@@ -25,6 +23,7 @@ class LoginScreen extends ConsumerWidget {
         LoadingSheet.show(context);
         if (current.errorMessage != null) {
           Navigator.of(context).pop();
+          ScaffoldMessenger.of(context).hideCurrentSnackBar();
         }
       } else if (current.status.isSubmissionFailure) {
         Navigator.of(context).pop();
