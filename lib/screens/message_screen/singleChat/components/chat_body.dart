@@ -23,6 +23,8 @@ class ChatBody extends StatefulWidget {
 }
 
 class _ChatBodyState extends State<ChatBody> {
+  final ScrollController _scrollController = ScrollController();
+
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
@@ -44,6 +46,12 @@ class _ChatBodyState extends State<ChatBody> {
             child: Text("Errore durante il caricamento dei messaggi"),
           );
         }
+        if (snapshot.connectionState == ConnectionState.active) {
+          Future.delayed(const Duration(milliseconds: 100)).then((_) {
+            _scrollController
+                .jumpTo(_scrollController.position.maxScrollExtent);
+          });
+        }
         if (snapshot.data!.docs[0]['messaggi'].isEmpty) {
           return Column(
               mainAxisSize: MainAxisSize.max,
@@ -60,6 +68,7 @@ class _ChatBodyState extends State<ChatBody> {
         return SizedBox(
           height: MediaQuery.of(context).size.height * 0.8,
           child: ListView.builder(
+            controller: _scrollController,
             itemCount: snapshot.data!.docs[0]['messaggi'].length,
             itemBuilder: (context, index) {
               MessageType type = MessageType

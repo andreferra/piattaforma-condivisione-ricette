@@ -1,4 +1,6 @@
 // Flutter imports:
+
+// Flutter imports:
 import "package:flutter/material.dart";
 import 'package:flutter/widgets.dart';
 
@@ -22,6 +24,7 @@ class EmailField extends ConsumerWidget {
       autofillHints: AutofillHints.email,
       hintText: "Inserisci l'indirizzo email",
       errorText: null,
+      onSubmitted: () => loginController.signInWithEmailAndPassword(),
       onChanged: (email) => loginController.onEmailChanged(email),
     );
   }
