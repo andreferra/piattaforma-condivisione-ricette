@@ -1,12 +1,13 @@
 // Package imports:
 
-// Project imports:
-import 'package:condivisionericette/controller/auth_repo_provider.dart';
 // Package imports:
 import 'package:equatable/equatable.dart';
 import 'package:firebase_auth_repo/auth_repo.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:form_validation/form_validator.dart';
+
+// Project imports:
+import 'package:condivisionericette/controller/auth_repo_provider.dart';
 
 part 'login_state.dart';
 
