@@ -1,19 +1,17 @@
 // Dart imports:
 import 'dart:typed_data';
 
-// Flutter imports:
-import 'package:flutter/material.dart';
-
 // Package imports:
 import 'package:cloud_firestore/cloud_firestore.dart';
+// Project imports:
+import 'package:condivisionericette/widget/text_input_field.dart';
 import 'package:firebase_auth_repo/auth_repo.dart';
+// Flutter imports:
+import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:model_repo/src/Message.dart';
 import 'package:model_repo/src/Notification.dart';
 import 'package:uuid/uuid.dart';
-
-// Project imports:
-import 'package:condivisionericette/widget/text_input_field.dart';
 
 class ChatInput extends StatefulWidget {
   final String userId;
@@ -91,6 +89,8 @@ class _ChatInputState extends State<ChatInput> {
 
   @override
   Widget build(BuildContext context) {
+    FocusNode focusNode = FocusNode();
+
     return Container(
       margin: const EdgeInsets.all(10),
       padding: const EdgeInsets.all(10),
@@ -102,9 +102,31 @@ class _ChatInputState extends State<ChatInput> {
           imageFile.isEmpty
               ? Expanded(
                   child: TextInputField(
-                      hintText: "Scrivi un messaggio...",
-                      controller: _controller,
-                      onChanged: (value) {}),
+                    hintText: "Scrivi un messaggio...",
+                    controller: _controller,
+                    onChanged: (value) {},
+                    focusNode: focusNode,
+                    onSubmitted: () {
+                      _sendMessage().then((value) {
+                        switch (value) {
+                          case "":
+                            {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text("Inserisci un messaggio"),
+                                ),
+                              );
+                              break;
+                            }
+                          default:
+                            {
+                              _controller.clear();
+                              break;
+                            }
+                        }
+                      });
+                    },
+                  ),
                 )
               : Expanded(
                   child: Stack(

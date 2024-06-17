@@ -1,16 +1,14 @@
 // Flutter imports:
 
-// Flutter imports:
-import 'package:flutter/material.dart';
-
 // Package imports:
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:model_repo/src/Message.dart';
-
 // Project imports:
 import 'package:condivisionericette/utils/message/message_card.dart';
 import 'package:condivisionericette/utils/message/recipe_card.dart';
 import 'package:condivisionericette/utils/message/user_card.dart';
+// Flutter imports:
+import 'package:flutter/material.dart';
+import 'package:model_repo/src/Message.dart';
 
 class ChatBody extends StatefulWidget {
   final String user1;
@@ -23,6 +21,8 @@ class ChatBody extends StatefulWidget {
 }
 
 class _ChatBodyState extends State<ChatBody> {
+  final ScrollController _scrollController = ScrollController();
+
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
@@ -44,6 +44,12 @@ class _ChatBodyState extends State<ChatBody> {
             child: Text("Errore durante il caricamento dei messaggi"),
           );
         }
+        if (snapshot.connectionState == ConnectionState.active) {
+          Future.delayed(const Duration(milliseconds: 100)).then((_) {
+            _scrollController
+                .jumpTo(_scrollController.position.maxScrollExtent);
+          });
+        }
         if (snapshot.data!.docs[0]['messaggi'].isEmpty) {
           return Column(
               mainAxisSize: MainAxisSize.max,
@@ -60,6 +66,7 @@ class _ChatBodyState extends State<ChatBody> {
         return SizedBox(
           height: MediaQuery.of(context).size.height * 0.8,
           child: ListView.builder(
+            controller: _scrollController,
             itemCount: snapshot.data!.docs[0]['messaggi'].length,
             itemBuilder: (context, index) {
               MessageType type = MessageType
