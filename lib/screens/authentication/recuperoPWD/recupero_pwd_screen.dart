@@ -1,25 +1,23 @@
 // Flutter imports:
-import 'package:flutter/material.dart';
-
-// Package imports:
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_auth_repo/auth_repo.dart';
-
 // Project imports:
 import 'package:condivisionericette/utils/utils.dart';
 import 'package:condivisionericette/widget/button/animated_button.dart';
 import 'package:condivisionericette/widget/button/rounded_button_style.dart';
+import 'package:firebase_auth_repo/auth_repo.dart';
+import 'package:flutter/material.dart';
 
 class RecuperoPWD extends StatefulWidget {
   const RecuperoPWD({super.key});
 
   @override
-  _RecuperoPWDState createState() => _RecuperoPWDState();
+  State<RecuperoPWD> createState() => _RecuperoPWDState();
 }
 
 class _RecuperoPWDState extends State<RecuperoPWD> {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
+  final AuthenticationRepository authRepo = AuthenticationRepository();
+  final FirebaseRepository firebaseRepo = FirebaseRepository();
 
   @override
   Widget build(BuildContext context) {
@@ -56,6 +54,8 @@ class _RecuperoPWDState extends State<RecuperoPWD> {
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'Inserisci un\'email';
+                        } else if (!isValidEmail(value)) {
+                          return 'Inserisci un\'email valida';
                         }
                         return null;
                       },
@@ -63,10 +63,38 @@ class _RecuperoPWDState extends State<RecuperoPWD> {
                     spacer(0, 20),
                     AnimatedButton(
                         onTap: () async {
-                          if (_formKey.currentState!.validate()) {
-                            await _sendPasswordResetEmail(
-                                _emailController.text);
+                          if (!_formKey.currentState!.validate()) {
+                            return;
                           }
+                          await authRepo
+                              .checkEmail(_emailController.text)
+                              .then((value) async {
+                            if (value == false) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content:
+                                      Text('Email non presente nel sistema'),
+                                ),
+                              );
+                              return;
+                            }
+                            await authRepo
+                                .resetPassword(_emailController.text)
+                                .then((value) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text('Email di recupero inviata'),
+                                ),
+                              );
+                            }).catchError((e) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content:
+                                      Text('Email non presente nel sistema'),
+                                ),
+                              );
+                            });
+                          });
                         },
                         child: const RoundedButtonStyle(
                           title: 'Invia email di recupero',
@@ -81,19 +109,8 @@ class _RecuperoPWDState extends State<RecuperoPWD> {
     );
   }
 
-  Future<void> _sendPasswordResetEmail(String email) async {
-    try {
-      AuthenticationRepository authRepo = AuthenticationRepository();
-      await authRepo.forgotPassword(email: email).then((value) {
-        ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Email di recupero password inviata')));
-
-        Navigator.pop(context);
-      });
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Errore durante l\'invio dell\'email')),
-      );
-    }
+  bool isValidEmail(String value) {
+    final emailRegex = RegExp(r'^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$');
+    return emailRegex.hasMatch(value);
   }
 }

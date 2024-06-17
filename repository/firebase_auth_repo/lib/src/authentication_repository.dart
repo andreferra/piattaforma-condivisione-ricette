@@ -113,6 +113,35 @@ class AuthenticationRepository {
       throw SignOutFailure();
     }
   }
+
+  /// Checks if the given [email] is already in use.
+  Future<bool> checkEmail(String email) async {
+    try {
+      return _firebaseRepo.checkUserEmail(email);
+    } on FirebaseAuthException catch (e) {
+      throw CheckEmailFailure(e.code);
+    }
+  }
+
+  Future<String> resetPassword(String text) async {
+    try {
+      String res = "";
+      await _firebaseAuth.sendPasswordResetEmail(email: text).then((value) {
+        res = "Email di recupero inviata";
+      }).catchError((e) {
+        res = "Email non presente nel sistema";
+      });
+      return res;
+    } on FirebaseAuthException catch (e) {
+      throw ForgotPasswordFailure(e.code);
+    }
+  }
+}
+
+class CheckEmailFailure implements Exception {
+  final String code;
+
+  const CheckEmailFailure(this.code);
 }
 
 class DeleteAccountFailure implements Exception {
