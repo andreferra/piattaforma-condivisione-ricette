@@ -21,6 +21,7 @@ class AuthUser extends Equatable {
   final List<String>? follower;
   final List<String>? following;
   final int? posts;
+  final List<String>? userNotificheActive;
   final List<String>? listaNotifiche;
   final bool? newNotifiche;
   final bool? gameActive;
@@ -39,6 +40,7 @@ class AuthUser extends Equatable {
     this.dataUltimoAccesso,
     this.isLogged,
     this.prefAlimentari,
+    this.userNotificheActive,
     this.allergie,
     this.interessiCulinari,
     this.bio,
@@ -66,6 +68,7 @@ class AuthUser extends Equatable {
         emailVerified,
         phone,
         photoURL,
+        userNotificheActive,
         dataRegistrazione,
         dataUltimoAccesso,
         isLogged,
@@ -84,7 +87,6 @@ class AuthUser extends Equatable {
       ];
 
   factory AuthUser.fromDocument(Map<String, dynamic> data) {
-    print(data);
     try {
       return AuthUser(
         uid: data['uid'],
@@ -96,6 +98,9 @@ class AuthUser extends Equatable {
         phone: data['phone'],
         newNotifiche: data['newNotifiche'],
         photoURL: data['photoURL'],
+        userNotificheActive: (data['userNotificheActive'] as List<dynamic>)
+            .map((item) => item.toString())
+            .toList(),
         gameActive: data['gameActive'],
         dataRegistrazione: data['dataRegistrazione'],
         dataUltimoAccesso: data['dataUltimoAccesso'],
@@ -151,6 +156,7 @@ class AuthUser extends Equatable {
       'interessiCulinari': interessiCulinari,
       'bio': bio,
       'notification': notification,
+      'userNotificheActive': userNotificheActive,
       'follower': follower,
       'following': following,
       'posts': posts,
@@ -177,6 +183,7 @@ class AuthUser extends Equatable {
     List<String>? allergie,
     List<String>? interessiCulinari,
     String? bio,
+    List<String>? userNotificheActive,
     bool? notification,
     List<String>? follower,
     List<String>? following,
@@ -194,6 +201,7 @@ class AuthUser extends Equatable {
       emailVerified: emailVerified ?? this.emailVerified,
       phone: phone ?? this.phone,
       photoURL: photoURL ?? this.photoURL,
+      userNotificheActive: userNotificheActive ?? this.userNotificheActive,
       dataRegistrazione: dataRegistrazione ?? this.dataRegistrazione,
       dataUltimoAccesso: dataUltimoAccesso ?? this.dataUltimoAccesso,
       newNotifiche: newNotifiche ?? this.newNotifiche,
