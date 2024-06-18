@@ -1,20 +1,18 @@
 // Flutter imports:
 
-// Flutter imports:
-import 'package:flutter/material.dart';
-
-// Package imports:
-import 'package:firebase_auth_repo/auth_repo.dart';
-import 'package:model_repo/model_repo.dart';
-import 'package:model_repo/src/Message.dart';
-import 'package:uuid/uuid.dart';
-
 // Project imports:
 import 'package:condivisionericette/screens/message_screen/singleChat/single_chat.dart';
 import 'package:condivisionericette/screens/public_profile/components/recipes_list.dart';
 import 'package:condivisionericette/screens/public_profile/components/top_section.dart';
 import 'package:condivisionericette/screens/public_profile/components/user_info.dart';
 import 'package:condivisionericette/utils/constant.dart';
+// Package imports:
+import 'package:firebase_auth_repo/auth_repo.dart';
+// Flutter imports:
+import 'package:flutter/material.dart';
+import 'package:model_repo/model_repo.dart';
+import 'package:uuid/uuid.dart';
+
 import '../../widget/share/share_screen.dart';
 
 class PublicProfile extends StatefulWidget {
@@ -46,7 +44,7 @@ class _PublicProfileState extends State<PublicProfile> {
             user.follower!.contains(widget.mioId)
                 ? loSeguo = true
                 : loSeguo = false;
-            user.listaNotifiche!.contains(widget.mioId)
+            user.userNotificheActive!.contains(widget.mioId)
                 ? notifiche = true
                 : notifiche = false;
           });
@@ -132,7 +130,7 @@ class _PublicProfileState extends State<PublicProfile> {
           case 'ok':
             setState(() {
               notifiche = true;
-              user.listaNotifiche!.add(widget.mioId);
+              user.userNotificheActive!.add(widget.mioId);
             });
             ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(content: Text("Notifiche attivate")));
@@ -157,7 +155,7 @@ class _PublicProfileState extends State<PublicProfile> {
           case 'ok':
             setState(() {
               notifiche = false;
-              user.listaNotifiche!.remove(widget.mioId);
+              user.userNotificheActive!.remove(widget.mioId);
             });
             ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(content: Text("Notifiche disattivate")));

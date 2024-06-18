@@ -456,7 +456,7 @@ class FirebaseRepository {
   Future<String> addNotification(String user1, String user2) async {
     try {
       await _firestore.collection('users').doc(user2).update({
-        'listaNotifiche': FieldValue.arrayUnion([user1])
+        'userNotificheActive': FieldValue.arrayUnion([user1])
       });
       return 'ok';
     } on FirebaseException catch (e) {
@@ -470,7 +470,7 @@ class FirebaseRepository {
   Future<String> deleteNotification(String user1, String user2) async {
     try {
       await _firestore.collection('users').doc(user2).update({
-        'listaNotifiche': FieldValue.arrayRemove([user1])
+        'userNotificheActive': FieldValue.arrayRemove([user1])
       });
       return 'ok';
     } on FirebaseException catch (e) {
