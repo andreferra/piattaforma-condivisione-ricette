@@ -1,16 +1,8 @@
 // Dart imports:
 import 'dart:typed_data';
 
-// Flutter imports:
-import 'package:flutter/material.dart';
-
 // Package imports:
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:model_repo/model_repo.dart';
-import 'package:uuid/uuid.dart';
-
 // Project imports:
 import 'package:condivisionericette/controller/PageController.dart';
 import 'package:condivisionericette/controller/auth_controller/auth_controller.dart';
@@ -20,6 +12,12 @@ import 'package:condivisionericette/widget/button/animated_button.dart';
 import 'package:condivisionericette/widget/button/rounded_button_style.dart';
 import 'package:condivisionericette/widget/loading_errors.dart';
 import 'package:condivisionericette/widget/text_input_field.dart';
+// Flutter imports:
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:model_repo/model_repo.dart';
+import 'package:uuid/uuid.dart';
 
 class ReceptsStep extends ConsumerWidget {
   final bool sfida;
@@ -140,6 +138,7 @@ class ReceptsStep extends ConsumerWidget {
                   hintText: "Descrizione step",
                   minLines: 6,
                   hasMaxLenght: true,
+                  keyboardType: TextInputType.multiline,
                   maxLength: 500,
                   onChanged: (value) {
                     recipesController.addStepText(value);
@@ -207,6 +206,18 @@ class ReceptsStep extends ConsumerWidget {
                       },
                       icon: const Icon(Icons.delete),
                     ),
+                    if (!recipesState.editStep && recipesState.editIndex != i)
+                      IconButton(
+                          onPressed: () {
+                            recipesController.onEditStep(true, i);
+                          },
+                          icon: const Icon(Icons.edit)),
+                    if (recipesState.editIndex == i && recipesState.editStep)
+                      IconButton(
+                          onPressed: () {
+                            recipesController.onEditStep(false, -1);
+                          },
+                          icon: const Icon(Icons.done)),
                   ],
                 ),
                 const SizedBox(
@@ -215,23 +226,67 @@ class ReceptsStep extends ConsumerWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    Expanded(
-                      child: Text(
-                        recipesState.passaggi[i],
-                        style: const TextStyle(
-                          fontSize: 16,
+                    if (recipesState.editIndex == i && recipesState.editStep)
+                      Expanded(
+                        child: TextInputField(
+                          hintText: "Descrizione step",
+                          minLines: 6,
+                          valoreIniziale: recipesState.passaggi[i],
+                          hasMaxLenght: true,
+                          keyboardType: TextInputType.multiline,
+                          maxLength: 500,
+                          onChanged: (value) {
+                            recipesController.onEditStepText(value);
+                          },
                         ),
                       ),
-                    ),
+                    if (recipesState.editIndex != i)
+                      Expanded(
+                        child: Text(
+                          recipesState.passaggi[i],
+                          style: const TextStyle(
+                            fontSize: 16,
+                          ),
+                        ),
+                      ),
                     const SizedBox(
                       height: defaultPadding * 3,
                     ),
-                    if (recipesState.immagini.isNotEmpty)
+                    if (recipesState.immagini.isNotEmpty &&
+                        recipesState.immagini.length > i &&
+                        recipesState.editIndex != i)
                       Image.memory(
                         height: MediaQuery.of(context).size.width * 0.1,
                         width: MediaQuery.of(context).size.width * 0.1,
                         recipesState.immagini[i],
                         fit: BoxFit.cover,
+                      ),
+                    if (recipesState.editIndex == i && recipesState.editStep)
+                      InkWell(
+                        onTap: () async {
+                          final image = await ImagePicker()
+                              .pickImage(source: ImageSource.gallery);
+
+                          if (image != null) {
+                            Uint8List file = await image.readAsBytes();
+                            recipesController.onEditImage(file);
+                          }
+                        },
+                        child: Container(
+                          width: MediaQuery.of(context).size.width * 0.1,
+                          height: MediaQuery.of(context).size.width * 0.1,
+                          decoration: BoxDecoration(
+                            color: Theme.of(context).colorScheme.secondary,
+                            borderRadius: BorderRadius.circular(12),
+                            image: DecorationImage(
+                              image: recipesState.newStepImage == null
+                                  ? Image.memory(recipesState.immagini[i]).image
+                                  : Image.memory(recipesState.newStepImage!)
+                                      .image,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        ),
                       ),
                   ],
                 ),

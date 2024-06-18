@@ -24,6 +24,10 @@ class RecipesState extends Equatable {
   final String? misura;
   final String? quantita;
 
+  final bool editStep;
+  final String? newDescription;
+  final Uint8List? newStepImage;
+  final int? editIndex;
   //step
   final List<Uint8List> immagini;
   final List<String> passaggi;
@@ -42,6 +46,7 @@ class RecipesState extends Equatable {
       this.descrizione,
       this.dataCreazione,
       this.tempoPreparazione,
+      this.editIndex,
       this.porzioni,
       this.difficolta = "facile",
       this.immagini = const [],
@@ -54,6 +59,9 @@ class RecipesState extends Equatable {
       this.passaggio,
       this.allergia,
       this.misura,
+      this.editStep = false,
+      this.newDescription,
+      this.newStepImage,
       this.quantita,
       this.coverImage,
       this.stepIndex = 0,
@@ -77,6 +85,10 @@ class RecipesState extends Equatable {
     List<Uint8List>? immagini,
     List<String>? ingredienti,
     List<String>? tag,
+    String? newDescription,
+    Uint8List? newStepImage,
+    bool? editStep,
+    int? editIndex,
     List<String>? passaggi,
     List<String>? allergie,
     String? ingrediente,
@@ -109,7 +121,11 @@ class RecipesState extends Equatable {
       ingredienti: ingredienti ?? this.ingredienti,
       tag: tag ?? this.tag,
       passaggi: passaggi ?? this.passaggi,
+      editIndex: editIndex ?? this.editIndex,
       allergie: allergie ?? this.allergie,
+      newDescription: newDescription ?? this.newDescription,
+      newStepImage: newStepImage ?? this.newStepImage,
+      editStep: editStep ?? this.editStep,
       ingrediente: ingrediente ?? this.ingrediente,
       tagSingolo: tagSingolo ?? this.tagSingolo,
       passaggio: passaggio ?? this.passaggio,
