@@ -3,16 +3,15 @@ import 'dart:typed_data';
 
 // Package imports:
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:equatable/equatable.dart';
-import 'package:firebase_auth_repo/auth_repo.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:uuid/uuid.dart';
-
 // Project imports:
 import 'package:condivisionericette/controller/auth_repo_provider.dart';
 import 'package:condivisionericette/model/Comment.dart';
 import 'package:condivisionericette/screens/recipes/view_screen/controller/recipe_interaction_controller.dart';
 import 'package:condivisionericette/utils/constant.dart';
+import 'package:equatable/equatable.dart';
+import 'package:firebase_auth_repo/auth_repo.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:uuid/uuid.dart';
 
 part 'recipes_state.dart';
 
@@ -240,11 +239,15 @@ class AddRecipesController extends StateNotifier<RecipesState> {
   }
 
   void removeStep(int value) {
+    List<String> passaggi = state.passaggi;
+    List<Uint8List> immagini = state.immagini;
+
+    passaggi.removeAt(value);
+    immagini.removeAt(value);
+
     state = state.copyWith(
-      passaggi:
-          state.passaggi.where((e) => e != state.passaggi[value]).toList(),
-      immagini:
-          state.immagini.where((e) => e != state.immagini[value]).toList(),
+      passaggi: passaggi,
+      immagini: immagini,
       stepIndex: state.stepIndex! - 1,
     );
   }
@@ -340,5 +343,27 @@ class AddRecipesController extends StateNotifier<RecipesState> {
     } catch (e) {
       print(e);
     }
+  }
+
+  void onEditStep(bool value, int index) {
+    state = state.copyWith(editStep: value, editIndex: index);
+  }
+
+  void onEditStepText(String value) {
+    state = state.copyWith(stepText: value);
+
+    List<String> passaggi = state.passaggi;
+
+    passaggi[state.editIndex!] = value;
+    state = state.copyWith(passaggi: passaggi, newDescription: "");
+  }
+
+  void onEditImage(Uint8List value) {
+    state = state.copyWith(newStepImage: value);
+
+    List<Uint8List> immagini = state.immagini;
+
+    immagini[state.editIndex!] = value;
+    state = state.copyWith(immagini: immagini, newStepImage: null);
   }
 }
