@@ -136,6 +136,61 @@ class AuthenticationRepository {
       throw ForgotPasswordFailure(e.code);
     }
   }
+
+  ///aggiunta funzione per aggiornare l'email
+  Future<String> updateEmail(String email, String password) async {
+    try {
+      String res = "";
+      final currentUser = _firebaseAuth.currentUser;
+
+      if (currentUser!.email != email) {
+        await _firebaseAuth.currentUser!.reauthenticateWithCredential(
+            EmailAuthProvider.credential(
+                email: currentUser.email!, password: password));
+        await _firebaseAuth.currentUser!.verifyBeforeUpdateEmail(email);
+
+        res = "ok";
+      }
+
+      return res;
+    } on FirebaseAuthException catch (e) {
+      throw ForgotPasswordFailure(e.code).toString();
+    }
+  }
+
+  ///aggiunta funzione per aggiornare la password
+  Future<String> updatePassword(
+      String email, String password, String oldPassword) async {
+    try {
+      String res = "";
+      final currentUser = _firebaseAuth.currentUser;
+
+      if (currentUser!.email == email &&
+          password.isNotEmpty &&
+          oldPassword.isNotEmpty) {
+        // riautentico l'utente
+        await _firebaseAuth.currentUser!.reauthenticateWithCredential(
+            EmailAuthProvider.credential(
+                email: currentUser.email!, password: oldPassword));
+        //modifico la password
+        await _firebaseAuth.currentUser!.updatePassword(password);
+
+        //aggiorno la password nel database
+        await _firebaseRepo
+            .updateEmailAndPassword(_firebaseAuth.currentUser!.email!, password,
+                _firebaseAuth.currentUser!.uid)
+            .then((value) {
+          res = "ok";
+        }).catchError((e) {
+          res = "error";
+        });
+      }
+
+      return res;
+    } on FirebaseAuthException catch (e) {
+      throw ForgotPasswordFailure(e.code).toString();
+    }
+  }
 }
 
 class CheckEmailFailure implements Exception {
@@ -167,6 +222,11 @@ class SignInWithEmailAndPasswordFailure implements Exception {
 /// Exception thrown when forgot password operation fails.
 class ForgotPasswordFailure implements Exception {
   final String code;
+
+  @override
+  String toString() {
+    return 'ForgotPasswordFailure: $code';
+  }
 
   const ForgotPasswordFailure(this.code);
 }

@@ -6,12 +6,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:form_validation/form_validator.dart';
 
 // Project imports:
-import 'package:condivisionericette/controller/PageController.dart';
 import 'package:condivisionericette/controller/auth_controller/auth_controller.dart';
 import 'package:condivisionericette/screens/setting_screen/components/delete_account_component.dart';
 import 'package:condivisionericette/screens/setting_screen/components/edit_email_component.dart';
 import 'package:condivisionericette/screens/setting_screen/components/edit_password_component.dart';
 import 'package:condivisionericette/screens/setting_screen/components/notification_component.dart';
+import 'package:condivisionericette/screens/setting_screen/components/waiting_confermation.dart';
 import 'package:condivisionericette/screens/setting_screen/controller/setting_controller.dart';
 import 'package:condivisionericette/utils/constant.dart';
 import 'package:condivisionericette/widget/button/animated_button.dart';
@@ -33,6 +33,7 @@ class SettingScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final user = ref.watch(authProvider);
     final settingController = ref.read(settingProvider.notifier);
+    final settingState = ref.watch(settingProvider);
 
     ref.listen<SettingState>(settingProvider, (previous, current) {
       if (current.status.isSubmissionInProgress) {
@@ -69,7 +70,20 @@ class SettingScreen extends ConsumerWidget {
             width: MediaQuery.of(context).size.width * 0.48,
             child: AnimatedButton(
                 onTap: () async {
-                  await settingController.aggiornaImpostazioni(user.user);
+                  bool res =
+                      await settingController.aggiornaImpostazioni(user.user);
+
+                  if (res) {
+                    String password = settingState.newPassword!.value.isEmpty
+                        ? user.user.password!
+                        : settingState.newPassword!.value;
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => WaitingConfermation(
+                            email: settingState.newEmail!.value,
+                            oldEmail: user.user.email!,
+                            password: password,
+                            userid: user.user.uid)));
+                  }
                 },
                 child: const RoundedButtonStyle(
                     title: "Aggiorna le impostazioni")),
