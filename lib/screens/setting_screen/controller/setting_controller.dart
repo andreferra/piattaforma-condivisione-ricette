@@ -96,6 +96,7 @@ class SettingController extends StateNotifier<SettingState> {
   Future<void> deleteAccount(String uid) async {
     try {
       state = state.copyWith(status: FormzStatus.submissionInProgress);
+      await _authRepo.signOut();
       await _authRepo.deleteAccount(uid);
       state = state.copyWith(status: FormzStatus.submissionSuccess);
     } catch (e) {
