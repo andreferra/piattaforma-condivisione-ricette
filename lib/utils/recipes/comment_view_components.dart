@@ -1,4 +1,11 @@
 // Flutter imports:
+
+// Flutter imports:
+import 'package:flutter/material.dart';
+
+// Package imports:
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 // Project imports:
 import 'package:condivisionericette/controller/auth_controller/auth_controller.dart';
 import 'package:condivisionericette/model/Comment.dart';
@@ -7,9 +14,6 @@ import 'package:condivisionericette/screens/recipes/add_recipes/controller/recip
 import 'package:condivisionericette/screens/recipes/view_screen/components/add_comment_component.dart';
 import 'package:condivisionericette/screens/recipes/view_screen/controller/recipe_interaction_controller.dart';
 import 'package:condivisionericette/utils/constant.dart';
-import 'package:flutter/material.dart';
-// Package imports:
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class CommentCard extends ConsumerWidget {
   final Comment commento;
