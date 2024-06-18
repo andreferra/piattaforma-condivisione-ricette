@@ -174,7 +174,33 @@ class FirebaseRepository {
   /// Delete user from database
   Future<void> deleteUserFromDatabase(String uid) async {
     try {
+      // Delete user from database
       await _firestore.collection('users').doc(uid).delete();
+      // Delete from messaggi
+      await _firestore
+          .collection('messaggi')
+          .where('id', whereIn: [uid])
+          .get()
+          .then((value) {
+            if (value.docs.isNotEmpty) {
+              for (var doc in value.docs) {
+                doc.reference.delete();
+              }
+            }
+          });
+
+      // Delete from ricette
+      await _firestore
+          .collection('recipes')
+          .where('user_id', isEqualTo: uid)
+          .get()
+          .then((value) {
+        if (value.docs.isNotEmpty) {
+          for (var doc in value.docs) {
+            doc.reference.delete();
+          }
+        }
+      });
     } on FirebaseException catch (e) {
       return Future.error(UpdateProfileFailure(e.code));
     } catch (e) {
