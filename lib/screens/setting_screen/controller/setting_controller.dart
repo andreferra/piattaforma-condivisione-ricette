@@ -1,6 +1,4 @@
 // Dart imports:
-import 'dart:js_util';
-import 'dart:ui';
 
 // Package imports:
 import 'package:equatable/equatable.dart';
@@ -47,7 +45,7 @@ class SettingController extends StateNotifier<SettingState> {
     state = state.copyWith(notification: value);
   }
 
-  Future<void> aggiornaImpostazioni(AuthUser oldUser) async {
+  Future<bool> aggiornaImpostazioni(AuthUser oldUser) async {
     try {
       state = state.copyWith(status: FormzStatus.submissionInProgress);
 
@@ -64,22 +62,34 @@ class SettingController extends StateNotifier<SettingState> {
           state.newPassword!.value == oldUser.password &&
           state.notification == oldUser.notification) {
         state = state.copyWith(status: FormzStatus.submissionSuccess);
-        return;
+        return false;
       }
+
       if (state.status.isValidated) {
-        await _firebaseRepo.updateUserSetting(
-          email,
-          password,
-          notifiche,
-          oldUser.uid,
-        );
+        // aggiorna preferenza notifiche utente
+        await _firebaseRepo.updateUserSetting(notifiche, oldUser.uid);
+
+        // aggiorna email e password utente
+
+        await _authRepo.updatePassword(
+            oldUser.email!, password, oldUser.password!);
+
+        //gestire aggiormamento email
+        await _authRepo.updateEmail(email, password);
       }
+
       state = state.copyWith(status: FormzStatus.submissionSuccess);
+      if (email != oldUser.email) {
+        return true;
+      }
+
+      return false;
     } catch (e) {
       state = state.copyWith(
         status: FormzStatus.submissionFailure,
         errorMessage: e.toString(),
       );
+      return false;
     }
   }
 

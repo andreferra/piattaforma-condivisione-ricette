@@ -242,14 +242,16 @@ class FirebaseRepository {
   }
 
   /// Updates the user's settings.
-  Future<void> updateUserSetting(
-      String email, String password, bool notification, String userid) async {
+  Future<String> updateUserSetting(bool notification, String userid) async {
     try {
+      String res = "error";
       await _firestore.collection('users').doc(userid).update({
-        'email': email,
-        'password': password,
         'notification': notification,
+      }).then((value) {
+        res = 'ok';
       });
+
+      return res;
     } on FirebaseException catch (e) {
       return Future.error(UpdateSettingFailure(e.code));
     } catch (e) {
@@ -1537,6 +1539,20 @@ class FirebaseRepository {
           }
         }
         return false;
+      });
+    } on FirebaseException catch (e) {
+      return Future.error(UpdateProfileFailure(e.code));
+    } catch (e) {
+      return Future.error(UpdateProfileFailure(e.toString()));
+    }
+  }
+
+  Future<void> updateEmailAndPassword(
+      String email, String password, String uid) async {
+    try {
+      await _firestore.collection('users').doc(uid).update({
+        'email': email,
+        'password': password,
       });
     } on FirebaseException catch (e) {
       return Future.error(UpdateProfileFailure(e.code));
