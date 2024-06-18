@@ -21,51 +21,23 @@ import 'package:condivisionericette/widget/button/rounded_button_style.dart';
 import 'package:condivisionericette/widget/loading_errors.dart';
 import 'package:condivisionericette/widget/text_input_field.dart';
 
-class Receptstep extends ConsumerStatefulWidget {
+class ReceptsStep extends ConsumerWidget {
   final bool sfida;
   final String sfidaId;
   final List<String> ingredienti;
   final List<String> urlImmagini;
   final SfideType type;
-  const Receptstep(
+  const ReceptsStep(
       {super.key,
-      this.sfida = false,
-      this.sfidaId = "",
-      this.ingredienti = const [],
+      required this.sfida,
+      required this.sfidaId,
+      this.type = SfideType.none,
       this.urlImmagini = const [],
-      this.type = SfideType.none});
+      this.ingredienti = const []});
 
   @override
-  ReceptstepState createState() => ReceptstepState();
-}
-
-class ReceptstepState extends ConsumerState<Receptstep> {
-  bool get sfida => sfida;
-  String get sfidaId => sfidaId;
-  List<String> get ingredienti => ingredienti;
-  List<String> get urlImmagini => urlImmagini;
-  SfideType get type => type;
-  late TextEditingController stepController;
-
-  @override
-  void initState() {
-    stepController = TextEditingController();
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    stepController.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final recipesController = ref.watch(addRecipesProvider.notifier);
-    final recipesState = ref.watch(addRecipesProvider);
-    final loadState = ref.watch(addRecipesProvider).status;
-    final user = ref.watch(authProvider).user;
-    final pageController = ref.watch(pageControllerProvider);
+  Widget build(BuildContext context, WidgetRef ref) {
+    final textEditingController = TextEditingController();
 
     ref.listen(addRecipesProvider, (previous, current) {
       if (current.errorType == ErrorType.stepImage) {
@@ -112,6 +84,11 @@ class ReceptstepState extends ConsumerState<Receptstep> {
       }
     });
 
+    final recipesController = ref.watch(addRecipesProvider.notifier);
+    final recipesState = ref.watch(addRecipesProvider);
+    final loadState = ref.watch(addRecipesProvider).status;
+    final user = ref.watch(authProvider).user;
+    final pageController = ref.watch(pageControllerProvider);
     return Column(
       children: [
         const SizedBox(
@@ -162,12 +139,14 @@ class ReceptstepState extends ConsumerState<Receptstep> {
               //descrizione dello step
               Expanded(
                 child: TextInputField(
-                  hintText: "Descrizione step",
+                  enable: recipesState.stepImage != null,
+                  hintText:
+                      "Dopo aver aggiunto l'immagine, descrivi il passaggio",
                   minLines: 6,
-                  controller: stepController,
                   hasMaxLenght: true,
                   keyboardType: TextInputType.multiline,
                   maxLength: 500,
+                  controller: textEditingController,
                   onChanged: (value) {},
                 ),
               )
@@ -180,11 +159,10 @@ class ReceptstepState extends ConsumerState<Receptstep> {
         AnimatedButton(
             onTap: () {
               try {
-                recipesController.addStepText(stepController.text);
+                recipesController.addStepText(textEditingController.text);
                 String res = recipesController.addStep();
                 recipesController.clearStep();
-                stepController.clear();
-
+                textEditingController.clear();
                 if (res == "ok") {
                   SnackBar snackBar = SnackBar(
                     backgroundColor: Colors.transparent,
@@ -376,8 +354,6 @@ class ReceptstepState extends ConsumerState<Receptstep> {
                             ..hideCurrentSnackBar()
                             ..showSnackBar(snackBar);
                           if (sfida) {
-                            print("sfida");
-
                             Navigator.of(context)
                                 .popUntil((route) => route.isFirst);
                           } else if (!sfida) {

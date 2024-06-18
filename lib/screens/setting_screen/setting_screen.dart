@@ -1,4 +1,6 @@
 // Flutter imports:
+
+// Flutter imports:
 import 'package:flutter/material.dart';
 
 // Package imports:
@@ -105,6 +107,7 @@ class SettingScreen extends ConsumerWidget {
             endIndent: 20,
           ),
           const SizedBox(height: defaultPadding * 2),
+          Text("Version 1.2.1", style: Theme.of(context).textTheme.bodyMedium),
         ],
       ),
     );

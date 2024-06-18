@@ -146,13 +146,13 @@ class AddRecipesScreen extends ConsumerWidget {
               ),
             ),
             const SizedBox(height: defaultPadding * 3),
-            Receptstep(
+            ReceptsStep(
               sfida: sfida,
-              type: sfideType,
               sfidaId: sfidaId,
-              urlImmagini: urlImmagini,
+              type: sfideType,
               ingredienti: ingredienti,
-            )
+              urlImmagini: urlImmagini,
+            ),
           ],
         ),
       ),
