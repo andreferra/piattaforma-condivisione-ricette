@@ -19,22 +19,52 @@ import 'package:image_picker/image_picker.dart';
 import 'package:model_repo/model_repo.dart';
 import 'package:uuid/uuid.dart';
 
-class ReceptsStep extends ConsumerWidget {
+class Receptstep extends ConsumerStatefulWidget {
   final bool sfida;
   final String sfidaId;
   final List<String> ingredienti;
   final List<String> urlImmagini;
   final SfideType type;
-  const ReceptsStep(
+  const Receptstep(
       {super.key,
-      required this.sfida,
-      required this.sfidaId,
-      this.type = SfideType.none,
+      this.sfida = false,
+      this.sfidaId = "",
+      this.ingredienti = const [],
       this.urlImmagini = const [],
-      this.ingredienti = const []});
+      this.type = SfideType.none});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ReceptstepState createState() => ReceptstepState();
+}
+
+class ReceptstepState extends ConsumerState<Receptstep> {
+  bool get sfida => sfida;
+  String get sfidaId => sfidaId;
+  List<String> get ingredienti => ingredienti;
+  List<String> get urlImmagini => urlImmagini;
+  SfideType get type => type;
+  late TextEditingController stepController;
+
+  @override
+  void initState() {
+    stepController = TextEditingController();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    stepController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final recipesController = ref.watch(addRecipesProvider.notifier);
+    final recipesState = ref.watch(addRecipesProvider);
+    final loadState = ref.watch(addRecipesProvider).status;
+    final user = ref.watch(authProvider).user;
+    final pageController = ref.watch(pageControllerProvider);
+
     ref.listen(addRecipesProvider, (previous, current) {
       if (current.errorType == ErrorType.stepImage) {
         SnackBar snackBar = SnackBar(
@@ -80,12 +110,6 @@ class ReceptsStep extends ConsumerWidget {
       }
     });
 
-    final recipesController = ref.watch(addRecipesProvider.notifier);
-    final recipesState = ref.watch(addRecipesProvider);
-    final stepImage = recipesState.stepImage;
-    final loadState = ref.watch(addRecipesProvider).status;
-    final user = ref.watch(authProvider).user;
-    final pageController = ref.watch(pageControllerProvider);
     return Column(
       children: [
         const SizedBox(
@@ -105,7 +129,8 @@ class ReceptsStep extends ConsumerWidget {
                     recipesController.addStepImage(file);
                   }
                 },
-                child: stepImage == null
+                child: recipesState.stepImage == null ||
+                        recipesState.stepImage!.isEmpty
                     ? Container(
                         width: MediaQuery.of(context).size.width * 0.1,
                         height: MediaQuery.of(context).size.width * 0.1,
@@ -126,7 +151,7 @@ class ReceptsStep extends ConsumerWidget {
                           color: Theme.of(context).colorScheme.secondary,
                           borderRadius: BorderRadius.circular(12),
                           image: DecorationImage(
-                            image: Image.memory(stepImage).image,
+                            image: Image.memory(recipesState.stepImage!).image,
                             fit: BoxFit.cover,
                           ),
                         ),
@@ -137,12 +162,11 @@ class ReceptsStep extends ConsumerWidget {
                 child: TextInputField(
                   hintText: "Descrizione step",
                   minLines: 6,
+                  controller: stepController,
                   hasMaxLenght: true,
                   keyboardType: TextInputType.multiline,
                   maxLength: 500,
-                  onChanged: (value) {
-                    recipesController.addStepText(value);
-                  },
+                  onChanged: (value) {},
                 ),
               )
             ],
@@ -154,7 +178,11 @@ class ReceptsStep extends ConsumerWidget {
         AnimatedButton(
             onTap: () {
               try {
+                recipesController.addStepText(stepController.text);
                 String res = recipesController.addStep();
+                recipesController.clearStep();
+                stepController.clear();
+
                 if (res == "ok") {
                   SnackBar snackBar = SnackBar(
                     backgroundColor: Colors.transparent,

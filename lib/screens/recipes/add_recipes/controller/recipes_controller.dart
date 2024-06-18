@@ -3,16 +3,15 @@ import 'dart:typed_data';
 
 // Package imports:
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:equatable/equatable.dart';
-import 'package:firebase_auth_repo/auth_repo.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:uuid/uuid.dart';
-
 // Project imports:
 import 'package:condivisionericette/controller/auth_repo_provider.dart';
 import 'package:condivisionericette/model/Comment.dart';
 import 'package:condivisionericette/screens/recipes/view_screen/controller/recipe_interaction_controller.dart';
 import 'package:condivisionericette/utils/constant.dart';
+import 'package:equatable/equatable.dart';
+import 'package:firebase_auth_repo/auth_repo.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:uuid/uuid.dart';
 
 part 'recipes_state.dart';
 
@@ -366,5 +365,15 @@ class AddRecipesController extends StateNotifier<RecipesState> {
 
     immagini[state.editIndex!] = value;
     state = state.copyWith(immagini: immagini, newStepImage: null);
+  }
+
+  void clearStep() {
+    state = state.copyWith(
+      stepText: null,
+      stepImage: Uint8List(0),
+      editStep: false,
+      editIndex: null,
+    );
+    print(state.stepText);
   }
 }
