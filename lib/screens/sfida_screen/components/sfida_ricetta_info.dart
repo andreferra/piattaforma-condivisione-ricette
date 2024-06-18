@@ -1,6 +1,5 @@
 // Flutter imports:
 import 'package:flutter/material.dart';
-
 // Package imports:
 import 'package:model_repo/model_repo.dart';
 
@@ -73,7 +72,7 @@ class _SfidaRicettaInfoState extends State<SfidaRicettaInfo> {
                   runSpacing: 8.0,
                   children: sfide.urlImmagini!.map((immagine) {
                     return SizedBox(
-                      width: MediaQuery.of(context).size.width / 3 - 40,
+                      width: MediaQuery.of(context).size.width / 4 - 20,
                       child: Image.network(
                         immagine,
                         width: 300,

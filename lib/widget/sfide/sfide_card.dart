@@ -1,11 +1,10 @@
 // Dart imports:
 import 'dart:async';
 
-// Flutter imports:
-import 'package:flutter/material.dart';
-
 // Package imports:
 import 'package:firebase_auth_repo/auth_repo.dart';
+// Flutter imports:
+import 'package:flutter/material.dart';
 import 'package:model_repo/model_repo.dart';
 
 class SfideCard extends StatefulWidget {
@@ -53,7 +52,7 @@ class _SfideCardState extends State<SfideCard> {
     final seconds = duration.inSeconds % 60;
 
     if (days > 0) {
-      return '$days giorni, $hours ore, $minutes minuti';
+      return '$days giorni, $hours ore';
     } else if (hours > 0) {
       return '$hours ore, $minutes minuti';
     } else if (minutes > 0) {
